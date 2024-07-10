@@ -4,7 +4,11 @@
 //
 //  Created by damao on 2024/7/10.
 //
+
+#if canImport(UIKit)
 import UIKit
+// 在这里使用 UIKit
+#endif
 
 class TrackViewCell: UITableViewCell {
   

@@ -5,7 +5,10 @@
 //  Created by damao on 2024/7/10.
 //
 
+#if canImport(Foundation)
 import Foundation
+#endif
+
 import Combine
 
 final class DeezerAPI {

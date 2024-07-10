@@ -5,7 +5,9 @@
 //  Created by damao on 2024/7/10.
 //
 
+#if canImport(Foundation)
 import Foundation
+#endif
 
 // MARK: - Track
 /// 跟踪類型，表示從 Deezer API 中獲取的音樂曲目列表。

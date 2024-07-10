@@ -7,7 +7,9 @@
 
 // MARK: - UIColor Extension
 
+#if canImport(UIKit)
 import UIKit
+#endif
 
 extension UIColor {
     // 使用十六进制字符串初始化 UIColor 实例

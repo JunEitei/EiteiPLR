@@ -5,6 +5,7 @@
 //  Created by damao on 2024/6/17.
 //
 
+
 import UIKit
 
 // 這個類用來做一些關乎全局的事情
