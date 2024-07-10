@@ -10,12 +10,12 @@ import UIKit
 // 在这里使用 UIKit
 #endif
 
-class TrackViewCell: UITableViewCell {
+class MusicCell: UITableViewCell {
   
   // MARK: - View Model
   
   /// ViewModel 實例，用於處理音樂播放相關邏輯。
-  let musicPlayerViewModel = ViewModel()
+  let musicPlayerViewModel = MusicViewModel()
   
   // MARK: - Views
   
@@ -76,9 +76,9 @@ class TrackViewCell: UITableViewCell {
   // MARK: - Functions
   
   /// 配置 cell，設置曲目顯示的數據。
-  func configureCell(track: Datum) {
-    self.trackNameLabel.text = track.title // 設置曲目名稱文本
-    self.trackArtistLabel.text = track.artist.name // 設置藝術家名稱文本
+  func configureCell(track: GitHubFile) {
+    self.trackNameLabel.text = track.name // 設置曲目名稱文本
+      self.trackArtistLabel.text = track.artist// 設置藝術家名稱文本
     
     self.addSubview(stackCardView) // 添加堆疊視圖到 cell
     stackCardView.snp.makeConstraints { make in

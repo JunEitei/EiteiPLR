@@ -18,17 +18,8 @@ public class ViewController: UIViewController, UISearchBarDelegate {
     private var subscriptions = Set<AnyCancellable>() // 訂閱集合，用於管理Combine框架的訂閱
     private var timer: Timer? // 定時器，用於延遲搜索輸入
     
-    let musicPlayerViewModel = ViewModel() // 音樂播放器的視圖模型
-    
-    // MARK: - Views
-    private let artistSearchBar: UISearchBar = {
-        let searchBar = UISearchBar()
-        searchBar.searchTextField.borderStyle = .roundedRect // 設置搜索欄的圓角邊框樣式
-        searchBar.searchTextField.placeholder = "Search artist and song title" // 設置搜索欄的占位文字
-        searchBar.backgroundImage = UIImage() // 移除搜索欄的背景圖片
-        
-        return searchBar
-    }()
+    let musicPlayerViewModel = MusicViewModel() // 音樂播放器的視圖模型
+
     
     private let titleTopLabel: UILabel = {
         let label = UILabel()
@@ -146,7 +137,7 @@ public class ViewController: UIViewController, UISearchBarDelegate {
     public override func viewDidLoad() {
         super.viewDidLoad()
         setUI() // 設置界面元素
-        listTableView.register(TrackViewCell.self, forCellReuseIdentifier: "cell") // 註冊自定義的音軌視圖單元格
+        listTableView.register(MusicCell.self, forCellReuseIdentifier: "cell") // 註冊自定義的音軌視圖單元格
         listTableView.dataSource = self // 設置表格視圖的數據源
         listTableView.delegate = self // 設置表格視圖的委託
         musicPlayerViewModel.fetchTracks() // 加載音軌數據
@@ -158,17 +149,11 @@ public class ViewController: UIViewController, UISearchBarDelegate {
     private func setUI() {
         view.backgroundColor = .systemBackground
         
-        // 添加和配置 artistSearchBar
-        view.addSubview(artistSearchBar)
-        artistSearchBar.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(28)
-            make.left.right.equalToSuperview().inset(8)
-        }
-        
+
         // 添加和配置 titleTopLabel
         view.addSubview(titleTopLabel)
         titleTopLabel.snp.makeConstraints { make in
-            make.top.equalTo(artistSearchBar.snp.bottom).offset(18)
+            make.top.equalTo(view.snp.top).offset(18)
             make.left.right.equalToSuperview().inset(16)
         }
         
@@ -301,46 +286,10 @@ public class ViewController: UIViewController, UISearchBarDelegate {
     private func addTargets() {
         // 將播放/暫停按鈕的觸發目標設置為當前視圖控制器，點擊事件為 playPauseButtonTapped 方法
         playPauseButton.addTarget(self, action: #selector(playPauseButtonTapped), for: .touchUpInside)
-        
-        // 將藝術家搜索條的委託對象設置為當前視圖控制器
-        artistSearchBar.delegate = self
+
     }
-    
-    // 當搜索按鈕被點擊時，執行搜索音樂藝術家名稱的方法並結束編輯狀態
-    public func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        musicPlayerViewModel.searchArtistName(name: searchBar.text ?? "")
-        artistSearchBar.endEditing(true)
-    }
-    
-    // 當開始編輯搜索條時，顯示取消按鈕
-    public func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-        artistSearchBar.showsCancelButton = true
-        return true
-    }
-    
-    // 當結束編輯搜索條時，隱藏取消按鈕
-    public func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
-        artistSearchBar.showsCancelButton = false
-        return true
-    }
-    
-    // 當取消按鈕被點擊時，結束搜索條的編輯狀態
-    public func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        artistSearchBar.endEditing(true)
-    }
-    
-    // 當搜索內容改變時，使用計時器延遲一秒執行搜索音樂藝術家名稱的方法
-    public func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { [weak self] _ in
-            self?.musicPlayerViewModel.searchArtistName(name: searchText)
-        }
-        
-    }
-    
-    deinit {
-        timer?.invalidate()
-    }
+
+
     
     @objc private func playPauseButtonTapped() {
         musicPlayerViewModel.pauseTrack()
@@ -361,25 +310,21 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let trackCell = listTableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? TrackViewCell else {
+        guard let trackCell = listTableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? MusicCell else {
             return UITableViewCell()
         }
         let trackList = musicPlayerViewModel.tracks
         trackCell.configureCell(track: trackList[indexPath.row])
         
-        // 彩虹
-        let rainbowColors: [UIColor] = [
-            UIColor.eiteiOrange,
-            UIColor.eiteiRed,
-            UIColor.eiteiSuperOrange,
-            UIColor.eiteiGreen,
-            UIColor.eiteiBlue,
-            UIColor.eiteiYellow
+        // 兩種橙色交替
+        let alternatingColors: [UIColor] = [
+            .eiteiOrange,
+            .eiteiSuperOrange
         ]
         
-        // 根据 indexPath.row 的值选择彩虹色
-        let colorIndex = indexPath.row % rainbowColors.count
-        trackCell.backgroundColor = rainbowColors[colorIndex]
+        // 根据 indexPath.row 的值选择相间的颜色
+        let colorIndex = indexPath.row % alternatingColors.count
+        trackCell.backgroundColor = alternatingColors[colorIndex]
         
         return trackCell
     }

@@ -21,12 +21,12 @@ protocol ViewModelProtocol {
   func pauseTrack()
 }
 
-final class ViewModel: ViewModelProtocol {
+final class MusicViewModel: ViewModelProtocol {
   
   // MARK: - Properties
   
   /// Deezer API 服務實例
-  let deezerAPI = DeezerAPI()
+  let deezerAPI = githubAPI()
   
   /// 是否正在加載中
   @Published var isLoading = false
@@ -50,7 +50,7 @@ final class ViewModel: ViewModelProtocol {
   @Published var currentTrackArtist: String = ""
   
   /// 歌曲列表
-  @Published var tracks: [Datum] = []
+  @Published var tracks: [GitHubFile] = []
   
   /// 訂閱集合，用於管理 Combine 訂閱
   var subscriptions = Set<AnyCancellable>()
@@ -86,34 +86,7 @@ final class ViewModel: ViewModelProtocol {
       )
       .store(in: &subscriptions)
   }
-  
-  /// 根據藝術家名稱從 Deezer API 中搜索歌曲。
-  ///
-  /// - Parameter name: 要搜索的藝術家名稱
-  /// 調用該方法後，使用 Combine 機制來處理異步數據流。
-  func searchArtistName(name: String) {
-    isLoading = true
-    deezerAPI.searchTracksByArtist(name: name)
-      .sink(
-        receiveCompletion: { status in
-          switch status {
-          case .finished:
-            self.isLoading = false
-            print("Completed")
-            break
-          case .failure(let error):
-            self.isLoading = false
-            print("Receiver error \(error)")
-            break
-          }
-        },
-        receiveValue: { tracks in
-          print("Data received")
-          self.tracks = tracks
-        }
-      )
-      .store(in: &subscriptions)
-  }
+
   
   /// 添加觀察器，監聽音樂播放器的狀態和播放進度。
   ///
@@ -155,10 +128,10 @@ final class ViewModel: ViewModelProtocol {
     } else {
       currentTrackIndex = trackIndex
       
-      let url = URL(string: tracks[trackIndex].preview)
+        let url = URL(string: tracks[trackIndex].download_url!)
       let playerItem: AVPlayerItem = AVPlayerItem(url: url!)
-      currentTrackName = tracks[trackIndex].title
-      currentTrackArtist = tracks[trackIndex].artist.name ?? "-"
+      currentTrackName = tracks[trackIndex].name
+        currentTrackArtist = tracks[trackIndex].artist!
       musicPlayer.replaceCurrentItem(with: playerItem)
       musicPlayer.play()
       isPlaying = true
