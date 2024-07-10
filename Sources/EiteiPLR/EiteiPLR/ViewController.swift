@@ -357,7 +357,6 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         return musicPlayerViewModel.tracks.count
     }
     
-    // 返回指定行的單元格，設置單元格的背景視圖顏色
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let trackCell = listTableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? TrackViewCell else {
             return UITableViewCell()
@@ -365,9 +364,19 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         let trackList = musicPlayerViewModel.tracks
         trackCell.configureCell(track: trackList[indexPath.row])
         
-        let backgroundView = UIView()
-        backgroundView.backgroundColor = .systemGray6
-        trackCell.selectedBackgroundView = backgroundView
+        // 彩虹
+        let rainbowColors: [UIColor] = [
+            UIColor.eiteiOrange,
+            UIColor.eiteiRed,
+            UIColor.eiteiSuperOrange,
+            UIColor.eiteiGreen,
+            UIColor.eiteiBlue,
+            UIColor.eiteiYellow
+        ]
+        
+        // 根据 indexPath.row 的值选择彩虹色
+        let colorIndex = indexPath.row % rainbowColors.count
+        trackCell.backgroundColor = rainbowColors[colorIndex]
         
         return trackCell
     }
