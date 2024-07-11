@@ -147,7 +147,48 @@ public class ViewController: UIViewController, UISearchBarDelegate {
         musicPlayerViewModel.fetchTracks() // 加載音軌數據
         addTargets() // 添加按鈕點擊事件
         bindToViewModel() // 將視圖模型綁定到視圖上
+        
+        // 设置远程控制事件监听器
+        UIApplication.shared.beginReceivingRemoteControlEvents()
+        becomeFirstResponder()
     }
+    
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // 停止接收远程控制事件
+        UIApplication.shared.endReceivingRemoteControlEvents()
+        resignFirstResponder()
+    }
+    
+    // 处理远程控制事件
+    public override func remoteControlReceived(with event: UIEvent?) {
+        guard let event = event else { return }
+        
+        if event.type == .remoteControl {
+            switch event.subtype {
+            case .remoteControlPlay:
+                // 处理播放事件
+                break
+            case .remoteControlPause:
+                // 处理暂停事件
+                break
+            case .remoteControlNextTrack:
+                // 处理下一曲事件
+                break
+            case .remoteControlPreviousTrack:
+                // 处理上一曲事件
+                break
+            default:
+                break
+            }
+        }
+    }
+    
+    public override var canBecomeFirstResponder: Bool {
+        return true
+    }
+    
     
     // MARK: - Private Methods
     private func setUI() {
