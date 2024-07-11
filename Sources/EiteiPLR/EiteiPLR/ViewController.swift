@@ -44,7 +44,7 @@ public class ViewController: UIViewController, UISearchBarDelegate {
     
     private lazy var trackNameLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .darkGray // 文字顏色設置
+        label.textColor = .eiteiGray // 文字顏色設置
         label.font = .systemFont(ofSize: 16, weight: .medium) // 字體和粗細設置
         label.textAlignment = .left // 文字對齊方式
         
@@ -54,7 +54,7 @@ public class ViewController: UIViewController, UISearchBarDelegate {
     private lazy var trackArtistLabel: UILabel = {
         let label = UILabel()
         label.textColor = .lightGray // 文字顏色設置
-        label.font = .systemFont(ofSize: 14, weight: .medium) // 字體和粗細設置
+        label.font = .systemFont(ofSize: 13, weight: .medium) // 字體和粗細設置
         label.textAlignment = .left // 文字對齊方式
         
         return label
@@ -82,6 +82,7 @@ public class ViewController: UIViewController, UISearchBarDelegate {
     
     private let trackDurationSlider: UISlider = {
         let slider = UISlider()
+        slider.tintColor = .eiteiBlue // 設置滑塊的顏色
         slider.thumbTintColor = .clear // 設置滑塊的拇指顏色為透明
         slider.maximumTrackTintColor = .white // 設置滑塊的最大軌道顏色為白色
         slider.isUserInteractionEnabled = false // 禁用滑塊的交互功能
@@ -103,7 +104,7 @@ public class ViewController: UIViewController, UISearchBarDelegate {
         return view
     }()
     
-    lazy var cardView: UIView = {
+    lazy var musicPlayerView: UIView = {
         let view = UIView()
         view.backgroundColor = .white // 設置卡片視圖的背景色為白色
         view.layer.cornerRadius = 12 // 設置卡片視圖的圓角半徑
@@ -175,11 +176,9 @@ public class ViewController: UIViewController, UISearchBarDelegate {
             make.bottom.equalToSuperview()
         }
         
-        
-        
-        // 添加和配置 cardView
-        view.addSubview(cardView)
-        cardView.snp.makeConstraints { make in
+        // 添加和配置播放器
+        view.addSubview(musicPlayerView)
+        musicPlayerView.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide)
             make.left.equalToSuperview().offset(16)
             make.right.equalToSuperview().offset(-16)
@@ -301,7 +300,7 @@ public class ViewController: UIViewController, UISearchBarDelegate {
         
     }
     
-    
+
     
     @objc private func playPauseButtonTapped() {
         musicPlayerViewModel.pauseTrack()
@@ -350,7 +349,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     // 點擊表格視圖中的行時，顯示卡片視圖並開始播放音軌
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        cardView.isHidden = false
+        musicPlayerView.isHidden = false
         musicPlayerViewModel.startPlay(trackIndex: indexPath.row)
     }
     

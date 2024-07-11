@@ -18,18 +18,18 @@ class MusicCell: UITableViewCell {
     
     // MARK: - Views
     
-    public lazy var trackNameLabel: UILabel = {
-        let label = UILabel()
+    public lazy var trackNameLabel: EiteiPaddedLabel = {
+        let label = EiteiPaddedLabel()
         label.textColor = .eiteiGray
         label.font = .systemFont(ofSize: 16, weight: .medium)
         label.textAlignment = .left // 文本居左對齊
         return label
     }()
     
-    private lazy var trackArtistLabel: UILabel = {
-        let label = UILabel()
+    private lazy var trackArtistLabel: EiteiPaddedLabel = {
+        let label = EiteiPaddedLabel()
         label.textColor = .eiteiLightGray // 使用淺灰色作為文本顏色
-        label.font = .systemFont(ofSize: 14, weight: .medium)
+        label.font = .systemFont(ofSize: 13, weight: .medium)
         label.textAlignment = .left // 文本居左對齊
         return label
     }()
@@ -86,17 +86,26 @@ class MusicCell: UITableViewCell {
     // MARK: - Setup Views
     
     private func setupViews() {
-        contentView.addSubview(stackCardView)
-        contentView.backgroundColor = .white
-        contentView.layer.cornerRadius = 8
-        contentView.layer.masksToBounds = false
-        contentView.layer.shadowColor = UIColor.black.cgColor
-        contentView.layer.shadowOpacity = 0.1
-        contentView.layer.shadowOffset = CGSize(width: 0, height: 2)
-        contentView.layer.shadowRadius = 4
         
+        // 外部
+        contentView.addSubview(stackCardView)
+        contentView.backgroundColor = .clear
+        contentView.layer.cornerRadius = 8
+        contentView.layer.masksToBounds = true
+        
+        // 內部
+        stackCardView.backgroundColor = .white
+        stackCardView.layer.cornerRadius = 8
+
+        // 添加阴影效果
+        stackCardView.layer.shadowColor = UIColor.eiteiBlue.cgColor
+        stackCardView.layer.shadowOffset = CGSize(width: 0, height: 4) // 陰影偏移量
+        stackCardView.layer.shadowOpacity = 0.81 // 陰影透明度
+        stackCardView.layer.shadowRadius = 4 // 陰影半径
+        stackCardView.layer.cornerRadius = 8 // 陰影的圓角
+                
         stackCardView.snp.makeConstraints { make in
-            make.edges.equalToSuperview().inset(5) // 四边边距为多少
+            make.edges.equalToSuperview().inset(5) // 四边边距
         }
     }
     

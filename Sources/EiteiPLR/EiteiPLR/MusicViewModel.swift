@@ -56,10 +56,8 @@ final class MusicViewModel: ViewModelProtocol {
   let musicPlayer = AVPlayer()
   
   // MARK: - Functions
-  
-  // 從 Deezer API 中獲取歌曲列表。
-  //
-  // 調用該方法後，使用 Combine 機制來處理異步數據流。
+
+  // 調用該方法後，使用 iOS Combine 機制來處理異步數據流。
   func fetchTracks() {
     isLoading = true
     githubAPI.shared.fetchTracks()
@@ -86,7 +84,6 @@ final class MusicViewModel: ViewModelProtocol {
 
   
   // 添加觀察器，監聽音樂播放器的狀態和播放進度。
-  //
   // 該方法將觀察音樂播放結束事件和播放進度的變化。
   func addObservers() {
     NotificationCenter.default.addObserver(self, selector: #selector(trackDidEnded), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: musicPlayer.currentItem)
