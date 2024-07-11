@@ -19,7 +19,7 @@ public class ViewController: UIViewController, UISearchBarDelegate {
     private var timer: Timer? // 定時器，用於延遲搜索輸入
     
     let musicPlayerViewModel = MusicViewModel() // 音樂播放器的視圖模型
-
+    
     
     private let titleTopLabel: UILabel = {
         let label = UILabel()
@@ -31,12 +31,11 @@ public class ViewController: UIViewController, UISearchBarDelegate {
     }()
     
     let listTableView: UITableView = {
-        let tableView = UITableView()
-        // 設置表格視圖
+        let tableView = UITableView(frame: .zero, style: .insetGrouped)        // 設置表格視圖
+        
         tableView.backgroundColor = .eiteiGray
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         
         return tableView
     }()
@@ -158,7 +157,7 @@ public class ViewController: UIViewController, UISearchBarDelegate {
         view.addSubview(titleTopLabel)
         
         titleTopLabel.textAlignment = .center // 使文字居中
-
+        
         titleTopLabel.snp.makeConstraints { make in
             // 使 titleTopLabel 的顶部距离 view 的 safe area 顶部为 0
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
@@ -299,10 +298,10 @@ public class ViewController: UIViewController, UISearchBarDelegate {
     private func addTargets() {
         // 將播放/暫停按鈕的觸發目標設置為當前視圖控制器，點擊事件為 playPauseButtonTapped 方法
         playPauseButton.addTarget(self, action: #selector(playPauseButtonTapped), for: .touchUpInside)
-
+        
     }
-
-
+    
+    
     
     @objc private func playPauseButtonTapped() {
         musicPlayerViewModel.pauseTrack()
@@ -329,15 +328,6 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         let trackList = musicPlayerViewModel.tracks
         trackCell.configureCell(track: trackList[indexPath.row])
         
-        // 兩種橙色交替
-        let alternatingColors: [UIColor] = [
-            .eiteiOrange,
-            .eiteiSuperOrange
-        ]
-        
-        // 根据 indexPath.row 的值选择相间的颜色
-        let colorIndex = indexPath.row % alternatingColors.count
-        trackCell.backgroundColor = alternatingColors[colorIndex]
         
         return trackCell
     }
@@ -362,6 +352,18 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         cardView.isHidden = false
         musicPlayerViewModel.startPlay(trackIndex: indexPath.row)
+    }
+    
+    
+    // 需要在section之间也添加间距
+    public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 10)) // 设置footer的高度为10，即section之间的间距
+        footerView.backgroundColor = .clear // 设置footer的背景色
+        return footerView
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 20 // 设置footer的高度，即section之间的间距
     }
     
 }
@@ -401,6 +403,6 @@ extension UITableView {
     // 恢復正常視圖，移除空視圖並顯示分隔線
     func restore() {
         self.backgroundView = nil
-        self.separatorStyle = .singleLine
+        self.separatorStyle = .none
     }
 }
