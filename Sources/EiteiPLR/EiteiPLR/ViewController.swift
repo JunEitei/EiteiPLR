@@ -23,20 +23,25 @@ public class ViewController: UIViewController, UISearchBarDelegate {
     
     private let titleTopLabel: UILabel = {
         let label = UILabel()
-        label.text = "Listen Now" // 標題標籤文字內容
-        label.textColor = .black // 文字顏色
-        label.font = .systemFont(ofSize: 26, weight: .bold) // 字體和粗細設置
+        label.text = "大毛　-　わたしも" // 標題標籤文字內容
+        label.textColor = .white // 文字顏色
+        label.font = .systemFont(ofSize: 33, weight: .heavy) // 字體和粗細設置
         
         return label
     }()
     
     let listTableView: UITableView = {
         let tableView = UITableView()
-        tableView.backgroundColor = .clear // 設置表格視圖的背景色為透明
-        tableView.contentInset.bottom = 70 // 設置表格視圖內容底部的內邊距
+        // 設置表格視圖
+        tableView.backgroundColor = .eiteiGray
+        tableView.separatorStyle = .none
+        tableView.showsVerticalScrollIndicator = false
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         
         return tableView
     }()
+    
+    
     
     private lazy var trackNameLabel: UILabel = {
         let label = UILabel()
@@ -147,23 +152,31 @@ public class ViewController: UIViewController, UISearchBarDelegate {
     
     // MARK: - Private Methods
     private func setUI() {
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .eiteiBackground
         
-
         // 添加和配置 titleTopLabel
         view.addSubview(titleTopLabel)
+        
+        titleTopLabel.textAlignment = .center // 使文字居中
+
         titleTopLabel.snp.makeConstraints { make in
-            make.top.equalTo(view.snp.top).offset(18)
-            make.left.right.equalToSuperview().inset(16)
+            // 使 titleTopLabel 的顶部距离 view 的 safe area 顶部为 0
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
+            make.left.right.equalToSuperview()
+            make.centerX.equalToSuperview()
         }
         
         // 添加和配置 listTableView
         view.addSubview(listTableView)
         listTableView.snp.makeConstraints { make in
+            
+            //距離標題10px
             make.top.equalTo(titleTopLabel.snp.bottom).offset(10)
             make.left.right.equalToSuperview()
             make.bottom.equalToSuperview()
         }
+        
+        
         
         // 添加和配置 cardView
         view.addSubview(cardView)
@@ -327,6 +340,17 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         trackCell.backgroundColor = alternatingColors[colorIndex]
         
         return trackCell
+    }
+    
+    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        headerView.backgroundColor = UIColor.clear
+        return headerView
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        // 設置表頭高度
+        return 0
     }
     
     // 返回指定行的行高

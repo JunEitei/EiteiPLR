@@ -21,7 +21,7 @@ struct GitHubFile: Codable {
     let url: String
     let html_url: String
     let git_url: String
-    let download_url: String?
+    let download_url: String
     let type: String
     var title: String?
     var preview: String?
@@ -78,7 +78,7 @@ final class githubAPI {
             var newFile = file
             newFile.id = index + 1
             newFile.title = file.name
-            newFile.preview = file.download_url ?? ""
+            newFile.preview = file.download_url
             newFile.artist = "大毛"
             newFile.album = "わたしも"
             return newFile

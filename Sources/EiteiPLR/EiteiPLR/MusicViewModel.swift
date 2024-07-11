@@ -125,7 +125,7 @@ final class MusicViewModel: ViewModelProtocol {
     } else {
       currentTrackIndex = trackIndex
       
-        let url = URL(string: tracks[trackIndex].download_url!)
+        let url = URL(string: tracks[trackIndex].download_url)
       let playerItem: AVPlayerItem = AVPlayerItem(url: url!)
       currentTrackName = tracks[trackIndex].name
         currentTrackArtist = tracks[trackIndex].artist!
