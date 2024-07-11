@@ -134,10 +134,11 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     public override func viewDidLoad() {
         super.viewDidLoad()
         setUI() // 設置界面元素
-
+        
         listTableView.register(MusicCell.self, forCellReuseIdentifier: "cell") // 註冊自定義的音軌視圖單元格
         listTableView.dataSource = self // 設置表格視圖的數據源
         listTableView.delegate = self // 設置表格視圖的委託
+        
         musicPlayerViewModel.fetchTracks() // 加載音軌數據
         addTargets() // 添加按鈕點擊事件
         bindToViewModel() // 將視圖模型綁定到視圖上
@@ -228,7 +229,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
             make.centerX.equalToSuperview()
         }
         titleTopLabel.isUserInteractionEnabled = true //允許被點擊
-
+        
         // 點擊事件
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleLabelTap))
         titleTopLabel.addGestureRecognizer(tapGesture)
@@ -253,7 +254,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         }
     }
     
-
+    
     private func showLoading() {
         // 隱藏表格視圖以顯示加載加載動畫
         listTableView.isHidden = true
@@ -370,15 +371,8 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         // 音樂暫停或繼續播放
         musicPlayerViewModel.pauseTrack()
         
-        // 當前火焰的圖標需要更新
-        let musicCell = listTableView.cellForRow(at: IndexPath(row: musicPlayerViewModel.currentTrackIndex, section: 0) ) as! MusicCell
-        
-        musicCell.eiteiWaveView.isHidden = !musicCell.eiteiWaveView.isHidden
-        
-        
-        
     }
-
+    
     // 點擊標題事件
     @objc public func handleLabelTap() {
         presentWebViewController()

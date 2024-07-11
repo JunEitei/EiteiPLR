@@ -35,12 +35,7 @@ class MusicCell: UITableViewCell {
         return label
     }()
     
-    public lazy var eiteiWaveView: EiteiWaveView = {
-        let eiteiWaveView = EiteiWaveView()
-        eiteiWaveView.isHidden = false // 預設隱藏
-        eiteiWaveView.backgroundColor = .clear
-        return eiteiWaveView
-    }()
+
     
     private lazy var stackView: UIStackView = {
         let view = UIStackView()
@@ -59,15 +54,7 @@ class MusicCell: UITableViewCell {
         view.spacing = 18 // 間距
         view.translatesAutoresizingMaskIntoConstraints = false
         view.addArrangedSubview(stackView) // 添加垂直堆疊視圖
-        view.addSubview(eiteiWaveView) // 添加波形圖示按鈕
-        
-        // 波形圖示佈局
-        eiteiWaveView.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.height.equalTo(28)
-            make.width.equalTo(45)
-            make.right.equalToSuperview().offset(-10) // 靠近右边缘，并设置偏移量
-        }
+
         
         return view
     }()
@@ -117,24 +104,9 @@ class MusicCell: UITableViewCell {
         self.trackArtistLabel.text = track.artist // 設置藝術家名稱文本
         self.backgroundColor = .clear // 背景透明
     }
+
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
-    
-    
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        
-        if selected {
-            trackNameLabel.textColor = .eiteiBlue
-            eiteiWaveView.isHidden = false // 選中時顯示波形圖示
-        } else {
-            trackNameLabel.textColor = .eiteiGray
-            eiteiWaveView.isHidden = true // 非選中時隱藏波形圖示
-        }
-    }
-    
+
     override func prepareForReuse() {
         super.prepareForReuse()
         trackNameLabel.text = nil // 重用前清空曲目名稱文本
