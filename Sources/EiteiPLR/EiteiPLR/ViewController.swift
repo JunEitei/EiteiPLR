@@ -12,7 +12,7 @@ import UIKit
 import SnapKit
 import Combine
 
-public class ViewController: UIViewController, UISearchBarDelegate {
+public class ViewController: UIViewController, UISearchBarDelegate ,UIViewControllerTransitioningDelegate {
     
     // MARK: - Properties
     private var subscriptions = Set<AnyCancellable>() // 訂閱集合，用於管理Combine框架的訂閱
@@ -134,6 +134,7 @@ public class ViewController: UIViewController, UISearchBarDelegate {
     public override func viewDidLoad() {
         super.viewDidLoad()
         setUI() // 設置界面元素
+
         listTableView.register(MusicCell.self, forCellReuseIdentifier: "cell") // 註冊自定義的音軌視圖單元格
         listTableView.dataSource = self // 設置表格視圖的數據源
         listTableView.delegate = self // 設置表格視圖的委託
@@ -218,7 +219,6 @@ public class ViewController: UIViewController, UISearchBarDelegate {
         
         // 添加和配置 titleTopLabel
         view.addSubview(titleTopLabel)
-        
         titleTopLabel.textAlignment = .center // 使文字居中
         
         titleTopLabel.snp.makeConstraints { make in
@@ -227,6 +227,12 @@ public class ViewController: UIViewController, UISearchBarDelegate {
             make.left.right.equalToSuperview()
             make.centerX.equalToSuperview()
         }
+        titleTopLabel.isUserInteractionEnabled = true //允許被點擊
+
+        // 點擊事件
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleLabelTap))
+        titleTopLabel.addGestureRecognizer(tapGesture)
+        
         
         // 添加和配置 listTableView
         view.addSubview(listTableView)
@@ -247,6 +253,7 @@ public class ViewController: UIViewController, UISearchBarDelegate {
         }
     }
     
+
     private func showLoading() {
         // 隱藏表格視圖以顯示加載加載動畫
         listTableView.isHidden = true
@@ -371,6 +378,11 @@ public class ViewController: UIViewController, UISearchBarDelegate {
         
         
     }
+
+    // 點擊標題事件
+    @objc public func handleLabelTap() {
+        presentWebViewController()
+    }
 }
 
 
@@ -431,43 +443,19 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         return 0
     }
     
+    // 顯示瀏覽器視圖
+    func presentWebViewController() {
+        let webViewController = EiteiWebController()
+        webViewController.modalPresentationStyle = .custom
+        webViewController.transitioningDelegate = self
+        present(webViewController, animated: true, completion: nil)
+    }
+    
+    // MARK: - UIViewControllerTransitioningDelegate
+    
+    public func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        return EiteiPresentationController(presentedViewController: presented, presenting: presenting)
+    }
+    
 }
 
-// MARK: - UITableView
-extension UITableView {
-    
-    // 設置空視圖，顯示自定義標題和消息，並隱藏分隔線
-    func setEmptyView(title: String, message: String) {
-        let emptyView = UIView(frame: CGRect(x: self.center.x, y: self.center.y, width: self.bounds.size.width, height: self.bounds.size.height))
-        
-        let titleLabel = UILabel()
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        emptyView.addSubview(titleLabel)
-        titleLabel.snp.makeConstraints { make in
-            make.centerX.equalTo(emptyView.snp.centerX)
-            make.centerY.equalTo(emptyView.snp.centerY).offset(-80)
-        }
-        titleLabel.text = title
-        titleLabel.textAlignment = .center
-        titleLabel.font = .systemFont(ofSize: 18, weight: .semibold)
-        
-        let messageLabel = UILabel()
-        messageLabel.translatesAutoresizingMaskIntoConstraints = false
-        emptyView.addSubview(messageLabel)
-        messageLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(6)
-            make.left.right.equalToSuperview().inset(32)
-        }
-        messageLabel.text = message
-        messageLabel.textAlignment = .center
-        messageLabel.numberOfLines = 0
-        messageLabel.font = .systemFont(ofSize: 14, weight: .regular)
-        
-    }
-    
-    // 恢復正常視圖，移除空視圖並顯示分隔線
-    func restore() {
-        self.backgroundView = nil
-        self.separatorStyle = .none
-    }
-}
