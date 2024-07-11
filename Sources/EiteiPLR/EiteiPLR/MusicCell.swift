@@ -16,6 +16,18 @@ class MusicCell: UITableViewCell {
     
     let musicPlayerViewModel = MusicViewModel()
     
+    // MARK: - Closure for Handling Current Track Change
+    
+    var currentTrackChangedClosure: (() -> Void)?
+    
+    // MARK: - Handle Current Track Changed
+
+    func handleCurrentTrackChanged(isCurrent: Bool) {
+        
+        // 隱藏波形效果
+        eiteiWaveView.isHidden = !isCurrent
+    }
+    
     // MARK: - Views
     
     public lazy var trackNameLabel: EiteiPaddedLabel = {
@@ -34,13 +46,11 @@ class MusicCell: UITableViewCell {
         return label
     }()
     
-    public lazy var waveformIcon: UIButton = {
-        let button = UIButton()
-        button.tintColor = .eiteiBlue
-        let image = UIImage(systemName: "waveform", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 289)))
-        button.setImage(image, for: .normal) //
-        button.isHidden = true // 預設隱藏
-        return button
+    public lazy var eiteiWaveView: EiteiWaveView = {
+        let eiteiWaveView = EiteiWaveView()
+        eiteiWaveView.isHidden = false // 預設隱藏
+        eiteiWaveView.backgroundColor = .clear
+        return eiteiWaveView
     }()
     
     private lazy var stackView: UIStackView = {
@@ -60,12 +70,14 @@ class MusicCell: UITableViewCell {
         view.spacing = 18 // 間距
         view.translatesAutoresizingMaskIntoConstraints = false
         view.addArrangedSubview(stackView) // 添加垂直堆疊視圖
-        view.addArrangedSubview(waveformIcon) // 添加波形圖示按鈕
+        view.addSubview(eiteiWaveView) // 添加波形圖示按鈕
         
-        waveformIcon.snp.makeConstraints { make in
+        // 波形圖示佈局
+        eiteiWaveView.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.height.equalTo(28)
             make.width.equalTo(45)
+            make.right.equalToSuperview().offset(-10) // 靠近右边缘，并设置偏移量
         }
         
         return view
@@ -120,16 +132,17 @@ class MusicCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
     }
+
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         
         if selected {
             trackNameLabel.textColor = .eiteiBlue
-            waveformIcon.isHidden = false // 選中時顯示波形圖示
+            eiteiWaveView.isHidden = false // 選中時顯示波形圖示
         } else {
             trackNameLabel.textColor = .eiteiGray
-            waveformIcon.isHidden = true // 非選中時隱藏波形圖示
+            eiteiWaveView.isHidden = true // 非選中時隱藏波形圖示
         }
     }
     
@@ -138,4 +151,13 @@ class MusicCell: UITableViewCell {
         trackNameLabel.text = nil // 重用前清空曲目名稱文本
         trackArtistLabel.text = nil // 重用前清空藝術家名稱文本
     }
+
+
+}
+
+// 處理Cell事務的代理
+protocol MusicCellDelegate: AnyObject {
+    
+    // 隱藏波形
+    func shouldHideWaveform(in cell: MusicCell)
 }

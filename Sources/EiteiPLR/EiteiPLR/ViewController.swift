@@ -16,14 +16,13 @@ public class ViewController: UIViewController, UISearchBarDelegate {
     
     // MARK: - Properties
     private var subscriptions = Set<AnyCancellable>() // 訂閱集合，用於管理Combine框架的訂閱
-    private var timer: Timer? // 定時器，用於延遲搜索輸入
     
     let musicPlayerViewModel = MusicViewModel() // 音樂播放器的視圖模型
     
     
     private let titleTopLabel: UILabel = {
         let label = UILabel()
-        label.text = "大毛　-　わたしも" // 標題標籤文字內容
+        label.text = "わたしも" // 標題標籤文字內容
         label.textColor = .white // 文字顏色
         label.font = .systemFont(ofSize: 33, weight: .heavy) // 字體和粗細設置
         
@@ -73,7 +72,7 @@ public class ViewController: UIViewController, UISearchBarDelegate {
     
     private lazy var playPauseButton: UIButton = {
         let button = UIButton()
-        button.tintColor = .black // 圖示顏色設置為黑色
+        button.tintColor = .eiteiBackground // 圖示顏色設置
         let image = UIImage(systemName: "pause.fill", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 28))) // 設置播放/暫停按鈕圖示
         button.setImage(image, for: .normal) // 設置按鈕的圖示
         
@@ -303,9 +302,14 @@ public class ViewController: UIViewController, UISearchBarDelegate {
 
     
     @objc private func playPauseButtonTapped() {
+        
+        // 音樂暫停
         musicPlayerViewModel.pauseTrack()
+
     }
 }
+
+
 
 // MARK: - UITableViewDelegate, UITableViewDataSource
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
@@ -353,17 +357,6 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         musicPlayerViewModel.startPlay(trackIndex: indexPath.row)
     }
     
-    
-    // 需要在section之间也添加间距
-    public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 10)) // 设置footer的高度为10，即section之间的间距
-        footerView.backgroundColor = .clear // 设置footer的背景色
-        return footerView
-    }
-    
-    public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 20 // 设置footer的高度，即section之间的间距
-    }
     
 }
 
