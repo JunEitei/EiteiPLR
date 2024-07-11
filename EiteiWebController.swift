@@ -9,25 +9,32 @@ class EiteiWebController: UIViewController, WKNavigationDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // 创建 WebView
+        // 創建 WebView
         webView = WKWebView()
         webView.navigationDelegate = self
         view.addSubview(webView)
 
-        // 设置 WebView 的 Frame，考虑状态栏高度和安全区域
+        // 設置 WebView 的 Frame，考慮狀態欄高度和安全區域
         webView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top) // 紧贴安全区域顶部
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top) // 緊貼安全區域頂部
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview()
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom) // 紧贴安全区域底部
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom) // 緊貼安全區域底部
         }
 
-        // 加载网页
+        // 加載網頁
         let url = URL(string: "https://juneitei.github.io/")!
         let request = URLRequest(url: url)
         webView.load(request)
 
-        // 设置 contentInsetAdjustmentBehavior 为 .never
+        // 設置 contentInsetAdjustmentBehavior 為 .never
         webView.scrollView.contentInsetAdjustmentBehavior = .never
+        
+        // 設置背景顏色為黑色
+        webView.backgroundColor = .black
+        webView.scrollView.backgroundColor = .black
+
+        // 禁用 WebView 背景透明
+        webView.isOpaque = false
     }
 }
