@@ -22,14 +22,14 @@ class MusicCell: UITableViewCell {
     public lazy var trackNameLabel: EiteiPaddedLabel = {
         let label = EiteiPaddedLabel()
         label.textColor = .eiteiGray
-        label.font = .systemFont(ofSize: 16, weight: .medium)
+        label.font = .systemFont(ofSize: 16, weight: .light)
         label.textAlignment = .left // 文本居左對齊
         return label
     }()
     
     private lazy var trackArtistLabel: EiteiPaddedLabel = {
         let label = EiteiPaddedLabel()
-        label.textColor = .eiteiLightGray // 使用淺灰色作為文本顏色
+        label.textColor = .eiteiExtraLightGray // 使用極淺灰色作為文本顏色
         label.font = .systemFont(ofSize: 13, weight: .medium)
         label.textAlignment = .left // 文本居左對齊
         return label
@@ -97,14 +97,14 @@ class MusicCell: UITableViewCell {
         // 內部
         stackCardView.backgroundColor = .white
         stackCardView.layer.cornerRadius = 8
-
+        
         // 添加阴影效果
         stackCardView.layer.shadowColor = UIColor.eiteiBlue.cgColor
-        stackCardView.layer.shadowOffset = CGSize(width: 0, height: 4) // 陰影偏移量
-        stackCardView.layer.shadowOpacity = 0.81 // 陰影透明度
-        stackCardView.layer.shadowRadius = 4 // 陰影半径
+        stackCardView.layer.shadowOffset = CGSize(width: 2, height: 3) // 陰影偏移量
+        stackCardView.layer.shadowOpacity = 0.6 // 陰影透明度
+        stackCardView.layer.shadowRadius = 3 // 陰影半径
         stackCardView.layer.cornerRadius = 8 // 陰影的圓角
-                
+        
         stackCardView.snp.makeConstraints { make in
             make.edges.equalToSuperview().inset(5) // 四边边距
         }
@@ -121,7 +121,7 @@ class MusicCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
     }
-
+    
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
@@ -140,6 +140,6 @@ class MusicCell: UITableViewCell {
         trackNameLabel.text = nil // 重用前清空曲目名稱文本
         trackArtistLabel.text = nil // 重用前清空藝術家名稱文本
     }
-
-
+    
+    
 }

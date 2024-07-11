@@ -44,20 +44,12 @@ public class ViewController: UIViewController, UISearchBarDelegate {
     private lazy var trackNameLabel: UILabel = {
         let label = UILabel()
         label.textColor = .eiteiGray // 文字顏色設置
-        label.font = .systemFont(ofSize: 16, weight: .medium) // 字體和粗細設置
+        label.font = .systemFont(ofSize: 19, weight: .bold) // 字體和粗細設置
         label.textAlignment = .left // 文字對齊方式
         
         return label
     }()
     
-    private lazy var trackArtistLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .lightGray // 文字顏色設置
-        label.font = .systemFont(ofSize: 13, weight: .medium) // 字體和粗細設置
-        label.textAlignment = .left // 文字對齊方式
-        
-        return label
-    }()
     
     private lazy var stackView: UIStackView = {
         let view = UIStackView()
@@ -65,7 +57,6 @@ public class ViewController: UIViewController, UISearchBarDelegate {
         view.spacing = 0 // 子視圖間距
         
         view.addArrangedSubview(trackNameLabel) // 將歌曲名稱標籤添加到堆疊視圖
-        view.addArrangedSubview(trackArtistLabel) // 將歌手名稱標籤添加到堆疊視圖
         
         return view
     }()
@@ -124,7 +115,7 @@ public class ViewController: UIViewController, UISearchBarDelegate {
         view.clipsToBounds = true // 裁剪超出邊界的內容
         
         let container = UIView()
-        container.layer.shadowColor = UIColor.lightGray.cgColor // 設置容器視圖的陰影顏色
+        container.layer.shadowColor = UIColor.eiteiBlue.cgColor // 設置容器視圖的陰影顏色
         container.layer.shadowOpacity = 0.7 // 設置容器視圖的陰影不透明度
         container.layer.shadowOffset = .zero // 設置容器視圖的陰影偏移量
         container.layer.shadowRadius = 10 // 設置容器視圖的陰影半徑
@@ -156,7 +147,6 @@ public class ViewController: UIViewController, UISearchBarDelegate {
         
         // 註冊下一曲通知觀察者
         NotificationCenter.default.addObserver(self, selector: #selector(updateCurrentlyPlayingTrack(notification:)), name: NSNotification.Name("TrackDidEndNotification"), object: nil)
-        
         
     }
     
@@ -252,8 +242,8 @@ public class ViewController: UIViewController, UISearchBarDelegate {
         view.addSubview(musicPlayerView)
         musicPlayerView.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide)
-            make.left.equalToSuperview().offset(16)
-            make.right.equalToSuperview().offset(-16)
+            make.left.equalToSuperview().offset(13)
+            make.right.equalToSuperview().offset(-13)
         }
     }
     
@@ -338,12 +328,6 @@ public class ViewController: UIViewController, UISearchBarDelegate {
             }
             .store(in: &subscriptions)  // 將訂閱存入訂閱集合中
         
-        // 監聽當前音軌藝術家變化，更新音軌藝術家標籤
-        musicPlayerViewModel.$currentTrackArtist
-            .sink { [weak self] trackArtist in
-                self?.trackArtistLabel.text = trackArtist  // 設置音軌藝術家標籤的文本
-            }
-            .store(in: &subscriptions)  // 將訂閱存入訂閱集合中
         
         // 監聽音軌列表變化，在主線程上重新加載表格視圖
         musicPlayerViewModel.$tracks
@@ -381,10 +365,10 @@ public class ViewController: UIViewController, UISearchBarDelegate {
         
         // 當前火焰的圖標需要更新
         let musicCell = listTableView.cellForRow(at: IndexPath(row: musicPlayerViewModel.currentTrackIndex, section: 0) ) as! MusicCell
-            
+        
         musicCell.eiteiWaveView.isHidden = !musicCell.eiteiWaveView.isHidden
         
-
+        
         
     }
 }
@@ -397,7 +381,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     // 返回表格視圖中的行數，如果音軌列表為空，顯示空視圖提示
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if musicPlayerViewModel.tracks.count == 0 {
-            tableView.setEmptyView(title: "Song not available", message: "Try searching again using a different spelling or keyword")
+            tableView.setEmptyView(title: "沒有找到音樂", message: "...")
         } else {
             tableView.restore()
         }
@@ -415,20 +399,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         return trackCell
     }
     
-    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerView = UIView()
-        headerView.backgroundColor = UIColor.clear
-        return headerView
-    }
-    
-    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        // 設置表頭高度
-        return 0
-    }
-    
     // 返回指定行的行高
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 60
+        return 66
     }
     
     // 點擊表格視圖中的行時，顯示卡片視圖並開始播放音軌
@@ -446,7 +419,17 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         musicPlayerViewModel.startPlay(trackIndex: indexPath.row)
     }
     
-
+    // 取消標頭的顯示
+    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        headerView.backgroundColor = UIColor.clear
+        return headerView
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        // 設置表頭高度
+        return 0
+    }
     
 }
 

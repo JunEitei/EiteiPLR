@@ -88,6 +88,11 @@ extension UIColor {
         return UIColor(hex: "#F3B940")
     }
     
+    // 返回Eitei主題極淺灰
+    static var eiteiExtraLightGray: UIColor {
+        return UIColor(hex: "#D3D3D3")
+    }
+    
     // UIColor 轉換為十六進制字串
     func toHexString(includeAlpha: Bool = true) -> String {
         var red: CGFloat = 0
