@@ -110,7 +110,9 @@ public class ViewController: UIViewController, UISearchBarDelegate {
         
         view.addSubview(stackCardView) // 將堆疊卡片視圖添加到卡片視圖
         stackCardView.snp.makeConstraints { make in
-            make.edges.equalToSuperview().inset(UIEdgeInsets(top: 10, left: 16, bottom: 12, right: 16)) // 設置堆疊卡片視圖的邊界約束
+            
+            // 卡片寬度在這設
+            make.edges.equalToSuperview().inset(UIEdgeInsets(top: 10, left: 22, bottom: 12, right: 22)) // 設置堆疊卡片視圖的邊界約束
         }
         
         view.addSubview(trackDurationSlider) // 將歌曲持續時間滑塊添加到卡片視圖
@@ -151,6 +153,24 @@ public class ViewController: UIViewController, UISearchBarDelegate {
         // 设置远程控制事件监听器
         UIApplication.shared.beginReceivingRemoteControlEvents()
         becomeFirstResponder()
+        
+        // 註冊下一曲通知觀察者
+        NotificationCenter.default.addObserver(self, selector: #selector(updateCurrentlyPlayingTrack(notification:)), name: NSNotification.Name("TrackDidEndNotification"), object: nil)
+        
+        
+    }
+    
+    
+    // 觸法下一曲的時候
+    @objc func updateCurrentlyPlayingTrack(notification: Notification) {
+        
+        // 列表選擇下一曲
+        selectNextSong()
+    }
+    
+    deinit {
+        // 移除通知觀察者
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("TrackDidEndNotification"), object: nil)
     }
     
     public override func viewWillDisappear(_ animated: Bool) {
@@ -175,6 +195,7 @@ public class ViewController: UIViewController, UISearchBarDelegate {
                 break
             case .remoteControlNextTrack:
                 // 处理下一曲事件
+                selectNextSong()
                 break
             case .remoteControlPreviousTrack:
                 // 处理上一曲事件
@@ -183,6 +204,17 @@ public class ViewController: UIViewController, UISearchBarDelegate {
                 break
             }
         }
+    }
+    
+    // 自動播放下一曲的效果
+    private func selectNextSong(){
+        // 確定索引路徑
+        let rowIndex = musicPlayerViewModel.currentTrackIndex
+        
+        // 取消上一曲的選擇
+        listTableView.cellForRow(at: IndexPath(row: rowIndex-1, section: 0) )?.setSelected(false, animated: false)
+        // 選中當前這首
+        listTableView.cellForRow(at: IndexPath(row: rowIndex, section: 0) )?.setSelected(true, animated: false)
     }
     
     public override var canBecomeFirstResponder: Bool {
@@ -210,8 +242,8 @@ public class ViewController: UIViewController, UISearchBarDelegate {
         view.addSubview(listTableView)
         listTableView.snp.makeConstraints { make in
             
-            //距離標題10px
-            make.top.equalTo(titleTopLabel.snp.bottom).offset(10)
+            //距離標題20px
+            make.top.equalTo(titleTopLabel.snp.bottom).offset(20)
             make.left.right.equalToSuperview()
             make.bottom.equalToSuperview()
         }
@@ -226,11 +258,11 @@ public class ViewController: UIViewController, UISearchBarDelegate {
     }
     
     private func showLoading() {
-        // 隱藏表格視圖以顯示加載警報框
+        // 隱藏表格視圖以顯示加載加載動畫
         listTableView.isHidden = true
         
-        // 創建帶有活動指示器的警報框
-        let alertController = UIAlertController(title: nil, message: "Loading...", preferredStyle: .alert)
+        // 創建帶有活動指示器的加載動畫
+        let alertController = UIAlertController(title: nil, message: "読み込み中...", preferredStyle: .alert)
         
         // 創建並配置活動指示器
         let indicator = UIActivityIndicatorView(style: .medium)
@@ -239,38 +271,38 @@ public class ViewController: UIViewController, UISearchBarDelegate {
         indicator.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         indicator.isUserInteractionEnabled = false
         
-        // 設置警報框高度約束
+        // 設置加載動畫高度約束
         alertController.view.snp.makeConstraints { make in
             make.height.equalTo(100)
         }
         
-        // 添加活動指示器到警報框視圖
+        // 添加活動指示器到加載動畫視圖
         alertController.view.addSubview(indicator)
         indicator.snp.makeConstraints { make in
             make.centerX.equalTo(alertController.view)
             make.top.equalTo(alertController.view.snp.centerY).offset(5)
         }
         
-        // 顯示警報框
+        // 顯示加載動畫
         present(alertController, animated: true, completion: nil)
     }
     
     private func showError(message: String) {
-        // 創建一個警報框，顯示錯誤消息
+        // 創建一個加載動畫，顯示錯誤消息
         let alertController = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         
-        // 添加“OK”按鈕動作，點擊後關閉警報框
+        // 添加“OK”按鈕動作，點擊後關閉加載動畫
         let OKAction = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction!) in
             alertController.dismiss(animated: true, completion: nil)
         }
         alertController.addAction(OKAction)
         
-        // 顯示警報框
+        // 顯示加載動畫
         present(alertController, animated: true, completion: nil)
     }
     
     private func dismissLoading() {
-        // 顯示表格視圖，並關閉正在顯示的警報框
+        // 顯示表格視圖，並關閉正在顯示的加載動畫
         listTableView.isHidden = false
         dismiss(animated: true, completion: nil)
     }
@@ -340,13 +372,13 @@ public class ViewController: UIViewController, UISearchBarDelegate {
         
     }
     
-
+    
     
     @objc private func playPauseButtonTapped() {
         
         // 音樂暫停
         musicPlayerViewModel.pauseTrack()
-
+        
     }
 }
 
@@ -394,10 +426,20 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     // 點擊表格視圖中的行時，顯示卡片視圖並開始播放音軌
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // 確定索引路徑
+        let rowIndex = musicPlayerViewModel.currentTrackIndex
+        
+        // 取消上一曲的選擇
+        listTableView.cellForRow(at: IndexPath(row: rowIndex, section: 0) )?.setSelected(false, animated: false)
+        
+        // 顯示播放器
         musicPlayerView.isHidden = false
+        
+        // 播放當前選中的一曲
         musicPlayerViewModel.startPlay(trackIndex: indexPath.row)
     }
     
+
     
 }
 

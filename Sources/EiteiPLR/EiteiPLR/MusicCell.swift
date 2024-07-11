@@ -16,17 +16,6 @@ class MusicCell: UITableViewCell {
     
     let musicPlayerViewModel = MusicViewModel()
     
-    // MARK: - Closure for Handling Current Track Change
-    
-    var currentTrackChangedClosure: (() -> Void)?
-    
-    // MARK: - Handle Current Track Changed
-
-    func handleCurrentTrackChanged(isCurrent: Bool) {
-        
-        // 隱藏波形效果
-        eiteiWaveView.isHidden = !isCurrent
-    }
     
     // MARK: - Views
     
@@ -153,11 +142,4 @@ class MusicCell: UITableViewCell {
     }
 
 
-}
-
-// 處理Cell事務的代理
-protocol MusicCellDelegate: AnyObject {
-    
-    // 隱藏波形
-    func shouldHideWaveform(in cell: MusicCell)
 }
