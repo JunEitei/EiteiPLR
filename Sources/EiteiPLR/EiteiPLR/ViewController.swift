@@ -376,8 +376,15 @@ public class ViewController: UIViewController, UISearchBarDelegate {
     
     @objc private func playPauseButtonTapped() {
         
-        // 音樂暫停
+        // 音樂暫停或繼續播放
         musicPlayerViewModel.pauseTrack()
+        
+        // 當前火焰的圖標需要更新
+        let musicCell = listTableView.cellForRow(at: IndexPath(row: musicPlayerViewModel.currentTrackIndex, section: 0) ) as! MusicCell
+            
+        musicCell.eiteiWaveView.isHidden = !musicCell.eiteiWaveView.isHidden
+        
+
         
     }
 }
