@@ -50,7 +50,7 @@ target 'Example-Cocoapods' do
 end
 ```
 4. **在根目錄運行pod install，完成後打開xcworkspace檔案，並將SceneDelegate.swift替換為如下代碼：**
-```ruby
+```swift
 import UIKit
 import EiteiPLR
 
@@ -72,7 +72,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 }
 ```
 
-5. （Optional）**必要時執行下面的命令以清理Pod緩存：**：
+5. **將AppDelegate.swift中的didFinishLaunchingWithOptions函數替換為如下代碼：**
+```swift
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        // 配置音频会话
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.mixWithOthers])
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print("Failed to configure AVAudioSession: \(error.localizedDescription)")
+        }
+        
+        return true
+    }
+```
+
+6. （Optional）**必要時執行下面的命令以清理Pod緩存：**：
 ```ruby
 pod cache clean --all
 pod deintegrate
@@ -80,7 +96,7 @@ pod clean
 rm -rf ~/Library/Developer/Xcode/DerivedData/*
 pod install --repo-update
 ```    
-6.  **運行項目即可**
+7.  **運行項目即可**
 
 
 # 集成方法（SPM）
@@ -131,7 +147,7 @@ let package = Package()
    ```
 
 4. **將SceneDelegate.swift替換為如下代碼：**
-```ruby
+```swift
 import UIKit
 import EiteiPLR
 
@@ -152,7 +168,24 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 }
 ```
-5. **順序執行以下操作：**
+
+5. **將AppDelegate.swift中的didFinishLaunchingWithOptions函數替換為如下代碼：**
+```swift
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        // 配置音频会话
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.mixWithOthers])
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print("Failed to configure AVAudioSession: \(error.localizedDescription)")
+        }
+        
+        return true
+    }
+```
+
+6. **順序執行以下操作：**
 <table>
     <tr>
         <td>「１」</td>
@@ -174,4 +207,4 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     </tr>
 </table>
 
-6. **運行項目即可**
+7. **運行項目即可**
