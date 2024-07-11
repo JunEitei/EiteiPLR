@@ -395,12 +395,15 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        
         guard let trackCell = listTableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? MusicCell else {
             return UITableViewCell()
         }
         let trackList = musicPlayerViewModel.tracks
         trackCell.configureCell(track: trackList[indexPath.row])
-        
+        // 取消選中時的高亮效果
+        trackCell.selectionStyle = .none
         
         return trackCell
     }
@@ -412,6 +415,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     // 點擊表格視圖中的行時，顯示卡片視圖並開始播放音軌
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         // 確定索引路徑
         let rowIndex = musicPlayerViewModel.currentTrackIndex
         
