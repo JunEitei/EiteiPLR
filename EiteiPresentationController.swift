@@ -32,7 +32,7 @@ class EiteiPresentationController: UIPresentationController {
 
         // 創建一個遮罩視圖，背景色為半透明黑色
         dimmingView = UIView(frame: containerView.bounds)
-        dimmingView.backgroundColor = UIColor.black.withAlphaComponent(0.4)
+        dimmingView.backgroundColor = UIColor.black.withAlphaComponent(1)
         dimmingView.alpha = 0
         containerView.addSubview(dimmingView)
 
