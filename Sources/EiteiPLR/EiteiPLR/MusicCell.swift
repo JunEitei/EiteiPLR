@@ -7,19 +7,18 @@
 
 #if canImport(UIKit)
 import UIKit
-// 在这里使用 UIKit
 #endif
 
 class MusicCell: UITableViewCell {
   
   // MARK: - View Model
   
-  /// ViewModel 實例，用於處理音樂播放相關邏輯。
+  // ViewModel 實例，用於處理音樂播放相關邏輯。
   let musicPlayerViewModel = MusicViewModel()
   
   // MARK: - Views
   
-  /// 顯示曲目名稱的標籤。
+  // 顯示曲目名稱的標籤。
   public lazy var trackNameLabel: UILabel = {
     let label = UILabel()
     label.textColor = UIColor(cgColor: .init(red: 34/255.0, green: 34/255.0, blue: 34/255.0, alpha: 1)) // 使用深灰色作為文本顏色
@@ -29,7 +28,7 @@ class MusicCell: UITableViewCell {
     return label
   }()
   
-  /// 顯示曲目藝術家的標籤。
+  // 顯示曲目藝術家的標籤。
   private lazy var trackArtistLabel: UILabel = {
     let label = UILabel()
     label.textColor = .lightGray // 使用淺灰色作為文本顏色
@@ -39,7 +38,7 @@ class MusicCell: UITableViewCell {
     return label
   }()
   
-  /// 波形圖示按鈕，用於顯示音樂波形。
+  // 波形圖示按鈕，用於顯示音樂波形。
   public lazy var waveformIcon: UIButton = {
     let button = UIButton()
     button.tintColor = .systemBlue // 使用系統藍色作為圖示顏色
@@ -50,7 +49,7 @@ class MusicCell: UITableViewCell {
     return button
   }()
   
-  /// 包含曲目名稱和藝術家標籤的垂直堆疊視圖。
+  // 包含曲目名稱和藝術家標籤的垂直堆疊視圖。
   private lazy var stackView: UIStackView = {
     let view = UIStackView()
     view.axis = .vertical // 垂直方向排列
@@ -61,7 +60,7 @@ class MusicCell: UITableViewCell {
     return view
   }()
   
-  /// 包含堆疊視圖和波形圖示按鈕的水平堆疊視圖。
+  // 包含堆疊視圖和波形圖示按鈕的水平堆疊視圖。
   private lazy var stackCardView: UIStackView = {
     let view = UIStackView()
     view.axis = .horizontal // 水平方向排列
@@ -75,7 +74,7 @@ class MusicCell: UITableViewCell {
   
   // MARK: - Functions
   
-  /// 配置 cell，設置曲目顯示的數據。
+  // 配置 cell，設置曲目顯示的數據。
   func configureCell(track: GitHubFile) {
     self.trackNameLabel.text = track.name // 設置曲目名稱文本
       self.trackArtistLabel.text = track.artist// 設置藝術家名稱文本

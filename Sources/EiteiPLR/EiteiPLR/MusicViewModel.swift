@@ -25,47 +25,44 @@ final class MusicViewModel: ViewModelProtocol {
   
   // MARK: - Properties
   
-  /// Deezer API 服務實例
-  let deezerAPI = githubAPI()
-  
-  /// 是否正在加載中
+  // 是否正在加載中
   @Published var isLoading = false
   
-  /// 當前播放的歌曲索引
+  // 當前播放的歌曲索引
   @Published var currentTrackIndex = 0
   
-  /// 當前歌曲的最大播放時長
+  // 當前歌曲的最大播放時長
   @Published var maxCurrentDuration: Double = 0
   
-  /// 當前歌曲的當前播放時長
+  // 當前歌曲的當前播放時長
   @Published var currentDuration: Double = 0
   
-  /// 是否正在播放中
+  // 是否正在播放中
   @Published var isPlaying = false
   
-  /// 當前播放的歌曲名稱
+  // 當前播放的歌曲名稱
   @Published var currentTrackName: String = ""
   
-  /// 當前播放的歌手名稱
+  // 當前播放的歌手名稱
   @Published var currentTrackArtist: String = ""
   
-  /// 歌曲列表
+  // 歌曲列表
   @Published var tracks: [GitHubFile] = []
   
-  /// 訂閱集合，用於管理 Combine 訂閱
+  // 訂閱集合，用於管理 Combine 訂閱
   var subscriptions = Set<AnyCancellable>()
   
-  /// 音樂播放器實例
+  // 音樂播放器實例
   let musicPlayer = AVPlayer()
   
   // MARK: - Functions
   
-  /// 從 Deezer API 中獲取歌曲列表。
-  ///
-  /// 調用該方法後，使用 Combine 機制來處理異步數據流。
+  // 從 Deezer API 中獲取歌曲列表。
+  //
+  // 調用該方法後，使用 Combine 機制來處理異步數據流。
   func fetchTracks() {
     isLoading = true
-    deezerAPI.fetchTracks()
+    githubAPI.shared.fetchTracks()
       .sink(
         receiveCompletion: { status in
           switch status {
@@ -88,9 +85,9 @@ final class MusicViewModel: ViewModelProtocol {
   }
 
   
-  /// 添加觀察器，監聽音樂播放器的狀態和播放進度。
-  ///
-  /// 該方法將觀察音樂播放結束事件和播放進度的變化。
+  // 添加觀察器，監聽音樂播放器的狀態和播放進度。
+  //
+  // 該方法將觀察音樂播放結束事件和播放進度的變化。
   func addObservers() {
     NotificationCenter.default.addObserver(self, selector: #selector(trackDidEnded), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: musicPlayer.currentItem)
     if let duration = musicPlayer.currentItem?.asset.duration.seconds {
@@ -101,9 +98,9 @@ final class MusicViewModel: ViewModelProtocol {
     }
   }
   
-  /// 音樂播放結束時的處理方法。
-  ///
-  /// 該方法將自動切換到下一首歌曲或者暫停播放。
+  // 音樂播放結束時的處理方法。
+  //
+  // 該方法將自動切換到下一首歌曲或者暫停播放。
   @objc func trackDidEnded() {
     NotificationCenter.default.removeObserver(self)
     var newTrackIndex = currentTrackIndex
@@ -119,9 +116,9 @@ final class MusicViewModel: ViewModelProtocol {
     }
   }
   
-  /// 開始播放指定索引的歌曲。
-  ///
-  /// - Parameter trackIndex: 要播放的歌曲索引
+  // 開始播放指定索引的歌曲。
+  //
+  // - Parameter trackIndex: 要播放的歌曲索引
   func startPlay(trackIndex: Int) {
     if currentTrackIndex == trackIndex && isPlaying == true {
       pauseTrack()
@@ -139,9 +136,9 @@ final class MusicViewModel: ViewModelProtocol {
     }
   }
   
-  /// 暫停當前播放的歌曲。
-  ///
-  /// 調用該方法後，音樂將暫停播放或者恢復播放。
+  // 暫停當前播放的歌曲。
+  //
+  // 調用該方法後，音樂將暫停播放或者恢復播放。
   func pauseTrack() {
     if musicPlayer.timeControlStatus == .playing {
       musicPlayer.pause()
