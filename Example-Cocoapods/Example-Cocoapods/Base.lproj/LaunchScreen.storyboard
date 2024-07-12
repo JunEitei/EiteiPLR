@@ -18,8 +18,8 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="毛" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0EY-of-rwo">
-                                <rect key="frame" x="123" y="332.33333333333331" width="147" height="187.66666666666669"/>
-                                <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="157"/>
+                                <rect key="frame" x="113.66666666666667" y="320.33333333333331" width="165.66666666666663" height="211.33333333333331"/>
+                                <fontDescription key="fontDescription" type="system" weight="black" pointSize="177"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>

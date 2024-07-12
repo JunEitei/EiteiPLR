@@ -6,7 +6,9 @@
 //
 
 
+#if canImport(UIKit)
 import UIKit
+#endif
 
 // 這個類用來做一些關乎全局的事情
 class Eitei {

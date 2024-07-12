@@ -1,5 +1,18 @@
+//
+//  EiteiWebController.swift
+//  EiteiPLR
+//
+//  Created by damao on 2024/7/11.
+//
+
+#if canImport(UIKit)
 import UIKit
+#endif
+
+#if canImport(WebKit)
 import WebKit
+#endif
+
 import SnapKit
 
 class EiteiWebController: UIViewController, WKNavigationDelegate {

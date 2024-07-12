@@ -5,8 +5,9 @@
 //  Created by damao on 2024/7/12.
 //
 
+#if canImport(UIKit)
 import UIKit
-
+#endif
 // 升級版
 class EiteiPresentationController: UIPresentationController {
 
