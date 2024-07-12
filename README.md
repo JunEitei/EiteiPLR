@@ -1,4 +1,5 @@
-# EiteiPLR（音樂播放器）  
+# EiteiPLR（Github音樂播放器）  
+
 # 集成方法（Cocoapods）
 
 1. **新建一個Swift項目，類型選擇Storyboard，然後：**
