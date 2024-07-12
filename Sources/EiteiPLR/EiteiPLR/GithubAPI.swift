@@ -10,6 +10,7 @@ import Foundation
 #endif
 
 import Combine
+import Alamofire
 
 // MARK: - GitHubFile
 struct GitHubFile: Codable {
@@ -29,37 +30,52 @@ struct GitHubFile: Codable {
     var album: String?
 }
 
-final class githubAPI {
+
+public final class GithubAPI {
+    
+    // 網絡連接實例
+    private let session: Session
     
     // 定義一個全局變量來保存音樂的總數量
     var totalMusicCount: Int = 0
     
-    // 单例实例
-    static let shared = githubAPI()
+    // 單例實例
+    static let shared = GithubAPI()
     
-    // 基础URL，用于获取GitHub仓库中的内容
+    // 基礎URL，用於獲取GitHub倉庫中的內容
     private let baseURL = "https://api.github.com/repos/JunEitei/EiteiPLR/contents/Music"
     
-    // 私有初始化方法，防止外部实例化
-    private init() {}
+    // 初始化方法中配置 Alamofire 會話（Session）
+    private init() {
+        let configuration = URLSessionConfiguration.default
+        configuration.requestCachePolicy = .reloadIgnoringLocalCacheData
+        self.session = Session(configuration: configuration, interceptor: NetworkRetrier())
+    }
+    
     
     // 方法：fetchFiles
     func fetchFiles() -> AnyPublisher<[GitHubFile], Error> {
         let url = URL(string: baseURL)!
-        return URLSession.shared.dataTaskPublisher(for: url)
-            .tryMap { element -> Data in
-                guard let response = element.response as? HTTPURLResponse,
-                      (200...299).contains(response.statusCode) else {
-                    throw URLError(.badServerResponse)
+        return Future<[GitHubFile], Error> { promise in
+            self.session.request(url)
+                .validate()
+                .responseData { response in
+                    switch response.result {
+                    case .success(let data):
+                        do {
+                            let files = try JSONDecoder().decode([GitHubFile].self, from: data)
+                            promise(.success(files))
+                        } catch {
+                            promise(.failure(error))
+                        }
+                    case .failure(let error):
+                        promise(.failure(error))
+                    }
                 }
-                return element.data
-            }
-            .decode(type: [GitHubFile].self, decoder: JSONDecoder())
-            .eraseToAnyPublisher()
+        }
+        .eraseToAnyPublisher()
     }
     
-
-
     // 讀取全部音軌同時統計數量
     func fetchTracks() -> AnyPublisher<[GitHubFile], Error> {
         fetchFiles()
@@ -94,6 +110,4 @@ final class githubAPI {
             return newFile
         }
     }
-    
-
 }
