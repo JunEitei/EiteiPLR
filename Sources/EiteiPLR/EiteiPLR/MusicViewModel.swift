@@ -78,6 +78,8 @@ final class MusicViewModel: ViewModelProtocol {
                 receiveValue: { tracks in
                     print("Data received")
                     self.tracks = tracks
+                    // 發送通知給界面刷新
+                    NotificationCenter.default.post(name: Notification.Name("TracksUpdated"), object: nil)
                 }
             )
             .store(in: &subscriptions)
@@ -113,8 +115,7 @@ final class MusicViewModel: ViewModelProtocol {
             startPlay(trackIndex: newTrackIndex)
         }
         
-        // 發送通知到 ViewController 更新表格
-        NotificationCenter.default.post(name: NSNotification.Name("TrackDidEndNotification"), object: self)
+
     }
     
     // 開始播放指定索引的歌曲。
@@ -150,5 +151,8 @@ final class MusicViewModel: ViewModelProtocol {
         }
     }
     
-
+    // Combine 內存清理
+    deinit {
+        subscriptions.forEach { $0.cancel() }
+    }
 }
