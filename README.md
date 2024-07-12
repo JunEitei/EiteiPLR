@@ -30,7 +30,7 @@
     </tr>
 </table>
 
-2. **右鍵單擊Info.plist，選擇Open as source code，並在最後一個Dict結束標籤之前添加如下代碼：**
+2. **右鍵單擊Info.plist，選擇Open as source code，並在最後一個Dict結束標籤之前添加如下代碼（以支持後台音頻播放）：**
    ```xml
     <key>UIBackgroundModes</key>
     <array>
@@ -73,22 +73,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 }
 ```
 
-5. **將AppDelegate.swift中的didFinishLaunchingWithOptions函數替換為如下代碼：**
+5. **將AppDelegate.swift中的didFinishLaunchingWithOptions函數中增加一行（需提前import EiteiPLR）：**
 ```swift
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
-        // 在背景執行緒中配置音頻會話，避免在主執行緒進行I/O操作
-        DispatchQueue.global(qos: .background).async {
-            do {
-                // 設置音頻會話類別和模式，並允許與其他音頻混合
-                try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [.mixWithOthers])
-                // 啟用音頻會話
-                try AVAudioSession.sharedInstance().setActive(true)
-            } catch {
-                // 如果配置失敗，打印錯誤訊息
-                print("配置AVAudioSession失敗: \(error.localizedDescription)")
-            }
-        }
+
+        EiteiAudioSessionManager.shared.configureAudioSession()
+
 ```
 
 6. （Optional）**必要時執行下面的命令以清理Pod緩存：**：
@@ -141,7 +130,7 @@ let package = Package()
     </tr>
 </table>
 
-3. **右鍵單擊Info.plist選擇Open as source code，並在最後一個Dict結束標籤之前添加如下代碼：**
+3. **右鍵單擊Info.plist，選擇Open as source code，並在最後一個Dict結束標籤之前添加如下代碼（以支持後台音頻播放）：**
    ```xml
     <key>UIBackgroundModes</key>
     <array>
@@ -172,7 +161,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 }
 ```
 
-5. **將AppDelegate.swift中的didFinishLaunchingWithOptions函數替換為如下代碼：**
+5. **將AppDelegate.swift中的didFinishLaunchingWithOptions函數中增加一行（需提前import EiteiPLR）：**
 ```swift
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
