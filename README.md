@@ -1,6 +1,6 @@
 # EiteiPLR（Github音樂播放器）  
 
-# 集成方法（Cocoapods）
+## Cocoapods
 
 1. **新建一個Swift項目，類型選擇Storyboard，然後：**
 <table>
@@ -102,7 +102,7 @@ pod install --repo-update
 7.  **運行項目即可**
 
 
-# 集成方法（SPM）
+## SPM
 
 1. **新建一個Swift項目，類型選擇Storyboard。接著在根目錄新建Package.swift，內容如下：**
 ```swift
