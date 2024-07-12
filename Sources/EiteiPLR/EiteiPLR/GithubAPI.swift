@@ -55,24 +55,24 @@ final class githubAPI {
             .eraseToAnyPublisher()
     }
     
-    // 方法：fetchTracks
+    // 讀取音軌
     func fetchTracks() -> AnyPublisher<[GitHubFile], Error> {
         fetchFiles()
             .map { files in
-                self.filterM4AFiles(files)
+                self.filterAudioFiles(files)
             }
-            .map { m4aFiles in
-                self.mapFilesToGitHubFile(m4aFiles)
+            .map { audioFiles in
+                self.mapFilesToGitHubFile(audioFiles)
             }
             .eraseToAnyPublisher()
     }
-    
-    // 私有方法：filterM4AFiles
-    private func filterM4AFiles(_ files: [GitHubFile]) -> [GitHubFile] {
-        return files.filter { $0.type == "file" && $0.name.hasSuffix(".m4a") }
+
+    // 過濾音頻文件（支持.m4a和.mp3格式）
+    private func filterAudioFiles(_ files: [GitHubFile]) -> [GitHubFile] {
+        return files.filter { $0.type == "file" && ($0.name.hasSuffix(".m4a") || $0.name.hasSuffix(".mp3")) }
     }
     
-    // 私有方法：mapFilesToGitHubFile
+    // 關聯到實體
     private func mapFilesToGitHubFile(_ files: [GitHubFile]) -> [GitHubFile] {
         return files.enumerated().map { index, file in
             var newFile = file
