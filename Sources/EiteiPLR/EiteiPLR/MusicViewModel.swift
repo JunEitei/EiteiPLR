@@ -15,6 +15,7 @@ import Foundation
 import MediaPlayer
 import Combine
 
+
 protocol ViewModelProtocol {
     func fetchTracks()
     func startPlay(trackIndex: Int)
@@ -60,7 +61,7 @@ final class MusicViewModel: ViewModelProtocol {
     // 調用該方法後，使用 iOS Combine 機制來處理異步數據流。
     func fetchTracks() {
         isLoading = true
-        githubAPI.shared.fetchTracks()
+        GithubAPI.shared.fetchTracks()
             .sink(
                 receiveCompletion: { status in
                     switch status {

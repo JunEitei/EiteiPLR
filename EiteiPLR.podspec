@@ -20,5 +20,8 @@ Pod::Spec.new do |spec|
   spec.resource =  ["Sources/EiteiPLR/Resource/*.png"]
   
   spec.dependency 'SnapKit', '~> 5.7.0'
+  spec.dependency 'Alamofire', '~> 5.9.1'
+  spec.dependency 'ReachabilitySwift', '~> 5.2.1'
+
 
 end

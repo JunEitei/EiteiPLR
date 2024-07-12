@@ -1,6 +1,10 @@
 PODS:
+  - Alamofire (5.9.1)
   - EiteiPLR (3.6.0):
+    - Alamofire (~> 5.9.1)
+    - ReachabilitySwift (~> 5.2.1)
     - SnapKit (~> 5.7.0)
+  - ReachabilitySwift (5.2.3)
   - SnapKit (5.7.1)
 
 DEPENDENCIES:
@@ -8,6 +12,8 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - Alamofire
+    - ReachabilitySwift
     - SnapKit
 
 EXTERNAL SOURCES:
@@ -15,7 +21,9 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  EiteiPLR: 26baddaff87c419845de698d80261b69d6e7eb6d
+  Alamofire: f36a35757af4587d8e4f4bfa223ad10be2422b8c
+  EiteiPLR: b6030c086986ab459e8ab3404bcf8b3e5a9cac11
+  ReachabilitySwift: 7f151ff156cea1481a8411701195ac6a984f4979
   SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
 
 PODFILE CHECKSUM: 41aaa05326f64b9d3ea6de1de0309e5102f0ce6f
