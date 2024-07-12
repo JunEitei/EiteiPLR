@@ -35,7 +35,7 @@ class MusicCell: UITableViewCell {
         return label
     }()
     
-
+    
     
     private lazy var stackView: UIStackView = {
         let view = UIStackView()
@@ -54,7 +54,7 @@ class MusicCell: UITableViewCell {
         view.spacing = 18 // 間距
         view.translatesAutoresizingMaskIntoConstraints = false
         view.addArrangedSubview(stackView) // 添加垂直堆疊視圖
-
+        
         
         return view
     }()
@@ -87,10 +87,10 @@ class MusicCell: UITableViewCell {
         
         // 添加阴影效果
         stackCardView.layer.shadowColor = UIColor.eiteiBlue.cgColor
-        stackCardView.layer.shadowOffset = CGSize(width: 2, height: 3) // 陰影偏移量
-        stackCardView.layer.shadowOpacity = 0.6 // 陰影透明度
+        stackCardView.layer.shadowOffset = CGSize(width: 3, height: 3) // 陰影偏移量
+        stackCardView.layer.shadowOpacity = 0.68 // 陰影透明度
         stackCardView.layer.shadowRadius = 3 // 陰影半径
-        stackCardView.layer.cornerRadius = 8 // 陰影的圓角
+        stackCardView.layer.cornerRadius = 9 // 陰影的圓角
         
         stackCardView.snp.makeConstraints { make in
             make.edges.equalToSuperview().inset(5) // 四边边距
@@ -104,9 +104,9 @@ class MusicCell: UITableViewCell {
         self.trackArtistLabel.text = track.artist // 設置藝術家名稱文本
         self.backgroundColor = .clear // 背景透明
     }
-
     
-
+    
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         trackNameLabel.text = nil // 重用前清空曲目名稱文本
