@@ -155,6 +155,9 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         // 註冊曲目數量計算通知觀察者
         NotificationCenter.default.addObserver(self, selector: #selector(handleMusicCountUpdate(_:)), name: Notification.Name("MusicCountUpdated"), object: nil)
         
+        // 網絡恢復重試
+        NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("NetworkResume"), object: nil)
+        
     }
     
     // 接收通知並處理音樂總數量更新
@@ -163,10 +166,20 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
             // 回到主線程更新接收到的音樂總數量
             DispatchQueue.main.async { [self] in
                 titleTopLabel.text = "大毛\(totalMusicCount)曲"
+                
+                // 同時刷新表格
+                listTableView.reloadData()
             }
         }
     }
     
+    
+    @objc func reload() {
+        
+        // 加載音軌數據
+        musicPlayerViewModel.fetchTracks()
+        
+    }
     
     
     // 觸法下一曲的時候
@@ -181,6 +194,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         // 移除通知觀察者
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("TrackDidEndNotification"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("MusicCountUpdated"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name("NetworkResume"), object: nil)
         
     }
     
@@ -469,8 +483,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         present(webViewController, animated: true, completion: nil)
     }
     
-    // MARK: - UIViewControllerTransitioningDelegate
-    
+    // 自定義轉場
     public func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         return EiteiPresentationController(presentedViewController: presented, presenting: presenting)
     }

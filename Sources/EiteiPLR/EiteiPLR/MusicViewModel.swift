@@ -115,7 +115,6 @@ final class MusicViewModel: ViewModelProtocol {
             startPlay(trackIndex: newTrackIndex)
         }
         
-
     }
     
     // 開始播放指定索引的歌曲。
@@ -154,5 +153,7 @@ final class MusicViewModel: ViewModelProtocol {
     // Combine 內存清理
     deinit {
         subscriptions.forEach { $0.cancel() }
+        
+
     }
 }

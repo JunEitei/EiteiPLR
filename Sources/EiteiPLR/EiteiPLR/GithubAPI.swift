@@ -39,7 +39,7 @@ public final class GithubAPI {
     
     private let reachability = try! Reachability()
     
-
+    
     // 定義一個全局變量來保存音樂的總數量
     var totalMusicCount: Int = 0
     
@@ -58,8 +58,9 @@ public final class GithubAPI {
         // 監聽網絡狀態變化
         reachability.whenReachable = { _ in
             print("網絡已連接，開始自動重試請求...")
-            // 在此處理重試邏輯，例如重新調用需要重試的請求
-            // 這裡可以做一些邏輯來觸發重新請求
+            
+            // 發送通知給界面刷新
+            NotificationCenter.default.post(name: Notification.Name("NetworkResume"), object: nil)
         }
         
         reachability.whenUnreachable = { _ in
