@@ -22,9 +22,9 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     
     private let titleTopLabel: UILabel = {
         let label = UILabel()
-        label.text = "わたしも" // 標題標籤文字內容
+        label.text = "大毛" // 標題標籤文字內容
         label.textColor = .white // 文字顏色
-        label.font = .systemFont(ofSize: 33, weight: .heavy) // 字體和粗細設置
+        label.font = .systemFont(ofSize: 36, weight: .heavy) // 字體和粗細設置
         
         return label
     }()
@@ -235,6 +235,14 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         titleTopLabel.addGestureRecognizer(tapGesture)
         
         
+        // 添加和配置播放器
+        view.addSubview(musicPlayerView)
+        musicPlayerView.snp.makeConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.left.equalToSuperview().offset(13)
+            make.right.equalToSuperview().offset(-13)
+        }
+        
         // 添加和配置 listTableView
         view.addSubview(listTableView)
         listTableView.snp.makeConstraints { make in
@@ -242,15 +250,8 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
             //距離標題20px
             make.top.equalTo(titleTopLabel.snp.bottom).offset(20)
             make.left.right.equalToSuperview()
-            make.bottom.equalToSuperview()
-        }
-        
-        // 添加和配置播放器
-        view.addSubview(musicPlayerView)
-        musicPlayerView.snp.makeConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide)
-            make.left.equalToSuperview().offset(13)
-            make.right.equalToSuperview().offset(-13)
+            // 表格底部距離，關乎被遮擋多少（重要）
+            make.bottom.equalTo(self.view).offset(-90)
         }
     }
     
