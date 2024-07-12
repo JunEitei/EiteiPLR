@@ -91,8 +91,9 @@ final class githubAPI {
             newFile.title = file.name
             newFile.preview = file.download_url
             newFile.artist = "大毛"
-            newFile.album = "わたしも"
             return newFile
         }
     }
+    
+
 }

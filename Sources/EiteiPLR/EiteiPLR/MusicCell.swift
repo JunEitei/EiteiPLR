@@ -100,7 +100,8 @@ class MusicCell: UITableViewCell {
     // MARK: - Configure Cell
     
     func configureCell(track: GitHubFile) {
-        self.trackNameLabel.text = track.name // 設置曲目名稱文本
+        self.trackNameLabel.text = removeFileExtension(track.name) // 設置曲目名稱文本並刪除文件名的後綴名
+        
         self.trackArtistLabel.text = track.artist // 設置藝術家名稱文本
         self.backgroundColor = .clear // 背景透明
     }
@@ -113,5 +114,15 @@ class MusicCell: UITableViewCell {
         trackArtistLabel.text = nil // 重用前清空藝術家名稱文本
     }
     
+
+    // 直接刪除文件名中最後一個點及其後的內容
+    private func removeFileExtension(_ fileName: String) -> String {
+        if let lastDotIndex = fileName.lastIndex(of: ".") {
+            let nameWithoutExtension = String(fileName.prefix(upTo: lastDotIndex))
+            return nameWithoutExtension
+        } else {
+            return fileName // 如果沒有找到後綴名，返回原始文件名
+        }
+    }
     
 }
