@@ -31,6 +31,9 @@ struct GitHubFile: Codable {
 
 final class githubAPI {
     
+    // 定義一個全局變量來保存音樂的總數量
+    var totalMusicCount: Int = 0
+    
     // 单例实例
     static let shared = githubAPI()
     
@@ -55,18 +58,26 @@ final class githubAPI {
             .eraseToAnyPublisher()
     }
     
-    // 讀取音軌
+
+
+    // 讀取全部音軌同時統計數量
     func fetchTracks() -> AnyPublisher<[GitHubFile], Error> {
         fetchFiles()
             .map { files in
-                self.filterAudioFiles(files)
+                // 在這裡計算音樂的總數量
+                self.totalMusicCount = files.count
+                
+                // 發送通知給 ViewController
+                NotificationCenter.default.post(name: Notification.Name("MusicCountUpdated"), object: self.totalMusicCount)
+                
+                return self.filterAudioFiles(files)
             }
             .map { audioFiles in
                 self.mapFilesToGitHubFile(audioFiles)
             }
             .eraseToAnyPublisher()
     }
-
+    
     // 過濾音頻文件（支持.m4a和.mp3格式）
     private func filterAudioFiles(_ files: [GitHubFile]) -> [GitHubFile] {
         return files.filter { $0.type == "file" && ($0.name.hasSuffix(".m4a") || $0.name.hasSuffix(".mp3")) }

@@ -94,6 +94,8 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         return view
     }()
     
+    
+    
     lazy var musicPlayerView: UIView = {
         let view = UIView()
         view.backgroundColor = .white // 設置卡片視圖的背景色為白色
@@ -150,7 +152,21 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         // 註冊下一曲通知觀察者
         NotificationCenter.default.addObserver(self, selector: #selector(updateCurrentlyPlayingTrack(notification:)), name: NSNotification.Name("TrackDidEndNotification"), object: nil)
         
+        // 註冊曲目數量計算通知觀察者
+        NotificationCenter.default.addObserver(self, selector: #selector(handleMusicCountUpdate(_:)), name: Notification.Name("MusicCountUpdated"), object: nil)
+        
     }
+    
+    // 接收通知並處理音樂總數量更新
+    @objc func handleMusicCountUpdate(_ notification: Notification) {
+        if let totalMusicCount = notification.object as? Int {
+            // 回到主線程更新接收到的音樂總數量
+            DispatchQueue.main.async { [self] in
+                titleTopLabel.text = "大毛\(totalMusicCount)曲"
+            }
+        }
+    }
+    
     
     
     // 觸法下一曲的時候
@@ -161,8 +177,11 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     }
     
     deinit {
+        
         // 移除通知觀察者
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("TrackDidEndNotification"), object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("MusicCountUpdated"), object: nil)
+        
     }
     
     public override func viewWillDisappear(_ animated: Bool) {
