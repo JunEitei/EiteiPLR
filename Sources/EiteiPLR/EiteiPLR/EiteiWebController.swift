@@ -18,6 +18,17 @@ import SnapKit
 class EiteiWebController: UIViewController, WKNavigationDelegate {
 
     var webView: WKWebView!
+    var url: URL!
+
+    // 初始化方法，接受一個 URL 對象作為參數
+    init(url: URL) {
+        self.url = url
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,8 +47,7 @@ class EiteiWebController: UIViewController, WKNavigationDelegate {
         }
 
         // 加載網頁
-        let url = URL(string: "https://juneitei.github.io/")!
-        let request = URLRequest(url: url)
+        let request = URLRequest(url: self.url)
         webView.load(request)
 
         // 設置 contentInsetAdjustmentBehavior 為 .never
