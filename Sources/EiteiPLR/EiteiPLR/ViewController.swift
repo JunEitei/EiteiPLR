@@ -258,10 +258,10 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
 
 
         let bookButton = UIButton(type: .system)
-        bookButton.setTitle("本", for: .normal)
-        bookButton.backgroundColor = .eiteiSuperOrange
+        bookButton.setTitle("クラブ", for: .normal)
+        bookButton.backgroundColor = .eiteiBackground
         bookButton.setTitleColor(.white, for: .normal)
-        bookButton.titleLabel?.font = UIFont.systemFont(ofSize: 17.0, weight: .medium)
+        bookButton.titleLabel?.font = UIFont.systemFont(ofSize: 22.0, weight: .medium)
         bookButton.heightAnchor.constraint(equalToConstant: 45).isActive = true // 设置按钮高度
         // 添加按钮点击事件
         bookButton.addTarget(self, action: #selector(bookButtonTapped), for: .touchUpInside)
