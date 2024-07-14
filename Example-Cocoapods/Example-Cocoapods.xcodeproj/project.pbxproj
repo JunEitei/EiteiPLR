@@ -348,7 +348,7 @@
 				DEVELOPMENT_TEAM = JT265W66SA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Example-Cocoapods/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "大毛";
+				INFOPLIST_KEY_CFBundleDisplayName = "ライブクラブ";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -377,7 +377,7 @@
 				DEVELOPMENT_TEAM = JT265W66SA;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Example-Cocoapods/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "大毛";
+				INFOPLIST_KEY_CFBundleDisplayName = "ライブクラブ";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

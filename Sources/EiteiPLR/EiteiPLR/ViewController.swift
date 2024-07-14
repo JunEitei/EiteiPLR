@@ -247,41 +247,46 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         view.backgroundColor = .eiteiBackground
         
         // 创建三个按钮，并设置不同的浅色背景颜色
-        let button1 = UIButton(type: .system)
-        button1.setTitle("ライブ", for: .normal)
-        button1.backgroundColor = .eiteiRed
-        button1.setTitleColor(.white, for: .normal)
-        button1.titleLabel?.font = UIFont.systemFont(ofSize: 17.0, weight: .ultraLight)
-        button1.heightAnchor.constraint(equalToConstant: 45).isActive = true // 设置按钮高度
+        let liveButton = UIButton(type: .system)
+        liveButton.setTitle("ライブ", for: .normal)
+        liveButton.backgroundColor = .eiteiYellow
+        liveButton.setTitleColor(.white, for: .normal)
+        liveButton.titleLabel?.font = UIFont.systemFont(ofSize: 17.0, weight: .medium)
+        liveButton.heightAnchor.constraint(equalToConstant: 45).isActive = true // 设置按钮高度
+        // 添加按钮点击事件
+        liveButton.addTarget(self, action: #selector(liveButtonTapped), for: .touchUpInside)
 
-        
-        let button2 = UIButton(type: .system)
-        button2.setTitle("本", for: .normal)
-        button2.backgroundColor = .eiteiSuperOrange
-        button2.setTitleColor(.white, for: .normal)
-        button2.titleLabel?.font = UIFont.systemFont(ofSize: 17.0, weight: .ultraLight)
-        button2.heightAnchor.constraint(equalToConstant: 45).isActive = true // 设置按钮高度
 
+        let bookButton = UIButton(type: .system)
+        bookButton.setTitle("本", for: .normal)
+        bookButton.backgroundColor = .eiteiSuperOrange
+        bookButton.setTitleColor(.white, for: .normal)
+        bookButton.titleLabel?.font = UIFont.systemFont(ofSize: 17.0, weight: .medium)
+        bookButton.heightAnchor.constraint(equalToConstant: 45).isActive = true // 设置按钮高度
+        // 添加按钮点击事件
+        bookButton.addTarget(self, action: #selector(bookButtonTapped), for: .touchUpInside)
         
-        let button3 = UIButton(type: .system)
-        button3.setTitle("野良猫救出", for: .normal)
-        button3.backgroundColor = .eiteiYellow
-        button3.setTitleColor(.white, for: .normal)
-        button3.titleLabel?.font = UIFont.systemFont(ofSize: 17.0, weight: .ultraLight)
-        button3.heightAnchor.constraint(equalToConstant: 45).isActive = true // 设置按钮高度
+        let catButton = UIButton(type: .system)
+        catButton.setTitle("野良猫救出", for: .normal)
+        catButton.backgroundColor = .eiteiRed
+        catButton.setTitleColor(.white, for: .normal)
+        catButton.titleLabel?.font = UIFont.systemFont(ofSize: 17.0, weight: .medium)
+        catButton.heightAnchor.constraint(equalToConstant: 45).isActive = true // 设置按钮高度
+        // 添加按钮点击事件
+        catButton.addTarget(self, action: #selector(catButtonTapped), for: .touchUpInside)
 
         
         // 创建UIStackView并添加按钮
-        let menuStack = UIStackView(arrangedSubviews: [button1, button2, button3])
-        menuStack.axis = .horizontal
-        menuStack.distribution = .fillEqually
-        menuStack.spacing = 0 // 减小间距
-        menuStack.translatesAutoresizingMaskIntoConstraints = false
+        let topMenuStack = UIStackView(arrangedSubviews: [liveButton, bookButton, catButton])
+        topMenuStack.axis = .horizontal
+        topMenuStack.distribution = .fillEqually
+        topMenuStack.spacing = 0 // 减小间距
+        topMenuStack.translatesAutoresizingMaskIntoConstraints = false
         
         // 添加UIStackView到主视图
-        view.addSubview(menuStack)
+        view.addSubview(topMenuStack)
 
-        menuStack.snp.makeConstraints { make in
+        topMenuStack.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.left.right.equalToSuperview()
             make.centerX.equalToSuperview()
@@ -300,7 +305,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         listTableView.snp.makeConstraints { make in
             
             //距離標題20px
-            make.top.equalTo(menuStack.snp.bottom).offset(20)
+            make.top.equalTo(topMenuStack.snp.bottom).offset(20)
             make.left.right.equalToSuperview()
             // 表格底部距離，關乎被遮擋多少（重要）
             make.bottom.equalTo(self.view).offset(-90)
@@ -427,10 +432,20 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         
     }
     
-    // 點擊標題事件
-    @objc public func handleLabelTap() {
-        presentWebViewController()
+    // 點擊Live事件
+    @objc public func liveButtonTapped() {
+        
+        presentWebViewController(urlString: "https://live-club.github.io/")
     }
+    // 點擊Book事件
+    @objc public func bookButtonTapped() {
+        presentWebViewController(urlString: "https://dm-o.netlify.app/")
+    }
+    // 點擊Cat事件
+    @objc public func catButtonTapped() {
+        presentWebViewController(urlString: "https://roccce.github.io/")
+    }
+    
 }
 
 
@@ -495,9 +510,17 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         return 0
     }
     
-    // 顯示瀏覽器視圖
-    func presentWebViewController() {
-        let webViewController = EiteiWebController()
+    func presentWebViewController(urlString: String) {
+
+        // 將URL字符串轉換為 URL 對象
+        guard let url = URL(string: urlString) else {
+            // 如果URL字符串無效，可以進行錯誤處理或者返回
+            print("Invalid URL string: \(urlString)")
+            return
+        }
+        
+        // 創建瀏覽器的實例，並傳入 URL
+        let webViewController = EiteiWebController(url: url)
         webViewController.modalPresentationStyle = .custom
         webViewController.transitioningDelegate = self
         present(webViewController, animated: true, completion: nil)

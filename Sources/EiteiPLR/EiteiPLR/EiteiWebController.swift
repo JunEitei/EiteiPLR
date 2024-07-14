@@ -60,4 +60,14 @@ class EiteiWebController: UIViewController, WKNavigationDelegate {
         // 禁用 WebView 背景透明
         webView.isOpaque = false
     }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        // 停止加載網頁
+        webView.stopLoading()
+        
+        // 從父視圖移除並釋放引用
+        webView.removeFromSuperview()
+    }
 }
