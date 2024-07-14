@@ -20,14 +20,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     let musicPlayerViewModel = MusicViewModel() // 音樂播放器的視圖模型
     
     
-    private let titleTopLabel: UILabel = {
-        let label = UILabel()
-        label.text = "大毛" // 標題標籤文字內容
-        label.textColor = .white // 文字顏色
-        label.font = .systemFont(ofSize: 36, weight: .heavy) // 字體和粗細設置
-        
-        return label
-    }()
+
     
     let listTableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .insetGrouped)        // 設置表格視圖
@@ -160,17 +153,19 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         
     }
     
+    
+    
     // 接收通知並處理音樂總數量更新
     @objc func handleMusicCountUpdate(_ notification: Notification) {
-        if let totalMusicCount = notification.object as? Int {
-            // 回到主線程更新接收到的音樂總數量
-            DispatchQueue.main.async { [self] in
-                titleTopLabel.text = "大毛\(totalMusicCount)曲"
-                
-                // 同時刷新表格
-                listTableView.reloadData()
-            }
-        }
+//        if let totalMusicCount = notification.object as? Int {
+//            // 回到主線程更新接收到的音樂總數量
+//            DispatchQueue.main.async { [self] in
+//                titleTopLabel.text = "大毛\(totalMusicCount)曲"
+//                
+//                // 同時刷新表格
+//                listTableView.reloadData()
+//            }
+//        }
     }
     
     
@@ -251,23 +246,47 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     private func setUI() {
         view.backgroundColor = .eiteiBackground
         
-        // 添加和配置 titleTopLabel
-        view.addSubview(titleTopLabel)
-        titleTopLabel.textAlignment = .center // 使文字居中
+        // 创建三个按钮，并设置不同的浅色背景颜色
+        let button1 = UIButton(type: .system)
+        button1.setTitle("ライブ", for: .normal)
+        button1.backgroundColor = .eiteiRed
+        button1.setTitleColor(.white, for: .normal)
+        button1.titleLabel?.font = UIFont.systemFont(ofSize: 17.0, weight: .ultraLight)
+        button1.heightAnchor.constraint(equalToConstant: 45).isActive = true // 设置按钮高度
+
         
-        titleTopLabel.snp.makeConstraints { make in
-            // 使 titleTopLabel 的顶部距离 view 的 safe area 顶部为 0
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
+        let button2 = UIButton(type: .system)
+        button2.setTitle("本", for: .normal)
+        button2.backgroundColor = .eiteiSuperOrange
+        button2.setTitleColor(.white, for: .normal)
+        button2.titleLabel?.font = UIFont.systemFont(ofSize: 17.0, weight: .ultraLight)
+        button2.heightAnchor.constraint(equalToConstant: 45).isActive = true // 设置按钮高度
+
+        
+        let button3 = UIButton(type: .system)
+        button3.setTitle("野良猫救出", for: .normal)
+        button3.backgroundColor = .eiteiYellow
+        button3.setTitleColor(.white, for: .normal)
+        button3.titleLabel?.font = UIFont.systemFont(ofSize: 17.0, weight: .ultraLight)
+        button3.heightAnchor.constraint(equalToConstant: 45).isActive = true // 设置按钮高度
+
+        
+        // 创建UIStackView并添加按钮
+        let menuStack = UIStackView(arrangedSubviews: [button1, button2, button3])
+        menuStack.axis = .horizontal
+        menuStack.distribution = .fillEqually
+        menuStack.spacing = 0 // 减小间距
+        menuStack.translatesAutoresizingMaskIntoConstraints = false
+        
+        // 添加UIStackView到主视图
+        view.addSubview(menuStack)
+
+        menuStack.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.left.right.equalToSuperview()
             make.centerX.equalToSuperview()
         }
-        titleTopLabel.isUserInteractionEnabled = true //允許被點擊
-        
-        // 點擊事件
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleLabelTap))
-        titleTopLabel.addGestureRecognizer(tapGesture)
-        
-        
+
         // 添加和配置播放器
         view.addSubview(musicPlayerView)
         musicPlayerView.snp.makeConstraints { make in
@@ -281,7 +300,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         listTableView.snp.makeConstraints { make in
             
             //距離標題20px
-            make.top.equalTo(titleTopLabel.snp.bottom).offset(20)
+            make.top.equalTo(menuStack.snp.bottom).offset(20)
             make.left.right.equalToSuperview()
             // 表格底部距離，關乎被遮擋多少（重要）
             make.bottom.equalTo(self.view).offset(-90)
@@ -315,8 +334,9 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
             make.top.equalTo(alertController.view.snp.centerY).offset(5)
         }
         
-        // 顯示加載動畫
-        present(alertController, animated: true, completion: nil)
+
+
+        
     }
     
     private func showError(message: String) {

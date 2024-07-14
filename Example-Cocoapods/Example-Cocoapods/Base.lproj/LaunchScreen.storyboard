@@ -17,9 +17,9 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="毛" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0EY-of-rwo">
-                                <rect key="frame" x="113.66666666666667" y="320.33333333333331" width="165.66666666666663" height="211.33333333333331"/>
-                                <fontDescription key="fontDescription" type="system" weight="black" pointSize="177"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="楽しんで" textAlignment="center" lineBreakMode="clip" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0EY-of-rwo">
+                                <rect key="frame" x="54.666666666666657" y="380" width="284" height="92"/>
+                                <fontDescription key="fontDescription" type="system" weight="black" pointSize="77"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
