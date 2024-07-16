@@ -20,8 +20,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     let musicPlayerViewModel = MusicViewModel() // 音樂播放器的視圖模型
     
     
-
-    
+    // 歌曲列表
     let listTableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .insetGrouped)        // 設置表格視圖
         
@@ -32,8 +31,10 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         return tableView
     }()
     
+    // 標題按鈕
+    let bookButton = UIButton(type: .system)
     
-    
+    // 播放器歌曲名稱
     private lazy var trackNameLabel: UILabel = {
         let label = UILabel()
         label.textColor = .eiteiGray // 文字顏色設置
@@ -43,7 +44,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         return label
     }()
     
-    
+    // 播放器佈局
     private lazy var stackView: UIStackView = {
         let view = UIStackView()
         view.axis = .vertical // 垂直排列的堆疊視圖
@@ -54,6 +55,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         return view
     }()
     
+    // 播放器暫停按鈕
     private lazy var playPauseButton: UIButton = {
         let button = UIButton()
         button.tintColor = .eiteiBackground // 圖示顏色設置
@@ -63,6 +65,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         return button
     }()
     
+    // 播放進度條
     private let trackDurationSlider: UISlider = {
         let slider = UISlider()
         slider.tintColor = .eiteiBlue // 設置滑塊的顏色
@@ -75,6 +78,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         return slider
     }()
     
+    // 播放器佈局
     private lazy var stackCardView: UIStackView = {
         let view = UIStackView()
         view.axis = .horizontal // 水平排列的堆疊視圖
@@ -157,15 +161,16 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     
     // 接收通知並處理音樂總數量更新
     @objc func handleMusicCountUpdate(_ notification: Notification) {
-//        if let totalMusicCount = notification.object as? Int {
-//            // 回到主線程更新接收到的音樂總數量
-//            DispatchQueue.main.async { [self] in
-//                titleTopLabel.text = "大毛\(totalMusicCount)曲"
-//                
-//                // 同時刷新表格
-//                listTableView.reloadData()
-//            }
-//        }
+        if let totalMusicCount = notification.object as? Int {
+            // 回到主線程更新接收到的音樂總數量
+            DispatchQueue.main.async { [weak self] in
+                // 設置按鈕的標題文字
+                self?.bookButton.setTitle("(共\(totalMusicCount)曲)", for: .normal)
+                
+                // 同時刷新表格
+                self?.listTableView.reloadData()
+            }
+        }
     }
     
     
@@ -246,38 +251,17 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     private func setUI() {
         view.backgroundColor = .eiteiBackground
         
-        // 创建三个按钮，并设置不同的浅色背景颜色
-        let liveButton = UIButton(type: .system)
-        liveButton.setTitle("ライブ", for: .normal)
-        liveButton.backgroundColor = .eiteiYellow
-        liveButton.setTitleColor(.white, for: .normal)
-        liveButton.titleLabel?.font = UIFont.systemFont(ofSize: 17.0, weight: .medium)
-        liveButton.heightAnchor.constraint(equalToConstant: 45).isActive = true // 设置按钮高度
-        // 添加按钮点击事件
-        liveButton.addTarget(self, action: #selector(liveButtonTapped), for: .touchUpInside)
-
-
-        let bookButton = UIButton(type: .system)
-        bookButton.setTitle("クラブ", for: .normal)
-        bookButton.backgroundColor = .eiteiBackground
+        
+        bookButton.backgroundColor = .clear
         bookButton.setTitleColor(.white, for: .normal)
-        bookButton.titleLabel?.font = UIFont.systemFont(ofSize: 22.0, weight: .medium)
+        bookButton.titleLabel?.font = UIFont.systemFont(ofSize: 30.0, weight: .heavy)
         bookButton.heightAnchor.constraint(equalToConstant: 45).isActive = true // 设置按钮高度
         // 添加按钮点击事件
         bookButton.addTarget(self, action: #selector(bookButtonTapped), for: .touchUpInside)
         
-        let catButton = UIButton(type: .system)
-        catButton.setTitle("野良猫救出", for: .normal)
-        catButton.backgroundColor = .eiteiRed
-        catButton.setTitleColor(.white, for: .normal)
-        catButton.titleLabel?.font = UIFont.systemFont(ofSize: 17.0, weight: .medium)
-        catButton.heightAnchor.constraint(equalToConstant: 45).isActive = true // 设置按钮高度
-        // 添加按钮点击事件
-        catButton.addTarget(self, action: #selector(catButtonTapped), for: .touchUpInside)
-
         
         // 创建UIStackView并添加按钮
-        let topMenuStack = UIStackView(arrangedSubviews: [liveButton, bookButton, catButton])
+        let topMenuStack = UIStackView(arrangedSubviews: [bookButton])
         topMenuStack.axis = .horizontal
         topMenuStack.distribution = .fillEqually
         topMenuStack.spacing = 0 // 减小间距
@@ -285,13 +269,13 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         
         // 添加UIStackView到主视图
         view.addSubview(topMenuStack)
-
+        
         topMenuStack.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.left.right.equalToSuperview()
             make.centerX.equalToSuperview()
         }
-
+        
         // 添加和配置播放器
         view.addSubview(musicPlayerView)
         musicPlayerView.snp.makeConstraints { make in
@@ -305,7 +289,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         listTableView.snp.makeConstraints { make in
             
             //距離標題20px
-            make.top.equalTo(topMenuStack.snp.bottom).offset(20)
+            make.top.equalTo(topMenuStack.snp.bottom).offset(10)
             make.left.right.equalToSuperview()
             // 表格底部距離，關乎被遮擋多少（重要）
             make.bottom.equalTo(self.view).offset(-90)
@@ -339,8 +323,8 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
             make.top.equalTo(alertController.view.snp.centerY).offset(5)
         }
         
-
-
+        
+        
         
     }
     
@@ -432,18 +416,9 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         
     }
     
-    // 點擊Live事件
-    @objc public func liveButtonTapped() {
-        
-        presentWebViewController(urlString: "https://live-club.github.io/")
-    }
     // 點擊Book事件
     @objc public func bookButtonTapped() {
         presentWebViewController(urlString: "https://dm-o.netlify.app/")
-    }
-    // 點擊Cat事件
-    @objc public func catButtonTapped() {
-        presentWebViewController(urlString: "https://roccce.github.io/")
     }
     
 }
@@ -511,7 +486,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func presentWebViewController(urlString: String) {
-
+        
         // 將URL字符串轉換為 URL 對象
         guard let url = URL(string: urlString) else {
             // 如果URL字符串無效，可以進行錯誤處理或者返回
