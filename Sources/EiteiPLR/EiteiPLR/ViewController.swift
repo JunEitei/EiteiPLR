@@ -146,9 +146,6 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         UIApplication.shared.beginReceivingRemoteControlEvents()
         becomeFirstResponder()
         
-        // 註冊下一曲通知觀察者
-        NotificationCenter.default.addObserver(self, selector: #selector(updateCurrentlyPlayingTrack(notification:)), name: NSNotification.Name("TrackDidEndNotification"), object: nil)
-        
         // 註冊曲目數量計算通知觀察者
         NotificationCenter.default.addObserver(self, selector: #selector(handleMusicCountUpdate(_:)), name: Notification.Name("MusicCountUpdated"), object: nil)
         
@@ -177,22 +174,17 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     @objc func reload() {
         
         // 加載音軌數據
-        musicPlayerViewModel.fetchTracks()
-        
+        DispatchQueue.global().async { [weak self] in
+            // 在後台線程中加載音軌數據
+            self?.musicPlayerViewModel.fetchTracks()
+        }
     }
     
     
-    // 觸法下一曲的時候
-    @objc func updateCurrentlyPlayingTrack(notification: Notification) {
-        
-        // 列表選擇下一曲
-        selectNextSong()
-    }
     
     deinit {
         
         // 移除通知觀察者
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("TrackDidEndNotification"), object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name("MusicCountUpdated"), object: nil)
         NotificationCenter.default.removeObserver(self, name: Notification.Name("NetworkResume"), object: nil)
         
@@ -212,34 +204,22 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         
         if event.type == .remoteControl {
             switch event.subtype {
-            case .remoteControlPlay:
-                // 处理播放事件
-                break
-            case .remoteControlPause:
-                // 处理暂停事件
+            case .remoteControlPlay,.remoteControlPause:
+                // 处理播放暂停事件
+                musicPlayerViewModel.pauseTrack()
                 break
             case .remoteControlNextTrack:
-                // 处理下一曲事件
-                selectNextSong()
+                // 下一曲
+                musicPlayerViewModel.playNextTrack()
                 break
             case .remoteControlPreviousTrack:
-                // 处理上一曲事件
+                // 上一曲
+                musicPlayerViewModel.playPreviousTrack()
                 break
             default:
                 break
             }
         }
-    }
-    
-    // 自動播放下一曲的效果
-    private func selectNextSong(){
-        // 確定索引路徑
-        let rowIndex = musicPlayerViewModel.currentTrackIndex
-        
-        // 取消上一曲的選擇
-        listTableView.cellForRow(at: IndexPath(row: rowIndex-1, section: 0) )?.setSelected(false, animated: false)
-        // 選中當前這首
-        listTableView.cellForRow(at: IndexPath(row: rowIndex, section: 0) )?.setSelected(true, animated: false)
     }
     
     public override var canBecomeFirstResponder: Bool {
