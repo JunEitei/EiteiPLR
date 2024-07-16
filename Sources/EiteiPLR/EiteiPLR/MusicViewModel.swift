@@ -150,7 +150,25 @@ final class MusicViewModel: ViewModelProtocol {
         }
     }
     
-    // Combine 內存清理
+    // 播放下一首歌曲
+    func playNextTrack() {
+        var newIndex = currentTrackIndex + 1
+        if newIndex >= tracks.count {
+            newIndex = 0
+        }
+        startPlay(trackIndex: newIndex)
+    }
+    
+    // 播放上一首歌曲
+    func playPreviousTrack() {
+        var newIndex = currentTrackIndex - 1
+        if newIndex < 0 {
+            newIndex = tracks.count - 1
+        }
+        startPlay(trackIndex: newIndex)
+    }
+    
+    // 內存清理
     deinit {
         subscriptions.forEach { $0.cancel() }
         
