@@ -13,6 +13,8 @@ class NetworkRetrier: RequestInterceptor {
     
     // 處理請求失敗後的重試邏輯
     func retry(_ request: Request, for session: Session, dueTo error: Error, completion: @escaping (RetryResult) -> Void) {
+        
+        
         var retries = 0
         
         guard let response = request.task?.response as? HTTPURLResponse,
@@ -22,10 +24,11 @@ class NetworkRetrier: RequestInterceptor {
         
         retries += 1
         
-        if retries <= retryLimit {
+        if retries <= self.retryLimit {
             completion(.retryWithDelay(2))  // 嘗試重試，延遲 2 秒
         } else {
             completion(.doNotRetry)  // 超過重試次數限制，不再重試
         }
+        
     }
 }

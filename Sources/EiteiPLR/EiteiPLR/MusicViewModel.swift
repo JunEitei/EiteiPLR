@@ -117,12 +117,11 @@ final class MusicViewModel: ViewModelProtocol {
         
     }
     
-    // 開始播放指定索引的歌曲。
-    //
-    // - Parameter trackIndex: 要播放的歌曲索引
+    // 開始播放指定索引的歌曲
     func startPlay(trackIndex: Int) {
-        if currentTrackIndex == trackIndex && isPlaying == true {
-            pauseTrack()
+        if currentTrackIndex == trackIndex{
+
+            //不做任何事
         } else {
             currentTrackIndex = trackIndex
             
@@ -137,9 +136,7 @@ final class MusicViewModel: ViewModelProtocol {
         }
     }
     
-    // 暫停當前播放的歌曲。
-    //
-    // 調用該方法後，音樂將暫停播放或者恢復播放。
+    // 暫停當前播放的歌曲。調用該方法後，音樂將暫停播放或者恢復播放
     func pauseTrack() {
         if musicPlayer.timeControlStatus == .playing {
             musicPlayer.pause()

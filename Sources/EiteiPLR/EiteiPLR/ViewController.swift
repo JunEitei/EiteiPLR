@@ -173,11 +173,9 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     
     @objc func reload() {
         
-        // 加載音軌數據
-        DispatchQueue.global().async { [weak self] in
-            // 在後台線程中加載音軌數據
-            self?.musicPlayerViewModel.fetchTracks()
-        }
+        // 在後台線程中加載音軌數據
+        self.musicPlayerViewModel.fetchTracks()
+        
     }
     
     
@@ -450,7 +448,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         musicPlayerView.isHidden = false
         
         // 播放當前選中的一曲
-        musicPlayerViewModel.startPlay(trackIndex: indexPath.row)
+        self.musicPlayerViewModel.startPlay(trackIndex: indexPath.row)
+        
+        
     }
     
     // 取消標頭的顯示
@@ -483,6 +483,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     // 自定義轉場
     public func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        
         return EiteiPresentationController(presentedViewController: presented, presenting: presenting)
     }
     
