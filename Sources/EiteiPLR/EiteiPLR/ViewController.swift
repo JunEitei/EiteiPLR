@@ -14,10 +14,21 @@ import Combine
 
 public class ViewController: UIViewController, UISearchBarDelegate ,UIViewControllerTransitioningDelegate {
     
+    // MARK: - Initialization
+    public init?(baseURL: String) {
+        self.baseURL = baseURL
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // 此處聲明Github音樂倉庫的路徑，此為默認值
+    var baseURL = "https://api.github.com/repos/JunEitei/EiteiPLR/contents/Music"
+    
     // MARK: - Properties
     private var subscriptions = Set<AnyCancellable>() // 訂閱集合，用於管理Combine框架的訂閱
-    
-    let musicPlayerViewModel = MusicViewModel() // 音樂播放器的視圖模型
     
     
     // 歌曲列表
@@ -33,6 +44,10 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     
     // 標題按鈕
     let bookButton = UIButton(type: .system)
+    
+    
+    // 播放器模型
+    lazy var musicPlayerViewModel = MusicViewModel(githubAPI: GithubAPI(baseURL: baseURL)) // 音樂播放器的視圖模型
     
     // 播放器歌曲名稱
     private lazy var trackNameLabel: UILabel = {

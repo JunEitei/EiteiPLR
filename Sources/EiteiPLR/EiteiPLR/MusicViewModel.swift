@@ -24,8 +24,14 @@ protocol ViewModelProtocol {
 
 final class MusicViewModel: ViewModelProtocol {
     
-    // MARK: - Properties
+    // MARK: - Initialization
+    init(githubAPI: GithubAPI) {
+        self.githubAPI = githubAPI
+    }
     
+    // MARK: - Properties
+    private let githubAPI: GithubAPI
+
     // 是否正在加載中
     @Published var isLoading = false
     
@@ -61,7 +67,7 @@ final class MusicViewModel: ViewModelProtocol {
     // 調用該方法後，使用 iOS Combine 機制來處理異步數據流。
     func fetchTracks() {
         isLoading = true
-        GithubAPI.shared.fetchTracks()
+        githubAPI.fetchTracks()
             .sink(
                 receiveCompletion: { status in
                     switch status {

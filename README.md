@@ -50,7 +50,7 @@ target 'Example-Cocoapods' do
 
 end
 ```
-4. **在根目錄運行pod install，完成後打開xcworkspace檔案，並將SceneDelegate.swift替換為如下代碼：**
+4. **在根目錄運行pod install，完成後打開xcworkspace檔案，並將SceneDelegate.swift替換為如下代碼（把我的地址換成你自己的音樂倉庫地址，音樂倉庫必須是一個Github檔案夾且權限為public）：**
 ```swift
 import UIKit
 import EiteiPLR
@@ -65,7 +65,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(windowScene: windowScene)
 
-        window?.rootViewController = ViewController()
+        // 把我的地址換成你自己的音樂倉庫地址
+        window?.rootViewController = ViewController(baseURL: "https://api.github.com/repos/JunEitei/EiteiPLR/contents/Music")
 
         window?.makeKeyAndVisible()
     }
@@ -138,7 +139,7 @@ let package = Package()
     </array>
    ```
 
-4. **將SceneDelegate.swift替換為如下代碼：**
+4. **將SceneDelegate.swift替換為如下代碼（把我的地址換成你自己的音樂倉庫地址，音樂倉庫必須是一個Github檔案夾且權限為public）：**
 ```swift
 import UIKit
 import EiteiPLR
@@ -153,7 +154,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(windowScene: windowScene)
 
-        window?.rootViewController = ViewController()
+        // 把我的地址換成你自己的音樂倉庫地址
+        window?.rootViewController = ViewController(baseURL: "https://api.github.com/repos/JunEitei/EiteiPLR/contents/Music")
 
         window?.makeKeyAndVisible()
     }

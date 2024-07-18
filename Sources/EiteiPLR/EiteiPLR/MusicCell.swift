@@ -11,12 +11,7 @@ import UIKit
 import SnapKit
 
 class MusicCell: UITableViewCell {
-    
-    // MARK: - View Model
-    
-    let musicPlayerViewModel = MusicViewModel()
-    
-    
+
     // MARK: - Views
     
     public lazy var trackNameLabel: EiteiPaddedLabel = {

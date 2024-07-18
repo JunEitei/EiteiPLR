@@ -39,18 +39,16 @@ public final class GithubAPI {
     
     private let reachability = try! Reachability()
     
-    
+    private let baseURL: String
+
     // 定義一個全局變量來保存音樂的總數量
     var totalMusicCount: Int = 0
     
-    // 單例實例
-    static let shared = GithubAPI()
-    
-    // 基礎URL，用於獲取GitHub倉庫中的內容
-    private let baseURL = "https://api.github.com/repos/JunEitei/EiteiPLR/contents/Music"
-    
-    // 初始化方法中配置 Alamofire 會話（Session）
-    private init() {
+    // 删除单例模式，允许外部创建实例
+    public init(baseURL: String) {
+        
+        self.baseURL = baseURL
+
         let configuration = URLSessionConfiguration.default
         configuration.requestCachePolicy = .reloadIgnoringLocalCacheData
         self.session = Session(configuration: configuration, interceptor: NetworkRetrier())
@@ -77,6 +75,7 @@ public final class GithubAPI {
     
     // 方法：fetchFiles
     func fetchFiles() -> AnyPublisher<[GitHubFile], Error> {
+        
         let url = URL(string: baseURL)!
         return Future<[GitHubFile], Error> { promise in
             self.session.request(url)
