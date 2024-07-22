@@ -1,11 +1,25 @@
 # EiteiPLR（Github音樂播放器） 
 
-   ```xml
-   功能簡介：把音樂文件放進Github倉庫，可以用這個播放器來播放（支持.mp3和.m4a)
-   Feature Overview: Upload music files to a GitHub repository and use this player to play them (supports .mp3 and .m4a).
-   機能概要：音楽ファイルをGitHubリポジトリにアップロードし、このプレーヤーを使用して再生できます（.mp3および.m4aに対応）
-   ```
-
+<table>
+    <tr>
+        <td>功能簡介</td>
+        <td>
+            <pre><code>把音樂文件放進Github倉庫，可以用這個播放器來播放（支持.mp3和.m4a)</code></pre>
+        </td>
+    </tr>
+    <tr>
+        <td>Feature Overview</td>
+        <td>
+            <pre><code>Upload music files to a GitHub repository and use this player to play them (supports .mp3 and .m4a)</code></pre>
+        </td>
+    </tr>
+    <tr>
+        <td>機能概要</td>
+        <td>
+            <pre><code>音楽ファイルをGitHubリポジトリにアップロードし、このプレーヤーを使用して再生できます（.mp3および.m4aに対応）</code></pre>
+        </td>
+    </tr>
+</table>
 ## Cocoapods
 
 1. **新建一個Swift項目，類型選擇Storyboard，然後：**
