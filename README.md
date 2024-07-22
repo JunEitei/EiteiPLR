@@ -1,4 +1,6 @@
-# EiteiPLR（Github音樂播放器）  
+# EiteiPLR（Github音樂播放器） 
+
+## 功能介紹：把音樂文件放進Github倉庫，可以用這個播放器來播放（支持.mp3和.m4a)
 
 ## Cocoapods
 
