@@ -411,7 +411,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     
     // 點擊Book事件
     @objc public func bookButtonTapped() {
-        presentWebViewController(urlString: "https://dm-o.netlify.app/")
+        presentWebViewController(urlString: "https://live-club.github.io/")
     }
     
 }

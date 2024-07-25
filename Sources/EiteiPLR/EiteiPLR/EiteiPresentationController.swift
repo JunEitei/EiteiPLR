@@ -20,6 +20,7 @@ class EiteiPresentationController: UIPresentationController {
         }
         let width = containerView.bounds.width
         let height = containerView.bounds.height * 0.77
+        
         let originX = (containerView.bounds.width - width) / 2
         let originY = (containerView.bounds.height - height) / 2
         return CGRect(x: originX, y: originY, width: width, height: height)
