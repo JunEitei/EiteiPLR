@@ -1,5 +1,7 @@
 import UIKit
 import SnapKit
+import MediaPlayer
+
 
 class EiteiPlayerController: UIViewController {
     
@@ -16,7 +18,7 @@ class EiteiPlayerController: UIViewController {
     }()
     
     // 副標題標籤
-    let titleLabel2: UILabel = {
+    let subtitleLabel: UILabel = {
         let label = UILabel()
         label.text = "布農孩子的傳承與跨界"
         label.font = UIFont.boldSystemFont(ofSize: 18)
@@ -56,36 +58,12 @@ class EiteiPlayerController: UIViewController {
     // 播放/暫停按鈕
     let playPauseImageView: UIImageView = {
         
-    let imageView = UIImageView(image: UIImage(systemName: "pause.fill"))
+        let imageView = UIImageView(image: UIImage(systemName: "pause.fill"))
         imageView.tintColor = UIColor(red: 0.866, green: 0.689, blue: 0.932, alpha: 1)
         imageView.isUserInteractionEnabled = true // 啟用互動
         return imageView
     }()
     
-    // 音量滑桿
-    let volumeSlider: UISlider = {
-        let slider = UISlider()
-        slider.minimumValue = 0
-        slider.maximumValue = 1
-        slider.value = 1
-        slider.tintColor = UIColor(red: 0.866, green: 0.689, blue: 0.932, alpha: 1)
-        slider.addTarget(self, action: #selector(volumeChange(_:)), for: .valueChanged)
-        return slider
-    }()
-    
-    // 低音量圖標
-    let volumeLowImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(systemName: "volume.1"))
-        imageView.tintColor = UIColor(red: 0.883, green: 0.875, blue: 0.962, alpha: 1)
-        return imageView
-    }()
-    
-    // 高音量圖標
-    let volumeHighImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(systemName: "volume.3"))
-        imageView.tintColor = UIColor(red: 0.883, green: 0.875, blue: 0.962, alpha: 1)
-        return imageView
-    }()
     
     // 封面圖像
     let imageView: UIImageView = {
@@ -100,14 +78,11 @@ class EiteiPlayerController: UIViewController {
         super.viewDidLoad()
         
         view.addSubview(titleLabel1)
-        view.addSubview(titleLabel2)
+        view.addSubview(subtitleLabel)
         view.addSubview(startTimeLabel)
         view.addSubview(endTimeLabel)
         view.addSubview(timeSlider)
         view.addSubview(playPauseImageView)
-        view.addSubview(volumeSlider)
-        view.addSubview(volumeLowImageView)
-        view.addSubview(volumeHighImageView)
         view.addSubview(imageView)
         
         // 添加點擊手勢識別器到播放/暫停圖標
@@ -121,15 +96,22 @@ class EiteiPlayerController: UIViewController {
     @objc func timeChange(_ sender: UISlider) {
         // 處理時間變更
     }
-
+    
+    
     // 音量變更處理
     @objc func volumeChange(_ sender: UISlider) {
-        // 處理音量變更
+        let volumeView = MPVolumeView()
+        let volumeSlider = volumeView.subviews.first { $0 is UISlider } as? UISlider
+        
+        // 確保找到音量滑桿
+        if let volumeSlider = volumeSlider {
+            volumeSlider.value = sender.value
+        }
     }
     
     // 播放/暫停按鈕點擊處理
     @objc func playPauseTapped() {
-
+        
         // 音樂暫停或繼續播放
         musicPlayerViewModel.pauseTrack()
         
@@ -149,7 +131,7 @@ class EiteiPlayerController: UIViewController {
             make.leading.equalToSuperview().offset(54)
         }
         
-        titleLabel2.snp.makeConstraints { make in
+        subtitleLabel.snp.makeConstraints { make in
             make.top.equalTo(titleLabel1.snp.bottom).offset(11)
             make.leading.equalToSuperview().offset(54)
         }
@@ -165,7 +147,7 @@ class EiteiPlayerController: UIViewController {
         }
         
         timeSlider.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel2.snp.bottom).offset(52)
+            make.top.equalTo(subtitleLabel.snp.bottom).offset(52)
             make.leading.equalToSuperview().offset(52)
             make.trailing.equalToSuperview().offset(-52)
             make.height.equalTo(30)
@@ -178,26 +160,6 @@ class EiteiPlayerController: UIViewController {
             make.height.equalTo(29)
         }
         
-        volumeSlider.snp.makeConstraints { make in
-            make.top.equalTo(playPauseImageView.snp.bottom).offset(30)
-            make.leading.equalToSuperview().offset(72)
-            make.trailing.equalToSuperview().offset(-72)
-            make.height.equalTo(30)
-        }
-        
-        volumeLowImageView.snp.makeConstraints { make in
-            make.centerY.equalTo(volumeSlider)
-            make.leading.equalToSuperview().offset(39)
-            make.width.equalTo(27)
-            make.height.equalTo(26)
-        }
-        
-        volumeHighImageView.snp.makeConstraints { make in
-            make.centerY.equalTo(volumeSlider)
-            make.trailing.equalToSuperview().offset(-39)
-            make.width.equalTo(27)
-            make.height.equalTo(26)
-        }
         
         imageView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(106)
