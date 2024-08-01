@@ -3,6 +3,10 @@ import SnapKit
 
 class EiteiPlayerController: UIViewController {
     
+    // 播放器模型
+    var musicPlayerViewModel : MusicViewModel!
+    
+    // 標題標籤
     let titleLabel1: UILabel = {
         let label = UILabel()
         label.text = "從此刻起"
@@ -11,6 +15,7 @@ class EiteiPlayerController: UIViewController {
         return label
     }()
     
+    // 副標題標籤
     let titleLabel2: UILabel = {
         let label = UILabel()
         label.text = "布農孩子的傳承與跨界"
@@ -19,6 +24,7 @@ class EiteiPlayerController: UIViewController {
         return label
     }()
     
+    // 開始時間標籤
     let startTimeLabel: UILabel = {
         let label = UILabel()
         label.text = "00:00"
@@ -27,6 +33,7 @@ class EiteiPlayerController: UIViewController {
         return label
     }()
     
+    // 結束時間標籤
     let endTimeLabel: UILabel = {
         let label = UILabel()
         label.text = "05:00"
@@ -35,7 +42,7 @@ class EiteiPlayerController: UIViewController {
         return label
     }()
     
-
+    // 時間滑桿
     let timeSlider: UISlider = {
         let slider = UISlider()
         slider.minimumValue = -1.5
@@ -46,14 +53,16 @@ class EiteiPlayerController: UIViewController {
         return slider
     }()
     
-
+    // 播放/暫停按鈕
     let playPauseImageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(systemName: "play.fill"))
+        
+    let imageView = UIImageView(image: UIImage(systemName: "pause.fill"))
         imageView.tintColor = UIColor(red: 0.866, green: 0.689, blue: 0.932, alpha: 1)
-        imageView.isUserInteractionEnabled = true // Enable interaction
+        imageView.isUserInteractionEnabled = true // 啟用互動
         return imageView
     }()
     
+    // 音量滑桿
     let volumeSlider: UISlider = {
         let slider = UISlider()
         slider.minimumValue = 0
@@ -64,18 +73,21 @@ class EiteiPlayerController: UIViewController {
         return slider
     }()
     
+    // 低音量圖標
     let volumeLowImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(systemName: "volume.1"))
         imageView.tintColor = UIColor(red: 0.883, green: 0.875, blue: 0.962, alpha: 1)
         return imageView
     }()
     
+    // 高音量圖標
     let volumeHighImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(systemName: "volume.3"))
         imageView.tintColor = UIColor(red: 0.883, green: 0.875, blue: 0.962, alpha: 1)
         return imageView
     }()
     
+    // 封面圖像
     let imageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(named: "third 1"))
         imageView.layer.cornerRadius = 20
@@ -98,31 +110,39 @@ class EiteiPlayerController: UIViewController {
         view.addSubview(volumeHighImageView)
         view.addSubview(imageView)
         
-        // Add tap gesture recognizer to playPauseImageView
+        // 添加點擊手勢識別器到播放/暫停圖標
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(playPauseTapped))
         playPauseImageView.addGestureRecognizer(tapGesture)
         
         setupConstraints()
     }
     
+    // 時間變更處理
     @objc func timeChange(_ sender: UISlider) {
-        // Handle time change
+        // 處理時間變更
     }
 
-    
+    // 音量變更處理
     @objc func volumeChange(_ sender: UISlider) {
-        // Handle volume change
+        // 處理音量變更
     }
     
+    // 播放/暫停按鈕點擊處理
     @objc func playPauseTapped() {
-        // Handle play/pause button tapped
-        if playPauseImageView.image == UIImage(systemName: "play.fill") {
+
+        // 音樂暫停或繼續播放
+        musicPlayerViewModel.pauseTrack()
+        
+        if musicPlayerViewModel.isPlaying {
+            // 如果正在播放，切換到暫停圖標
             playPauseImageView.image = UIImage(systemName: "pause.fill")
         } else {
+            // 如果暫停中，切換到播放圖標
             playPauseImageView.image = UIImage(systemName: "play.fill")
         }
     }
     
+    // 設置佈局約束
     func setupConstraints() {
         titleLabel1.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(421)

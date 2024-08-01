@@ -296,11 +296,22 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     
     // 处理点击事件的方法
     @objc func musicPlayerViewTapped() {
-
+        
         // 創建瀏覽器的實例，並傳入 URL
         let playerViewController = EiteiPlayerController()
         playerViewController.modalPresentationStyle = .custom
         playerViewController.transitioningDelegate = self
+        
+        //把播放模型傳遞過去
+        playerViewController.musicPlayerViewModel = self.musicPlayerViewModel
+        
+        if musicPlayerViewModel.isPlaying {
+            // 如果正在播放，切換到暫停圖標
+            playerViewController.playPauseImageView.image = UIImage(systemName: "pause.fill")
+        } else {
+            // 如果暫停中，切換到播放圖標
+            playerViewController.playPauseImageView.image = UIImage(systemName: "play.fill")
+        }
         present(playerViewController, animated: true, completion: nil)
     }
     
