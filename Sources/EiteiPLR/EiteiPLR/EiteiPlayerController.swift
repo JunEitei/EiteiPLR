@@ -42,7 +42,7 @@ class EiteiPlayerController: UIViewController {
         slider.maximumValue = 1
         slider.value = -1.5
         slider.tintColor = UIColor(red: 0.866, green: 0.689, blue: 0.932, alpha: 1)
-        slider.addTarget(EiteiPlayerController.self, action: #selector(timeChange(_:)), for: .valueChanged)
+        slider.addTarget(self, action: #selector(timeChange(_:)), for: .valueChanged)
         return slider
     }()
     
@@ -60,7 +60,7 @@ class EiteiPlayerController: UIViewController {
         slider.maximumValue = 1
         slider.value = 1
         slider.tintColor = UIColor(red: 0.866, green: 0.689, blue: 0.932, alpha: 1)
-        slider.addTarget(EiteiPlayerController.self, action: #selector(volumeChange(_:)), for: .valueChanged)
+        slider.addTarget(self, action: #selector(volumeChange(_:)), for: .valueChanged)
         return slider
     }()
     

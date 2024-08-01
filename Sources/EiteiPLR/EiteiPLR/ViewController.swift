@@ -277,6 +277,11 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
             make.right.equalToSuperview().offset(-13)
         }
         
+        // 添加点击手势识别器
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(musicPlayerViewTapped))
+        musicPlayerView.addGestureRecognizer(tapGestureRecognizer)
+        musicPlayerView.isUserInteractionEnabled = true // 确保 view 的用户交互被启用
+        
         // 添加和配置 listTableView
         view.addSubview(listTableView)
         listTableView.snp.makeConstraints { make in
@@ -287,6 +292,16 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
             // 表格底部距離，關乎被遮擋多少（重要）
             make.bottom.equalTo(self.view).offset(-90)
         }
+    }
+    
+    // 处理点击事件的方法
+    @objc func musicPlayerViewTapped() {
+
+        // 創建瀏覽器的實例，並傳入 URL
+        let playerViewController = EiteiPlayerController()
+        playerViewController.modalPresentationStyle = .custom
+        playerViewController.transitioningDelegate = self
+        present(playerViewController, animated: true, completion: nil)
     }
     
     
