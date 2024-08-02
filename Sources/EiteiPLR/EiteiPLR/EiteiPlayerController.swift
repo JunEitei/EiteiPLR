@@ -26,24 +26,6 @@ class EiteiPlayerController: UIViewController {
         return label
     }()
     
-    // 開始時間標籤
-    let startTimeLabel: UILabel = {
-        let label = UILabel()
-        label.text = "00:00"
-        label.font = UIFont.boldSystemFont(ofSize: 16)
-        label.textColor = UIColor.systemBackground
-        return label
-    }()
-    
-    // 結束時間標籤
-    let endTimeLabel: UILabel = {
-        let label = UILabel()
-        label.text = "05:00"
-        label.font = UIFont.boldSystemFont(ofSize: 16)
-        label.textColor = UIColor.systemBackground
-        return label
-    }()
-    
     // 時間滑桿
     let timeSlider: UISlider = {
         let slider = UISlider()
@@ -76,11 +58,9 @@ class EiteiPlayerController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+                
         view.addSubview(titleLabel)
         view.addSubview(subtitleLabel)
-        view.addSubview(startTimeLabel)
-        view.addSubview(endTimeLabel)
         view.addSubview(timeSlider)
         view.addSubview(playPauseImageView)
         view.addSubview(imageView)
@@ -134,16 +114,6 @@ class EiteiPlayerController: UIViewController {
         subtitleLabel.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(11)
             make.leading.equalToSuperview().offset(54)
-        }
-        
-        startTimeLabel.snp.makeConstraints { make in
-            make.top.equalTo(timeSlider.snp.bottom).offset(17)
-            make.leading.equalToSuperview().offset(54)
-        }
-        
-        endTimeLabel.snp.makeConstraints { make in
-            make.top.equalTo(timeSlider.snp.bottom).offset(17)
-            make.trailing.equalToSuperview().offset(-54)
         }
         
         timeSlider.snp.makeConstraints { make in

@@ -44,7 +44,7 @@ class EiteiPresentationController: UIPresentationController {
         
         // 過渡協調器，動畫顯示遮罩視圖
         presentedViewController.transitionCoordinator?.animate(alongsideTransition: { _ in
-            self.dimmingView.alpha = 1
+            self.dimmingView.alpha = 0.95
         }, completion: nil)
     }
     

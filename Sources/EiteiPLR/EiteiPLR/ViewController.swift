@@ -384,6 +384,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         musicPlayerViewModel.$maxCurrentDuration
             .sink { [weak self] duration in
                 self?.trackDurationSlider.maximumValue = Float(duration)  // 將最大播放時長轉換為浮點數並設置為進度條的最大值
+                self?.playerViewController.timeSlider.maximumValue = Float(duration)  // 將最大播放時長轉換為浮點數並設置為播放器進度條的最大值
             }
             .store(in: &subscriptions)  // 將訂閱存入訂閱集合中
         
@@ -391,6 +392,8 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         musicPlayerViewModel.$currentDuration
             .sink { [weak self] duration in
                 self?.trackDurationSlider.value = Float(duration)  // 將當前播放時長轉換為浮點數並設置為進度條的當前值
+                self?.playerViewController.timeSlider.value = Float(duration)  // 將最大播放時長轉換為浮點數並設置為播放器進度條的最大值
+
             }
             .store(in: &subscriptions)  // 將訂閱存入訂閱集合中
         
