@@ -92,8 +92,7 @@ final class MusicViewModel: ViewModelProtocol {
     }
     
     
-    // 添加觀察器，監聽音樂播放器的狀態和播放進度。
-    // 該方法將觀察音樂播放結束事件和播放進度的變化。
+    // 添加觀察器，監聽音樂播放器的狀態和播放進度。該方法將觀察音樂播放結束事件和播放進度的變化。
     func addObservers() {
         NotificationCenter.default.addObserver(self, selector: #selector(trackDidEnded), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: musicPlayer.currentItem)
         if let duration = musicPlayer.currentItem?.asset.duration.seconds {
@@ -104,9 +103,7 @@ final class MusicViewModel: ViewModelProtocol {
         }
     }
     
-    // 音樂播放結束時的處理方法。
-    //
-    // 該方法將自動切換到下一首歌曲或者暫停播放。
+    // 音樂播放結束時的處理方法。 該方法將自動切換到下一首歌曲或者暫停播放。
     @objc func trackDidEnded() {
         NotificationCenter.default.removeObserver(self)
         var newTrackIndex = currentTrackIndex
@@ -121,6 +118,14 @@ final class MusicViewModel: ViewModelProtocol {
             startPlay(trackIndex: newTrackIndex)
         }
         
+    }
+    
+    // 繼續播放
+    func resumeTrack() {
+        if musicPlayer.timeControlStatus == .paused {
+            musicPlayer.play()
+            isPlaying = true
+        }
     }
     
     // 開始播放指定索引的歌曲
@@ -169,6 +174,12 @@ final class MusicViewModel: ViewModelProtocol {
             newIndex = tracks.count - 1
         }
         startPlay(trackIndex: newIndex)
+    }
+    
+    // 添加 seekToTime 方法
+    func seekToTime(time: Double) {
+        let cmTime = CMTime(seconds: time, preferredTimescale: 1000)
+        musicPlayer.seek(to: cmTime)
     }
     
     // 內存清理
