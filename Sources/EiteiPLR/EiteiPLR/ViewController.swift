@@ -14,8 +14,8 @@ import Combine
 
 public class ViewController: UIViewController, UISearchBarDelegate ,UIViewControllerTransitioningDelegate {
     
-    // 用于跟踪 EiteiPlayerController 实例
-    private var playerViewController: EiteiPlayerController?
+    // 用于跟踪 EiteiPlayerController 实例，提前初始化以備後用
+    private var playerViewController = EiteiPlayerController()
     
     // MARK: - Initialization
     public init?(baseURL: String) {
@@ -299,33 +299,23 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     
     // 处理点击事件的方法
     @objc func musicPlayerViewTapped() {
-        
-        // 如果 EiteiPlayerController 实例已经存在，直接展示它
-        if let existingPlayerViewController = playerViewController {
-            present(existingPlayerViewController, animated: true, completion: nil)
-            return
-        }
-        // 创建 EiteiPlayerController 的实例
-        let newPlayerViewController = EiteiPlayerController()
-        newPlayerViewController.modalPresentationStyle = .custom
-        newPlayerViewController.transitioningDelegate = self
+
+        playerViewController.modalPresentationStyle = .custom
+        playerViewController.transitioningDelegate = self
         
         // 把播放模型传递过去
-        newPlayerViewController.musicPlayerViewModel = self.musicPlayerViewModel
+        playerViewController.musicPlayerViewModel = self.musicPlayerViewModel
         
         if musicPlayerViewModel.isPlaying {
             // 如果正在播放，切换到暂停图标
-            newPlayerViewController.playPauseImageView.image = UIImage(systemName: "pause.fill")
+            playerViewController.playPauseImageView.image = UIImage(systemName: "pause.fill")
         } else {
             // 如果暂停中，切换到播放图标
-            newPlayerViewController.playPauseImageView.image = UIImage(systemName: "play.fill")
+            playerViewController.playPauseImageView.image = UIImage(systemName: "play.fill")
         }
         
-        // 保存新创建的实例
-        playerViewController = newPlayerViewController
-        
         // 展示新创建的 EiteiPlayerController 实例
-        present(newPlayerViewController, animated: true, completion: nil)
+        present(playerViewController, animated: true, completion: nil)
     }
     
     
