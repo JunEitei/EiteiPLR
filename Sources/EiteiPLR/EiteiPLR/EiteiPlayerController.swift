@@ -4,7 +4,7 @@ import Combine
 import AVFoundation
 
 class EiteiPlayerController: UIViewController {
-    
+
     // 播放器模型
     var musicPlayerViewModel: MusicViewModel!
     
@@ -45,13 +45,11 @@ class EiteiPlayerController: UIViewController {
         return imageView
     }()
     
-    // 封面图像
-    let imageView: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "third 1"))
-        imageView.layer.cornerRadius = 20
-        imageView.clipsToBounds = true
-        imageView.contentMode = .scaleAspectFit
-        return imageView
+    // 波形視圖
+    let eiteiWaveView: EiteiWaveView = {
+        let view = EiteiWaveView()
+        view.backgroundColor = .clear // 设置背景颜色为黑色
+        return view
     }()
     
     private var subscriptions = Set<AnyCancellable>()
@@ -64,7 +62,7 @@ class EiteiPlayerController: UIViewController {
         view.addSubview(subtitleLabel)
         view.addSubview(timeSlider)
         view.addSubview(playPauseImageView)
-        view.addSubview(imageView)
+        view.addSubview(eiteiWaveView)
         
         // 添加点击手势识别器到播放/暂停图标
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(playPauseTapped))
@@ -90,6 +88,21 @@ class EiteiPlayerController: UIViewController {
                         self.timeSlider.value = newSliderValue
                     }
                 }
+            }
+            .store(in: &subscriptions)
+        
+        // 监听音乐播放状态的变化
+        musicPlayerViewModel.$isPlaying
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isPlaying in
+                guard let self = self else { return }
+                if isPlaying {
+                    self.eiteiWaveView.start() // 开始动画
+                } else {
+                    self.eiteiWaveView.stop()  // 停止动画
+                }
+                // 更新播放/暂停按钮图标
+                self.playPauseImageView.image = UIImage(systemName: isPlaying ? "pause.fill" : "play.fill")
             }
             .store(in: &subscriptions)
     }
@@ -120,15 +133,12 @@ class EiteiPlayerController: UIViewController {
     
     // 播放/暂停按钮点击处理
     @objc func playPauseTapped() {
-        // 音乐暂停或继续播放
-        musicPlayerViewModel.pauseTrack()
-        
         if musicPlayerViewModel.isPlaying {
-            // 如果正在播放，切换到暂停图标
-            playPauseImageView.image = UIImage(systemName: "pause.fill")
+            // 如果正在播放，切换到暂停
+            musicPlayerViewModel.pauseTrack()
         } else {
-            // 如果暂停中，切换到播放图标
-            playPauseImageView.image = UIImage(systemName: "play.fill")
+            // 如果暂停中，切换到播放
+            musicPlayerViewModel.resumeTrack()
         }
     }
     
@@ -156,11 +166,11 @@ class EiteiPlayerController: UIViewController {
             make.width.height.equalTo(50)
         }
         
-        imageView.snp.makeConstraints { make in
+        eiteiWaveView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(80)
-            make.leading.equalToSuperview().offset(30)
-            make.trailing.equalToSuperview().offset(-30)
-            make.height.equalTo(imageView.snp.width) // 保持正方形
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().offset(-20)
+            make.height.equalTo(eiteiWaveView.snp.width) // 保持正方形
         }
     }
 }
