@@ -33,14 +33,14 @@ class EiteiPlayerController: UIViewController {
         slider.maximumValue = 1
         slider.value = 0
         slider.isContinuous = true
-        slider.tintColor = UIColor(red: 0.866, green: 0.689, blue: 0.932, alpha: 1)
+        slider.tintColor = .eiteiPurple
         return slider
     }()
     
     // 播放/暂停按钮
     let playPauseImageView: UIImageView = {
         let imageView = UIImageView(image: UIImage(systemName: "pause.fill"))
-        imageView.tintColor = UIColor(red: 0.866, green: 0.689, blue: 0.932, alpha: 1)
+        imageView.tintColor = .eiteiPurple
         imageView.isUserInteractionEnabled = true
         return imageView
     }()
@@ -151,7 +151,7 @@ class EiteiPlayerController: UIViewController {
         }
         
         playPauseImageView.snp.makeConstraints { make in
-            make.top.equalTo(timeSlider.snp.bottom).offset(20)
+            make.top.equalTo(timeSlider.snp.bottom).offset(50)
             make.centerX.equalToSuperview()
             make.width.height.equalTo(50)
         }

@@ -93,6 +93,12 @@ extension UIColor {
         return UIColor(hex: "#D3D3D3")
     }
     
+    // 返回Eitei主題紫
+    static var eiteiPurple: UIColor {
+        return UIColor(red: 0.866, green: 0.689, blue: 0.932, alpha: 1)
+    }
+    
+
     // UIColor 轉換為十六進制字串
     func toHexString(includeAlpha: Bool = true) -> String {
         var red: CGFloat = 0
