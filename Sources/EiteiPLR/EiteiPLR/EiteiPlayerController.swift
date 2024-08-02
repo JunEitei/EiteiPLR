@@ -9,7 +9,7 @@ class EiteiPlayerController: UIViewController {
     var musicPlayerViewModel : MusicViewModel!
     
     // 標題標籤
-    let titleLabel1: UILabel = {
+    let titleLabel: UILabel = {
         let label = UILabel()
         label.text = "從此刻起"
         label.font = UIFont.boldSystemFont(ofSize: 23)
@@ -77,7 +77,7 @@ class EiteiPlayerController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.addSubview(titleLabel1)
+        view.addSubview(titleLabel)
         view.addSubview(subtitleLabel)
         view.addSubview(startTimeLabel)
         view.addSubview(endTimeLabel)
@@ -126,13 +126,13 @@ class EiteiPlayerController: UIViewController {
     
     // 設置佈局約束
     func setupConstraints() {
-        titleLabel1.snp.makeConstraints { make in
+        titleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(421)
             make.leading.equalToSuperview().offset(54)
         }
         
         subtitleLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel1.snp.bottom).offset(11)
+            make.top.equalTo(titleLabel.snp.bottom).offset(11)
             make.leading.equalToSuperview().offset(54)
         }
         

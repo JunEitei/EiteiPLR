@@ -299,7 +299,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     
     // 处理点击事件的方法
     @objc func musicPlayerViewTapped() {
-
+        
         playerViewController.modalPresentationStyle = .custom
         playerViewController.transitioningDelegate = self
         
@@ -398,6 +398,14 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         musicPlayerViewModel.$currentTrackName
             .sink { [weak self] trackName in
                 self?.trackNameLabel.text = trackName  // 設置音軌名稱標籤的文本
+                self?.playerViewController.titleLabel.text = trackName // 設置播放器音軌名稱標籤的文本
+            }
+            .store(in: &subscriptions)  // 將訂閱存入訂閱集合中
+        
+        // 監聽當前藝術家名名稱變化，更新藝術家名稱標籤
+        musicPlayerViewModel.$currentTrackName
+            .sink { [weak self] currentTrackArtist in
+                self?.playerViewController.subtitleLabel.text = "大毛"
             }
             .store(in: &subscriptions)  // 將訂閱存入訂閱集合中
         
