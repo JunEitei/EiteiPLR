@@ -55,7 +55,7 @@ class EiteiPlayerController: UIViewController {
     }()
     
     private var subscriptions = Set<AnyCancellable>()
-    private var isSeeking = false
+    private var isSeeking = false // 标志用户是否正在拖动滑块
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -83,9 +83,12 @@ class EiteiPlayerController: UIViewController {
             .sink { [weak self] currentDuration in
                 guard let self = self else { return }
                 let duration = self.musicPlayerViewModel.maxCurrentDuration
+                // 在拖动时不更新滑块位置
                 if duration > 0 && !self.isSeeking {
-                    self.timeSlider.maximumValue = Float(duration)
-                    self.timeSlider.value = Float(currentDuration)
+                    let newSliderValue = Float(currentDuration)
+                    if abs(self.timeSlider.value - newSliderValue) > 0.1 {
+                        self.timeSlider.value = newSliderValue
+                    }
                 }
             }
             .store(in: &subscriptions)
@@ -93,17 +96,17 @@ class EiteiPlayerController: UIViewController {
     
     // 时间变更处理
     @objc func timeChange(_ sender: UISlider) {
-        // 不更新音乐进度，等待拖动结束后再更新
         if isSeeking {
-            return
+            let newTime = Double(sender.value)
+            musicPlayerViewModel.seekToTime(time: newTime)
         }
-        let newTime = Double(sender.value)
-        musicPlayerViewModel.seekToTime(time: newTime)
     }
     
     // 用户开始拖动滑杆
     @objc func seekStarted(_ sender: UISlider) {
         isSeeking = true
+        // 暂停音乐播放
+        musicPlayerViewModel.pauseTrack()
     }
     
     // 用户结束拖动滑杆
@@ -111,6 +114,8 @@ class EiteiPlayerController: UIViewController {
         isSeeking = false
         let newTime = Double(sender.value)
         musicPlayerViewModel.seekToTime(time: newTime)
+        // 继续播放音乐
+        musicPlayerViewModel.resumeTrack()
     }
     
     // 播放/暂停按钮点击处理
