@@ -169,8 +169,19 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         // 網絡恢復重試
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("NetworkResume"), object: nil)
         
+        // 创建并配置屏幕边缘滑动手势识别器
+        let edgeSwipeGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(handleEdgeSwipe(_:)))
+        edgeSwipeGesture.edges = .left // 仅在左边缘触发
+        view.addGestureRecognizer(edgeSwipeGesture)
     }
     
+    // 处理屏幕边缘滑动手势
+    @objc func handleEdgeSwipe(_ gesture: UIScreenEdgePanGestureRecognizer) {
+        if gesture.state == .recognized {
+            // 当手势识别到时，调用 bookButtonTapped 方法
+            bookButtonTapped()
+        }
+    }
     
     @objc func reload() {
         
