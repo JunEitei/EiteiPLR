@@ -16,7 +16,8 @@ enum PlayMode: String {
     case loop = "loop" // 列表循环
 }
 
-// 音乐视图模型类，遵循 ViewModelProtocol 协议
+    
+// 音乐视图模型类，遵循 EiteiMusicProtocol 协议
 final class EiteiMusicModel: EiteiMusicProtocol {
     
     // MARK: - 初始化方法
@@ -91,7 +92,6 @@ final class EiteiMusicModel: EiteiMusicProtocol {
     
     // 音乐播放结束时的处理方法，根据播放模式选择下一步操作
     @objc func trackDidEnded() {
-        NotificationCenter.default.removeObserver(self) // 移除观察者
         if playMode == .single {
             // 单曲循环模式：将播放进度重置为初始位置，并继续播放
             musicPlayer.seek(to: CMTime.zero) { [weak self] _ in
