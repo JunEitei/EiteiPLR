@@ -7,28 +7,6 @@
 <img width="559" alt="截圖 2024-08-05 11 35 50" src="https://github.com/user-attachments/assets/1f11e6dd-1587-4798-af30-dfd10a6dee38">
 <img width="559" alt="截圖 2024-08-05 11 34 43" src="https://github.com/user-attachments/assets/b1584908-86f4-41b4-a27e-821db4ab5eab">
 
-## 
-
-<table>
-    <tr>
-        <td>功能簡介</td>
-        <td>
-            <pre><code>把音樂文件放進Github倉庫，可以用這個播放器來播放（支持.mp3和.m4a)</code></pre>
-        </td>
-    </tr>
-    <tr>
-        <td>Feature Overview</td>
-        <td>
-            <pre><code>Upload music files to a GitHub repository and use this player to play them (supports .mp3 and .m4a)</code></pre>
-        </td>
-    </tr>
-    <tr>
-        <td>機能概要</td>
-        <td>
-            <pre><code>音楽ファイルをGitHubリポジトリにアップロードし、このプレーヤーを使用して再生できます（.mp3および.m4aに対応）</code></pre>
-        </td>
-    </tr>
-</table>
 
 ## Cocoapods
 
