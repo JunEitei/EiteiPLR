@@ -33,6 +33,10 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     // MARK: - Properties
     private var subscriptions = Set<AnyCancellable>() // 訂閱集合，用於管理Combine框架的訂閱
     
+    // 添加豎線视图
+    private let verticalLine = UIView()
+    
+    
     
     // 歌曲列表
     let listTableView: UITableView = {
@@ -107,7 +111,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     }()
     
     
-    
+    // 播放器視圖
     lazy var musicPlayerView: UIView = {
         let view = UIView()
         view.backgroundColor = .white // 設置卡片視圖的背景色為白色
@@ -222,7 +226,24 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     
     // MARK: - Private Methods
     private func setUI() {
-        view.backgroundColor = .eiteiBackground
+        view.backgroundColor = .eiteiBackground // 背景色
+        
+        verticalLine.backgroundColor = .white // 设置竖线颜色
+        
+        
+        applyRoundedCorners() // 繪製圓角
+        
+        view.addSubview(verticalLine)
+        
+        // 使用 SnapKit 设置 左線條
+        verticalLine.snp.makeConstraints { make in
+            make.centerY.equalTo(view.snp.centerY) // 垂直中心对齐
+            make.leading.equalTo(view.safeAreaLayoutGuide.snp.leading) // 左边缘对齐 safeArea 的左边缘
+            make.height.equalTo(300) // 高度
+            make.width.equalTo(4) // 竖线宽度
+        }
+        
+        
         
         // 添加和配置播放器
         view.addSubview(musicPlayerView)
@@ -247,6 +268,43 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
             // 表格底部距離，關乎被遮擋多少（重要）
             make.bottom.equalTo(self.view).offset(-90)
         }
+        
+        // 将竖线移动到表格视图的上层
+        view.bringSubviewToFront(verticalLine)
+    }
+    
+    // 繪製豎線圓角
+    private func applyRoundedCorners() {
+        let cornerRadius: CGFloat = 2 // 圆角半径
+        let lineWidth: CGFloat = 4 // 竖线宽度
+        let lineHeight: CGFloat = 700 // 竖线高度
+        
+        // 创建圆角路径
+        let path = UIBezierPath()
+        
+        // 添加顶部圆角
+        path.addArc(withCenter: CGPoint(x: lineWidth / 2, y: cornerRadius),
+                    radius: cornerRadius,
+                    startAngle: .pi,
+                    endAngle: .pi * 1.5,
+                    clockwise: true)
+        
+        // 添加竖线路径
+        path.addLine(to: CGPoint(x: lineWidth / 2, y: lineHeight - cornerRadius))
+        
+        // 添加底部圆角
+        path.addArc(withCenter: CGPoint(x: lineWidth / 2, y: lineHeight - cornerRadius),
+                    radius: cornerRadius,
+                    startAngle: .pi * 1.5,
+                    endAngle: 0,
+                    clockwise: true)
+        
+        // 关闭路径
+        path.close()
+        
+        let maskLayer = CAShapeLayer()
+        maskLayer.path = path.cgPath
+        verticalLine.layer.mask = maskLayer
     }
     
     // 处理点击事件的方法
