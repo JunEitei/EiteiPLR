@@ -80,6 +80,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         button.tintColor = .eiteiBackground // 圖示顏色設置
         let image = UIImage(systemName: "pause.fill", withConfiguration: UIImage.SymbolConfiguration(font: .systemFont(ofSize: 28))) // 設置播放/暫停按鈕圖示
         button.setImage(image, for: .normal) // 設置按鈕的圖示
+        button.isHidden = true // 一開始隱藏
         
         return button
     }()
@@ -115,7 +116,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     lazy var musicPlayerView: UIView = {
         let view = UIView()
         view.backgroundColor = .white // 設置卡片視圖的背景色為白色
-        view.layer.cornerRadius = 22 // 設置卡片視圖的圓角半徑
+        view.layer.cornerRadius = 24 // 設置卡片視圖的圓角半徑
         
         view.addSubview(stackCardView) // 將堆疊卡片視圖添加到卡片視圖
         stackCardView.snp.makeConstraints { make in
@@ -132,20 +133,20 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         
         view.clipsToBounds = true // 裁剪超出邊界的內容
         
-        let container = UIView()
-        container.layer.shadowColor = UIColor.eiteiLightGray.cgColor // 設置容器視圖的陰影顏色
-        container.layer.shadowOpacity = 0.7 // 設置容器視圖的陰影不透明度
-        container.layer.shadowOffset = .zero // 設置容器視圖的陰影偏移量
-        container.layer.shadowRadius = 10 // 設置容器視圖的陰影半徑
+        let musicPlayerContainer = UIView()
+        musicPlayerContainer.layer.shadowColor = UIColor.eiteiLightGray.cgColor // 設置容器視圖的陰影顏色
+        musicPlayerContainer.layer.shadowOpacity = 0.7 // 設置容器視圖的陰影不透明度
+        musicPlayerContainer.layer.shadowOffset = .zero // 設置容器視圖的陰影偏移量
+        musicPlayerContainer.layer.shadowRadius = 10 // 設置容器視圖的陰影半徑
         
-        container.addSubview(view) // 將卡片視圖添加到容器視圖
+        musicPlayerContainer.addSubview(view) // 將卡片視圖添加到容器視圖
         view.snp.makeConstraints { make in
             make.edges.equalToSuperview() // 設置卡片視圖與容器視圖的邊界約束
         }
         
-        container.isHidden = true // 設置容器視圖初始為隱藏狀態
+        musicPlayerContainer.isHidden = false // 設置容器視圖初始為非隱藏狀態
         
-        return container // 返回容器視圖
+        return musicPlayerContainer // 返回容器視圖
     }()
     
     // MARK: - Lifecycle
@@ -248,6 +249,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         // 添加和配置播放器
         view.addSubview(musicPlayerView)
         musicPlayerView.snp.makeConstraints { make in
+            make.height.equalTo(50) // 高度
             make.bottom.equalTo(view.safeAreaLayoutGuide)
             make.left.equalToSuperview().offset(13)
             make.right.equalToSuperview().offset(-13)
@@ -266,7 +268,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.left.right.equalToSuperview()
             // 表格底部距離，關乎被遮擋多少（重要）
-            make.bottom.equalTo(self.view).offset(-90)
+            make.bottom.equalTo(self.view).offset(-92)
         }
         
         // 将竖线移动到表格视图的上层
@@ -324,8 +326,11 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
             playerViewController.playPauseImageView.image = UIImage(systemName: "play.fill")
         }
         
-        // 展示新创建的 EiteiPlayerController 实例
-        present(playerViewController, animated: true, completion: nil)
+        // 展示播放器，僅限於播放按鈕非隱藏的情形
+        if (self.playPauseButton.isHidden == false) {
+            present(playerViewController, animated: true, completion: nil)
+            
+        }
     }
     
     
@@ -502,6 +507,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     // 點擊表格視圖中的行時，顯示卡片視圖並開始播放音軌
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        // 播放按鈕顯示
+        playPauseButton.isHidden = false
         
         // 確定索引路徑
         let rowIndex = musicPlayerViewModel.currentTrackIndex
