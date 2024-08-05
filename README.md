@@ -1,4 +1,4 @@
-# EiteiPLR（Github音樂播放器） 
+# Github音樂播放器
 
 ## 永程官網：https://yongcheng.jp/
 ## 
