@@ -1,4 +1,4 @@
-# Github音樂播放器
+# 永程Github音樂播放器
 
 ## 永程官網：https://yongcheng.jp/
 ## 
