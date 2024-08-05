@@ -6,7 +6,7 @@ import AVFoundation
 class EiteiPlayerController: UIViewController {
 
     // 播放器模型
-    var musicPlayerViewModel: MusicViewModel!
+    var musicPlayerViewModel: EiteiMusicModel!
     
     // 标题标签
     let titleLabel: UILabel = {
@@ -45,11 +45,19 @@ class EiteiPlayerController: UIViewController {
         return imageView
     }()
     
-    // 波形視圖
+    // 波形视图
     let eiteiWaveView: EiteiWaveView = {
         let view = EiteiWaveView()
-        view.backgroundColor = .clear // 设置背景颜色为黑色
+        view.backgroundColor = .clear
         return view
+    }()
+    
+    // 播放模式按钮
+    let playModeButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "repeat"), for: .normal)
+        button.tintColor = .white
+        return button
     }()
     
     private var subscriptions = Set<AnyCancellable>()
@@ -63,6 +71,7 @@ class EiteiPlayerController: UIViewController {
         view.addSubview(timeSlider)
         view.addSubview(playPauseImageView)
         view.addSubview(eiteiWaveView)
+        view.addSubview(playModeButton)
         
         // 添加点击手势识别器到播放/暂停图标
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(playPauseTapped))
@@ -72,6 +81,9 @@ class EiteiPlayerController: UIViewController {
         timeSlider.addTarget(self, action: #selector(timeChange(_:)), for: .valueChanged)
         timeSlider.addTarget(self, action: #selector(seekStarted(_:)), for: .touchDown)
         timeSlider.addTarget(self, action: #selector(seekEnded(_:)), for: [.touchUpInside, .touchUpOutside])
+        
+        // 添加播放模式按钮点击事件
+        playModeButton.addTarget(self, action: #selector(playModeTapped), for: .touchUpInside)
         
         setupConstraints()
         
@@ -103,6 +115,20 @@ class EiteiPlayerController: UIViewController {
                 }
                 // 更新播放/暂停按钮图标
                 self.playPauseImageView.image = UIImage(systemName: isPlaying ? "pause.fill" : "play.fill")
+            }
+            .store(in: &subscriptions)
+        
+        // 监听播放模式的变化
+        musicPlayerViewModel.$playMode
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] playMode in
+                guard let self = self else { return }
+                switch playMode {
+                case .single:
+                    self.playModeButton.setImage(UIImage(systemName: "repeat.1"), for: .normal)
+                case .loop:
+                    self.playModeButton.setImage(UIImage(systemName: "repeat"), for: .normal)
+                }
             }
             .store(in: &subscriptions)
     }
@@ -142,6 +168,11 @@ class EiteiPlayerController: UIViewController {
         }
     }
     
+    // 播放模式按钮点击处理
+    @objc func playModeTapped() {
+        musicPlayerViewModel.togglePlayMode()
+    }
+    
     // 设置布局约束
     func setupConstraints() {
         titleLabel.snp.makeConstraints { make in
@@ -172,5 +203,12 @@ class EiteiPlayerController: UIViewController {
             make.trailing.equalToSuperview().offset(-20)
             make.height.equalTo(eiteiWaveView.snp.width) // 保持正方形
         }
+        
+        playModeButton.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(10)
+            make.trailing.equalToSuperview().offset(-20)
+            make.width.height.equalTo(30)
+        }
     }
 }
+

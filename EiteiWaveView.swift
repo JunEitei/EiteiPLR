@@ -8,7 +8,7 @@
 import UIKit
 import QuartzCore
 
-// 計算公式，用於生成波形效果
+// 計算公式，用於生成波形
 fileprivate func gfn(x: CGFloat) -> CGFloat {
     return pow((8 / (8 + pow(x, 4))), 8)
 }

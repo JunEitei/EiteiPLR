@@ -50,7 +50,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     
     
     // 播放器模型
-    lazy var musicPlayerViewModel = MusicViewModel(githubAPI: GithubAPI(baseURL: baseURL)) // 音樂播放器的視圖模型
+    lazy var musicPlayerViewModel = EiteiMusicModel(githubAPI: GithubAPI(baseURL: baseURL)) // 音樂播放器的視圖模型
     
     // 播放器歌曲名稱
     private lazy var trackNameLabel: UILabel = {
