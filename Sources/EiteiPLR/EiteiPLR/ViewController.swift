@@ -45,9 +45,6 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         return tableView
     }()
     
-    // 標題按鈕
-    let bookButton = UIButton(type: .system)
-    
     
     // 播放器模型
     lazy var musicPlayerViewModel = EiteiMusicModel(githubAPI: GithubAPI(baseURL: baseURL)) // 音樂播放器的視圖模型
@@ -86,7 +83,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     // 播放進度條
     private let trackDurationSlider: UISlider = {
         let slider = UISlider()
-        slider.tintColor = .eiteiBlue // 設置滑塊的顏色
+        slider.tintColor = .eiteiLightGray // 設置滑塊的顏色
         slider.thumbTintColor = .clear // 設置滑塊的拇指顏色為透明
         slider.maximumTrackTintColor = .white // 設置滑塊的最大軌道顏色為白色
         slider.isUserInteractionEnabled = false // 禁用滑塊的交互功能
@@ -114,7 +111,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     lazy var musicPlayerView: UIView = {
         let view = UIView()
         view.backgroundColor = .white // 設置卡片視圖的背景色為白色
-        view.layer.cornerRadius = 12 // 設置卡片視圖的圓角半徑
+        view.layer.cornerRadius = 22 // 設置卡片視圖的圓角半徑
         
         view.addSubview(stackCardView) // 將堆疊卡片視圖添加到卡片視圖
         stackCardView.snp.makeConstraints { make in
@@ -132,7 +129,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         view.clipsToBounds = true // 裁剪超出邊界的內容
         
         let container = UIView()
-        container.layer.shadowColor = UIColor.eiteiBlue.cgColor // 設置容器視圖的陰影顏色
+        container.layer.shadowColor = UIColor.eiteiLightGray.cgColor // 設置容器視圖的陰影顏色
         container.layer.shadowOpacity = 0.7 // 設置容器視圖的陰影不透明度
         container.layer.shadowOffset = .zero // 設置容器視圖的陰影偏移量
         container.layer.shadowRadius = 10 // 設置容器視圖的陰影半徑
@@ -152,7 +149,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         super.viewDidLoad()
         setUI() // 設置界面元素
         
-        listTableView.register(MusicCell.self, forCellReuseIdentifier: "cell") // 註冊自定義的音軌視圖單元格
+        listTableView.register(EiteiMusicCell.self, forCellReuseIdentifier: "cell") // 註冊自定義的音軌視圖單元格
         listTableView.dataSource = self // 設置表格視圖的數據源
         listTableView.delegate = self // 設置表格視圖的委託
         
@@ -164,28 +161,9 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         UIApplication.shared.beginReceivingRemoteControlEvents()
         becomeFirstResponder()
         
-        // 註冊曲目數量計算通知觀察者
-        NotificationCenter.default.addObserver(self, selector: #selector(handleMusicCountUpdate(_:)), name: Notification.Name("MusicCountUpdated"), object: nil)
-        
         // 網絡恢復重試
         NotificationCenter.default.addObserver(self, selector: #selector(reload), name: Notification.Name("NetworkResume"), object: nil)
         
-    }
-    
-    
-    
-    // 接收通知並處理音樂總數量更新
-    @objc func handleMusicCountUpdate(_ notification: Notification) {
-        if let totalMusicCount = notification.object as? Int {
-            // 回到主線程更新接收到的音樂總數量
-            DispatchQueue.main.async { [weak self] in
-                // 設置按鈕的標題文字
-                self?.bookButton.setTitle("(共\(totalMusicCount)曲)", for: .normal)
-                
-                // 同時刷新表格
-                self?.listTableView.reloadData()
-            }
-        }
     }
     
     
@@ -201,7 +179,6 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     deinit {
         
         // 移除通知觀察者
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name("MusicCountUpdated"), object: nil)
         NotificationCenter.default.removeObserver(self, name: Notification.Name("NetworkResume"), object: nil)
         
     }
@@ -247,31 +224,6 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     private func setUI() {
         view.backgroundColor = .eiteiBackground
         
-        
-        bookButton.backgroundColor = .clear
-        bookButton.setTitleColor(.white, for: .normal)
-        bookButton.titleLabel?.font = UIFont.systemFont(ofSize: 30.0, weight: .heavy)
-        bookButton.heightAnchor.constraint(equalToConstant: 45).isActive = true // 设置按钮高度
-        // 添加按钮点击事件
-        bookButton.addTarget(self, action: #selector(bookButtonTapped), for: .touchUpInside)
-        
-        
-        // 创建UIStackView并添加按钮
-        let topMenuStack = UIStackView(arrangedSubviews: [bookButton])
-        topMenuStack.axis = .horizontal
-        topMenuStack.distribution = .fillEqually
-        topMenuStack.spacing = 0 // 减小间距
-        topMenuStack.translatesAutoresizingMaskIntoConstraints = false
-        
-        // 添加UIStackView到主视图
-        view.addSubview(topMenuStack)
-        
-        topMenuStack.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            make.left.right.equalToSuperview()
-            make.centerX.equalToSuperview()
-        }
-        
         // 添加和配置播放器
         view.addSubview(musicPlayerView)
         musicPlayerView.snp.makeConstraints { make in
@@ -290,7 +242,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         listTableView.snp.makeConstraints { make in
             
             //距離標題20px
-            make.top.equalTo(topMenuStack.snp.bottom).offset(10)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.left.right.equalToSuperview()
             // 表格底部距離，關乎被遮擋多少（重要）
             make.bottom.equalTo(self.view).offset(-90)
@@ -393,7 +345,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
             .sink { [weak self] duration in
                 self?.trackDurationSlider.value = Float(duration)  // 將當前播放時長轉換為浮點數並設置為進度條的當前值
                 self?.playerViewController.timeSlider.value = Float(duration)  // 將最大播放時長轉換為浮點數並設置為播放器進度條的最大值
-
+                
             }
             .store(in: &subscriptions)  // 將訂閱存入訂閱集合中
         
@@ -474,7 +426,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         
-        guard let trackCell = listTableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? MusicCell else {
+        guard let trackCell = listTableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? EiteiMusicCell else {
             return UITableViewCell()
         }
         let trackList = musicPlayerViewModel.tracks

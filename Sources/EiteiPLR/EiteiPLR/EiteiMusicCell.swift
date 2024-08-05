@@ -10,8 +10,8 @@ import UIKit
 #endif
 import SnapKit
 
-class MusicCell: UITableViewCell {
-
+class EiteiMusicCell: UITableViewCell {
+    
     // MARK: - Views
     
     public lazy var trackNameLabel: EiteiPaddedLabel = {
@@ -81,7 +81,7 @@ class MusicCell: UITableViewCell {
         stackCardView.layer.cornerRadius = 8
         
         // 添加阴影效果
-        stackCardView.layer.shadowColor = UIColor.eiteiBlue.cgColor
+        stackCardView.layer.shadowColor = UIColor.eiteiPurple.cgColor
         stackCardView.layer.shadowOffset = CGSize(width: 3, height: 3) // 陰影偏移量
         stackCardView.layer.shadowOpacity = 0.68 // 陰影透明度
         stackCardView.layer.shadowRadius = 3 // 陰影半径
@@ -109,7 +109,7 @@ class MusicCell: UITableViewCell {
         trackArtistLabel.text = nil // 重用前清空藝術家名稱文本
     }
     
-
+    
     // 直接刪除文件名中最後一個點及其後的內容
     private func removeFileExtension(_ fileName: String) -> String {
         if let lastDotIndex = fileName.lastIndex(of: ".") {
