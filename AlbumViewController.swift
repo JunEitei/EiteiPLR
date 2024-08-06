@@ -17,9 +17,11 @@ class AlbumViewController: UIViewController, UICollectionViewDataSource, UIColle
         // 創建 UICollectionViewFlowLayout 佈局
         let layout = AlbumCollectionViewLayout()
         
+        
         // 創建 UICollectionView 並設置佈局
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        
+        collectionView.backgroundColor = .clear
+
         // 設置數據源和代理
         collectionView.dataSource = self
         collectionView.delegate = self
