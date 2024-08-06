@@ -36,7 +36,8 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     // 添加豎線视图
     private let verticalLine = UIView()
     
-    
+    // 延迟加载的属性，播放器模型
+    var musicPlayerViewModel: EiteiMusicModel!
     
     // 歌曲列表
     let listTableView: UITableView = {
@@ -50,8 +51,6 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     }()
     
     
-    // 播放器模型
-    lazy var musicPlayerViewModel = EiteiMusicModel(githubAPI: GithubAPI(baseURL: baseURL)) // 音樂播放器的視圖模型
     
     // 播放器歌曲名稱
     private lazy var trackNameLabel: UILabel = {
@@ -153,6 +152,15 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     public override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+        // 获取保存的专辑 URL（如果有的话）
+        let savedAlbumURL = UserDefaults.standard.string(forKey: "SavedAlbumURL")
+        
+        // 根据保存的 URL 或默认的 baseURL 初始化 GithubAPI
+        let initialBaseURL = savedAlbumURL ?? baseURL
+        
+        // 使用初始的 baseURL 初始化 GithubAPI 实例
+        musicPlayerViewModel = EiteiMusicModel(githubAPI: GithubAPI(baseURL: initialBaseURL))
         
         
         
@@ -564,6 +572,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             
             // 重新加載
             reload()
+            
+            //保存专辑 URL 到 UserDefaults
+            UserDefaults.standard.set(albumURL, forKey: "SavedAlbumURL")
         }
         
         albumViewController.modalPresentationStyle = .custom
