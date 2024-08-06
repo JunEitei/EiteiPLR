@@ -98,7 +98,7 @@ extension UIColor {
         return UIColor(red: 0.866, green: 0.689, blue: 0.932, alpha: 1)
     }
     
-
+    
     // UIColor 轉換為十六進制字串
     func toHexString(includeAlpha: Bool = true) -> String {
         var red: CGFloat = 0
@@ -130,4 +130,15 @@ extension UIColor {
         
         self.init(red: red, green: green, blue: blue, alpha: alpha)
     }
+    
+    
+    // 擴展 UIColor 以支持用整數定義顏色
+    convenience init(red: Int, green: Int, blue: Int) {
+        self.init(red: CGFloat(red)/255,  // 設置紅色分量
+                  green: CGFloat(green)/255,  // 設置綠色分量
+                  blue: CGFloat(blue)/255,  // 設置藍色分量
+                  alpha: 1.0)  // 設置透明度
+    }
+    
+    
 }

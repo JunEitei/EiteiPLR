@@ -178,8 +178,8 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     // 处理屏幕边缘滑动手势
     @objc func handleEdgeSwipe(_ gesture: UIScreenEdgePanGestureRecognizer) {
         if gesture.state == .recognized {
-            // 当手势识别到时，调用 bookButtonTapped 方法
-            bookButtonTapped()
+            // 当手势识别到时，调用專輯選擇
+            presentAlbumViewController()
         }
     }
     
@@ -474,12 +474,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         musicPlayerViewModel.pauseTrack()
         
     }
-    
-    // 點擊Book事件
-    @objc public func bookButtonTapped() {
-        presentWebViewController(urlString: "https://live-club.github.io/")
-    }
-    
+
 }
 
 
@@ -549,6 +544,19 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         return 0
     }
     
+    
+    // 彈出專輯選擇器
+    func presentAlbumViewController() {
+        
+        // 創建專輯選擇器的實例，並傳入 URL
+        let albumViewController = AlbumViewController()
+        albumViewController.modalPresentationStyle = .custom
+        albumViewController.transitioningDelegate = self
+        present(albumViewController, animated: true, completion: nil)
+    }
+    
+    
+    // 彈出瀏覽器
     func presentWebViewController(urlString: String) {
         
         // 將URL字符串轉換為 URL 對象
