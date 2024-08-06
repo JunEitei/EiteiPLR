@@ -12,6 +12,7 @@ import Foundation
 import Combine
 import Alamofire
 import Reachability
+import ProgressHUD
 
 // MARK: - GitHubFile
 struct GitHubFile: Codable {
@@ -49,8 +50,6 @@ public final class GithubAPI {
     
     private var baseURL: String
     
-    // 定義一個全局變量來保存音樂的總數量
-    var totalMusicCount: Int = 0
     
     // 删除单例模式，允许外部创建实例
     public init(baseURL: String) {
@@ -120,16 +119,26 @@ public final class GithubAPI {
     
     // 讀取全部音軌同時統計數量
     func fetchTracks() -> AnyPublisher<[GitHubFile], Error> {
-        fetchFiles()
+        // 显示 ProgressHUD
+        ProgressHUD.colorHUD = .eiteiPurple
+        ProgressHUD.colorAnimation = .eiteiPurple
+        ProgressHUD.fontStatus = .systemFont(ofSize: 21, weight: .ultraLight)
+        ProgressHUD.animate("楽しんで", .triangleDotShift)
+        
+        return fetchFiles()
             .map { files in
-                // 在這裡計算音樂的總數量
-                self.totalMusicCount = files.count
-                
                 return self.filterAudioFiles(files)
             }
             .map { audioFiles in
                 self.mapFilesToGitHubFile(audioFiles)
             }
+            .handleEvents(receiveCompletion: { _ in
+                // 无论成功还是失败，都隐藏 ProgressHUD
+                ProgressHUD.dismiss()
+            }, receiveCancel: {
+                // 如果请求被取消，也隐藏 ProgressHUD
+                ProgressHUD.dismiss()
+            })
             .eraseToAnyPublisher()
     }
     

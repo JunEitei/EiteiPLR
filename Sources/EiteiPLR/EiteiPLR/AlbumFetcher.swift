@@ -5,7 +5,9 @@
 //  Created by damao on 2024/8/6.
 //
 
+#if canImport(Foundation)
 import Foundation
+#endif
 
 // 專門封裝用來獲取專輯列表
 class AlbumFetcher {

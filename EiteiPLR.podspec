@@ -22,6 +22,6 @@ Pod::Spec.new do |spec|
   spec.dependency 'SnapKit', '~> 5.7.0'
   spec.dependency 'Alamofire', '~> 5.9.1'
   spec.dependency 'ReachabilitySwift', '~> 5.2.1'
-
+  spec.dependency 'ProgressHUD', '~> 14.1.1'
 
 end

@@ -2,8 +2,10 @@ PODS:
   - Alamofire (5.9.1)
   - EiteiPLR (3.6.0):
     - Alamofire (~> 5.9.1)
+    - ProgressHUD
     - ReachabilitySwift (~> 5.2.1)
     - SnapKit (~> 5.7.0)
+  - ProgressHUD (14.1.1)
   - ReachabilitySwift (5.2.3)
   - SnapKit (5.7.1)
 
@@ -13,6 +15,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - Alamofire
+    - ProgressHUD
     - ReachabilitySwift
     - SnapKit
 
@@ -22,7 +25,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Alamofire: f36a35757af4587d8e4f4bfa223ad10be2422b8c
-  EiteiPLR: b6030c086986ab459e8ab3404bcf8b3e5a9cac11
+  EiteiPLR: ea4024cc57acd4835067318b2959fd3a8fb0acb2
+  ProgressHUD: abb9136ae23c85204236828562cb9a8ec98efb44
   ReachabilitySwift: 7f151ff156cea1481a8411701195ac6a984f4979
   SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
 

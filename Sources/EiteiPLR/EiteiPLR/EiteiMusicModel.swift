@@ -1,5 +1,13 @@
+
+
+#if canImport(UIKit)
 import UIKit
+#endif
+
+#if canImport(Foundation)
 import Foundation
+#endif
+
 import MediaPlayer
 import Combine
 

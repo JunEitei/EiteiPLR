@@ -5,7 +5,9 @@
 //  Created by damao on 2024/7/10.
 //
 
+#if canImport(UIKit)
 import UIKit
+#endif
 
 class AlbumCell: UICollectionViewCell {
     

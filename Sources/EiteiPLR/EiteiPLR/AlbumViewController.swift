@@ -5,7 +5,9 @@
 //  Created by damao on 2024/8/6.
 //
 
+#if canImport(UIKit)
 import UIKit
+#endif
 import SnapKit
 
 class AlbumViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {

@@ -15,16 +15,16 @@ let package = Package(
             targets: ["EiteiPLR"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/SnapKit/SnapKit.git", .upToNextMajor(from: "5.7.1")),
-        .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.9.1")),
-        .package(url: "https://github.com/ashleymills/Reachability.swift.git", .upToNextMajor(from: "5.2.1"))
-
+        .package(url: "https://github.com/SnapKit/SnapKit", .upToNextMajor(from: "5.7.1")),
+        .package(url: "https://github.com/Alamofire/Alamofire", .upToNextMajor(from: "5.9.1")),
+        .package(url: "https://github.com/ashleymills/Reachability.swift", .upToNextMajor(from: "5.2.3")),
+        .package(url: "https://github.com/relatedcode/ProgressHUD", .upToNextMajor(from: "14.1.3"))
     ],
     targets: [
         .target(
             name: "EiteiPLR",
             dependencies: [
-                "SnapKit","Alamofire","ReachabilitySwift"
+                "SnapKit","Alamofire","Reachability","ProgressHUD"
             ],
             path: "Sources/EiteiPLR",
             resources: [
