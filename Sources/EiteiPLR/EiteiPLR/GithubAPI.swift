@@ -42,12 +42,12 @@ struct GitHubAlbum: Codable {
 public final class GithubAPI {
     
     // 網絡連接實例
-    private let session: Session
+    private var session: Session
     
     // 網路狀態監聽器
     private let reachability = try! Reachability()
     
-    private let baseURL: String
+    private var baseURL: String
     
     // 定義一個全局變量來保存音樂的總數量
     var totalMusicCount: Int = 0
@@ -104,6 +104,18 @@ public final class GithubAPI {
                 }
         }
         .eraseToAnyPublisher()
+    }
+    
+    // 設置新的 baseURL
+    public func setBaseURL(_ newBaseURL: String) {
+        self.baseURL = newBaseURL
+        
+        // 重新配置 Session 实例
+        let configuration = URLSessionConfiguration.default
+        configuration.requestCachePolicy = .reloadIgnoringLocalCacheData
+        self.session = Session(configuration: configuration, interceptor: NetworkRetrier())
+        
+        print("Updated baseURL to \(newBaseURL)")
     }
     
     // 讀取全部音軌同時統計數量
