@@ -185,9 +185,32 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         let edgeSwipeGesture = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(handleEdgeSwipe(_:)))
         edgeSwipeGesture.edges = .left // 仅在左边缘触发
         view.addGestureRecognizer(edgeSwipeGesture)
+        
+        //检测长按手势
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
+        listTableView.addGestureRecognizer(longPressGesture)
     }
     
-    // 处理屏幕边缘滑动手势
+    // 處理長按手勢
+    @objc private func handleLongPress(_ gesture: UILongPressGestureRecognizer) {
+        let location = gesture.location(in: listTableView)
+        guard let indexPath = listTableView.indexPathForRow(at: location) else { return }
+        
+        if gesture.state == .began {
+            // 获取点击的单元格的数据
+            guard let cell = listTableView.cellForRow(at: indexPath) as? EiteiMusicCell else { return }
+            
+            // 根据数据模型获取相应的音樂模型
+            let track = musicPlayerViewModel.tracks[indexPath.row]
+            
+            // TODO
+            print(track.name)
+            // 创建并展示弹出菜单
+            presentWebViewController(urlString: "https://live-club.github.io/")
+        }
+    }
+    
+    // 處理屏幕边缘滑动手势
     @objc func handleEdgeSwipe(_ gesture: UIScreenEdgePanGestureRecognizer) {
         if gesture.state == .recognized {
             // 当手势识别到时，调用專輯選擇
