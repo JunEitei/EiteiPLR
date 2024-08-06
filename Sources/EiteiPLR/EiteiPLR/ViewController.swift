@@ -28,7 +28,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     }
     
     // 此處聲明Github音樂倉庫的路徑，此為默認值
-    var baseURL = "https://api.github.com/repos/JunEitei/EiteiPLR/contents/Music"
+    var baseURL = "https://api.github.com/repos/JunEitei/Music/contents/わたしも"
     
     // MARK: - Properties
     private var subscriptions = Set<AnyCancellable>() // 訂閱集合，用於管理Combine框架的訂閱
