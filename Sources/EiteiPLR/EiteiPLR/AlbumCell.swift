@@ -27,6 +27,7 @@ class AlbumCell: UICollectionViewCell {
         return label
     }()
     
+    
     // 初始化 cell
     override init(frame: CGRect) {
         super.init(frame: frame)

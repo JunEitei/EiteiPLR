@@ -7,7 +7,7 @@
 
 import Foundation
 
-
+// 專門封裝用來獲取專輯列表
 class AlbumFetcher {
     
     // 定義 GitHubAlbum 結構體

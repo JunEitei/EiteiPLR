@@ -154,21 +154,6 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         super.viewDidLoad()
         
         
-        // 使用示例
-        let fetcher = AlbumFetcher()
-        fetcher.fetchGitHubAlbums { albums in
-            if let albums = albums {
-                // 在主線程中處理結果
-                DispatchQueue.main.async {
-                    for album in albums {
-                        print("ID: \(album.id ?? 0), Name: \(album.name), URL: \(album.url)")
-                    }
-                }
-            } else {
-                print("No albums found or error occurred")
-            }
-        }
-
         
         
         setUI() // 設置界面元素
@@ -493,7 +478,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         musicPlayerViewModel.pauseTrack()
         
     }
-
+    
 }
 
 
