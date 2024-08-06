@@ -141,10 +141,13 @@ extension UIColor {
     }
     
     
-    // 生成深色的带有微妙色调的灰色
-    static func randomSexyDarkGrayColor() -> UIColor {
-        // 生成随机的亮度，范围从0.1到0.4（深色灰色）
-        let brightness = CGFloat(arc4random_uniform(30) + 10) / 100.0
+    // 生成具有梯度感的深灰色
+    static func randomSteppedDarkGrayColor() -> UIColor {
+        // 定义亮度的不同梯度段
+        let brightnessSteps: [CGFloat] = [0.1, 0.2, 0.3, 0.4]
+        
+        // 随机选择一个亮度梯度段
+        let brightness = brightnessSteps[Int(arc4random_uniform(UInt32(brightnessSteps.count)))]
         
         // 生成微小的随机色调，范围从0到0.1
         let hue = CGFloat(arc4random_uniform(10)) / 100.0
