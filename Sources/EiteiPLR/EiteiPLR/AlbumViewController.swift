@@ -12,6 +12,8 @@ class AlbumViewController: UIViewController, UICollectionViewDataSource, UIColle
     
     var collectionView: UICollectionView!  // 定義 UICollectionView 屬性
     var albums: [AlbumFetcher.GitHubAlbum] = []  // 更新 albums 屬性來存儲從 API 獲得的數據
+    // 回调闭包
+    var onAlbumSelected: ((String) -> Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,7 +64,7 @@ class AlbumViewController: UIViewController, UICollectionViewDataSource, UIColle
         }
     }
     
-
+    
     // 提供每個 cell 的內容
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AlbumCell", for: indexPath) as! AlbumCell
@@ -85,7 +87,14 @@ class AlbumViewController: UIViewController, UICollectionViewDataSource, UIColle
     
     // 處理 cell 點擊事件
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let albumName = albums[indexPath.row].url  // 獲取選中專輯的名稱
-        print("Selected album: \(albumName)")  // 輸出選中專輯的名稱
+        
+        let selectedAlbum = albums[indexPath.row]
+        let albumURL = selectedAlbum.url
+        
+        // 调用回调并传递选中的专辑 URL
+        onAlbumSelected?(albumURL)
+        
+        // 隐藏当前视图控制器
+        dismiss(animated: true, completion: nil)
     }
 }
