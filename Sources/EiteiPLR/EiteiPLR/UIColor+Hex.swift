@@ -140,5 +140,13 @@ extension UIColor {
                   alpha: 1.0)  // 設置透明度
     }
     
+    // 生成隨機顏色
+    static func randomDarkColor() -> UIColor {
+        // 生成较低的 RGB 值以确保颜色较深
+        let red = CGFloat(arc4random_uniform(128)) / 255.0
+        let green = CGFloat(arc4random_uniform(128)) / 255.0
+        let blue = CGFloat(arc4random_uniform(128)) / 255.0
+        return UIColor(red: red, green: green, blue: blue, alpha: 1.0)
+    }
     
 }

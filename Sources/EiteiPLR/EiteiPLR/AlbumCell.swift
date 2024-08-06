@@ -12,7 +12,7 @@ class AlbumCell: UICollectionViewCell {
     // 定義專輯名稱標籤
     let albumNameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 18)  // 設置字體為粗體，字號為 18
+        label.font = UIFont.boldSystemFont(ofSize: 23)  // 設置字體為粗體，字號為 18
         label.textColor = .white  // 設置文字顏色為白色
         label.textAlignment = .center  // 設置文字對齊方式為居中
         return label
@@ -21,12 +21,18 @@ class AlbumCell: UICollectionViewCell {
     // 定義藝術家名稱標籤
     let artistNameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 14)  // 設置字體為粗體，字號為 14
+        label.font = UIFont.systemFont(ofSize: 14)  // 設置字體為粗體，字號為 14
         label.textColor = UIColor(white: 1.0, alpha: 0.7)  // 設置文字顏色為白色，透明度為 0.7
         label.textAlignment = .center  // 設置文字對齊方式為居中
         return label
     }()
     
+    // 新增 URL 屬性
+    var albumURL: String? {
+        didSet {
+            // 可以在這裡處理 URL，例如加載圖片或其他操作
+        }
+    }
     
     // 初始化 cell
     override init(frame: CGRect) {

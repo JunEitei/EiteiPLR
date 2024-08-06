@@ -1,3 +1,10 @@
+//
+//  AlbumViewController.swift
+//  EiteiPLR
+//
+//  Created by damao on 2024/8/6.
+//
+
 import UIKit
 import SnapKit
 
@@ -5,15 +12,6 @@ class AlbumViewController: UIViewController, UICollectionViewDataSource, UIColle
     
     var collectionView: UICollectionView!  // 定義 UICollectionView 屬性
     var albums: [AlbumFetcher.GitHubAlbum] = []  // 更新 albums 屬性來存儲從 API 獲得的數據
-    
-    // 定義顏色數組
-    var colors: [UIColor]  = [
-        UIColor(red: 237/255, green: 37/255, blue: 78/255, alpha: 1.0),   // 顏色 1
-        UIColor(red: 249/255, green: 220/255, blue: 92/255, alpha: 1.0),   // 顏色 2
-        UIColor(red: 194/255, green: 234/255, blue: 189/255, alpha: 1.0),  // 顏色 3
-        UIColor(red: 1/255, green: 25/255, blue: 54/255, alpha: 1.0),      // 顏色 4
-        UIColor(red: 255/255, green: 184/255, blue: 209/255, alpha: 1.0)   // 顏色 5
-    ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -64,6 +62,7 @@ class AlbumViewController: UIViewController, UICollectionViewDataSource, UIColle
         }
     }
     
+
     // 提供每個 cell 的內容
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AlbumCell", for: indexPath) as! AlbumCell
@@ -71,9 +70,10 @@ class AlbumViewController: UIViewController, UICollectionViewDataSource, UIColle
         
         // 使用從 API 獲得的數據填充 cell
         let album = albums[indexPath.row]
-        cell.backgroundColor = colors[indexPath.row % colors.count]  // 設置 cell 背景顏色
+        cell.backgroundColor = UIColor.randomDarkColor()  // 設置 cell 背景顏色為隨機顏色
         cell.albumNameLabel.text = album.name  // 設置專輯名稱
-        cell.artistNameLabel.text = album.url  // 設置藝術家名稱或 URL
+        cell.artistNameLabel.text = "大毛"  // 設置藝術家名稱或 URL
+        cell.albumURL = album.url  // 設置 albumURL
         
         return cell
     }
@@ -85,7 +85,7 @@ class AlbumViewController: UIViewController, UICollectionViewDataSource, UIColle
     
     // 處理 cell 點擊事件
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let albumName = albums[indexPath.row].name  // 獲取選中專輯的名稱
+        let albumName = albums[indexPath.row].url  // 獲取選中專輯的名稱
         print("Selected album: \(albumName)")  // 輸出選中專輯的名稱
     }
 }
