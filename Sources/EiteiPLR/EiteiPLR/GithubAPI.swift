@@ -31,12 +31,20 @@ struct GitHubFile: Codable {
     var album: String?
 }
 
+// MARK: - GitHubAlbum
+struct GitHubAlbum: Codable {
+    var id: Int?
+    let name: String
+    let url: String
+}
+
 
 public final class GithubAPI {
     
     // 網絡連接實例
     private let session: Session
     
+    // 網路狀態監聽器
     private let reachability = try! Reachability()
     
     private let baseURL: String
@@ -73,7 +81,8 @@ public final class GithubAPI {
     }
     
     
-    // 方法：fetchFiles
+
+    // 檢索文件
     func fetchFiles() -> AnyPublisher<[GitHubFile], Error> {
         
         let url = URL(string: baseURL)!
@@ -103,16 +112,42 @@ public final class GithubAPI {
             .map { files in
                 // 在這裡計算音樂的總數量
                 self.totalMusicCount = files.count
-                
-                // 發送通知給 ViewController
-                NotificationCenter.default.post(name: Notification.Name("MusicCountUpdated"), object: self.totalMusicCount)
-                
+
                 return self.filterAudioFiles(files)
             }
             .map { audioFiles in
                 self.mapFilesToGitHubFile(audioFiles)
             }
             .eraseToAnyPublisher()
+    }
+    
+    
+    // 檢索專輯
+    func fetchAlbums() -> AnyPublisher<[GitHubAlbum], Error> {
+        let urlString = "https://api.github.com/repos/JunEitei/Music/contents"
+        guard let url = URL(string: urlString) else {
+            return Fail(error: URLError(.badURL)).eraseToAnyPublisher()
+        }
+        
+        return Future<[GitHubAlbum], Error> { promise in
+            self.session.request(url)
+                .validate()
+                .responseData { response in
+                    switch response.result {
+                    case .success(let data):
+                        do {
+                            // 解析 JSON 数据
+                            let albums = try JSONDecoder().decode([GitHubAlbum].self, from: data)
+                            promise(.success(albums))
+                        } catch {
+                            promise(.failure(error))
+                        }
+                    case .failure(let error):
+                        promise(.failure(error))
+                    }
+                }
+        }
+        .eraseToAnyPublisher()
     }
     
     // 過濾音頻文件（支持.m4a和.mp3格式）
