@@ -192,6 +192,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         // 在後台線程中加載音軌數據
         self.musicPlayerViewModel.fetchTracks()
         
+        self.listTableView.reloadData()
     }
     
     
@@ -554,6 +555,17 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         
         // 創建專輯選擇器的實例，並傳入 URL
         let albumViewController = AlbumViewController()
+        
+        // 配置回调闭包
+        albumViewController.onAlbumSelected = { [self] albumURL in
+            
+            // 把當前播放器的url重置
+            musicPlayerViewModel.githubAPI.setBaseURL(albumURL)
+            
+            // 重新加載
+            reload()
+        }
+        
         albumViewController.modalPresentationStyle = .custom
         albumViewController.transitioningDelegate = self
         present(albumViewController, animated: true, completion: nil)

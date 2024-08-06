@@ -28,7 +28,7 @@ final class EiteiMusicModel: EiteiMusicProtocol {
     }
     
     // MARK: - 属性
-    private let githubAPI: GithubAPI // GitHub API 实例，用于获取曲目列表
+    public let githubAPI: GithubAPI // GitHub API 实例，用于获取曲目列表
     
     // 使用 @Published 修饰的属性会自动触发视图更新
     @Published var isLoading = false // 是否正在加载中
