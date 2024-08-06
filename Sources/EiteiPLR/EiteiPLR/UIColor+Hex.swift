@@ -140,19 +140,19 @@ extension UIColor {
                   alpha: 1.0)  // 設置透明度
     }
     
-    // 生成随机的美观颜色
-    static func randomAttractiveColor() -> UIColor {
+    
+    // 生成深色的带有微妙色调的灰色
+    static func randomSexyDarkGrayColor() -> UIColor {
+        // 生成随机的亮度，范围从0.1到0.4（深色灰色）
+        let brightness = CGFloat(arc4random_uniform(30) + 10) / 100.0
         
-        // 生成随机的色相值，范围从0到360度
-        let hue = CGFloat(arc4random_uniform(360)) / 360.0
+        // 生成微小的随机色调，范围从0到0.1
+        let hue = CGFloat(arc4random_uniform(10)) / 100.0
         
-        // 生成随机的饱和度，范围从0.5到1.0（较高的饱和度）
-        let saturation = CGFloat(arc4random_uniform(51) + 50) / 100.0
+        // 使用非常低的饱和度确保色调非常微妙
+        let saturation: CGFloat = 0.05
         
-        // 生成随机的亮度，范围从0.4到0.8（中等亮度）
-        let brightness = CGFloat(arc4random_uniform(41) + 40) / 100.0
-        
-        // 返回颜色
+        // 返回带有微妙色调的深灰色
         return UIColor(hue: hue, saturation: saturation, brightness: brightness, alpha: 1.0)
     }
 }

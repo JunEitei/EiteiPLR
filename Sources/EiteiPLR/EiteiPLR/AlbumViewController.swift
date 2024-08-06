@@ -72,7 +72,8 @@ class AlbumViewController: UIViewController, UICollectionViewDataSource, UIColle
         
         // 使用從 API 獲得的數據填充 cell
         let album = albums[indexPath.row]
-        cell.backgroundColor = UIColor.randomAttractiveColor()  // 設置 cell 背景顏色為隨機顏色
+        // 設置專輯背景顏色為深色的且带有微妙色调的灰色
+        cell.backgroundColor = UIColor.randomSexyDarkGrayColor()
         cell.albumNameLabel.text = album.name  // 設置專輯名稱
         cell.artistNameLabel.text = "大毛"  // 設置藝術家名稱或 URL
         cell.albumURL = album.url  // 設置 albumURL
