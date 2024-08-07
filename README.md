@@ -1,6 +1,6 @@
 # Github 音楽プレーヤー
 
-## https://yongcheng.jp/
+## 企業公式サイト：https://yongcheng.jp/
 
 ## Preview：
 
