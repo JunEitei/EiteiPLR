@@ -116,25 +116,25 @@ let package = Package()
     <tr>
         <td>「１」</td>
         <td>
-            <pre><code>把Main.storyboard和ViewController.swift刪掉</code></pre>
+            <pre><code>Main.storyboard と ViewController.swift を削除する</code></pre>
         </td>
     </tr>
     <tr>
         <td>「２」</td>
         <td>
-            <pre><code>同時在Info.plist中（最末尾）把Storyboard Name = Main這一行刪除</code></pre>
+            <pre><code>Info.plist の末尾で、Storyboard Name = Main の行を削除する</code></pre>
         </td>
     </tr>
     <tr>
         <td>「３」</td>
         <td>
-            <pre><code>在Build Settings中把UIKit Main Storyboard File Base Name刪掉</code></pre>
+            <pre><code>Build Settings で UIKit Main Storyboard File Base Name を削除する</code></pre>
         </td>
     </tr>
     <tr>
         <td>「４」</td>
         <td>
-            <pre><code>在Build Settings裡將User Script Sandboxing設置為No</code></pre>
+            <pre><code>Build Settings で User Script Sandboxing を No に設定する</code></pre>
         </td>
     </tr>
 </table>
