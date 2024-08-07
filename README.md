@@ -1,4 +1,4 @@
-# Eitei Github 音楽プレーヤー
+# Github 音楽プレーヤー
 
 ## https://yongcheng.jp/
 
