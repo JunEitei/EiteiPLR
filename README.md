@@ -1,6 +1,6 @@
-# Github 音楽プレーヤー
+# Eitei音楽プレーヤー
 
-## 企業公式サイトとはhttps://yongcheng.jp/
+## 企業公式サイトとは　https://yongcheng.jp/
 
 ## Preview：
 
