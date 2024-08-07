@@ -8,44 +8,44 @@
 <img width="559" alt="截圖 2024-08-06 14 36 34" src="https://github.com/user-attachments/assets/3f87cddb-a3e9-4572-8caf-ef95c54cf84e">
 <img width="559" alt="截圖 2024-08-05 11 34 43" src="https://github.com/user-attachments/assets/b1584908-86f4-41b4-a27e-821db4ab5eab">
 
-## Install via Cocoapods
+## Cocoapods を使ってインストールする方法
 
-1. **新建一個Swift項目，類型選擇Storyboard，然後：**
+1. **新しい Swift プロジェクトを作成し、Storyboard を選択して、次の操作を行います：**
 <table>
     <tr>
         <td>「１」</td>
         <td>
-            <pre><code>把Main.storyboard和ViewController.swift刪掉</code></pre>
+            <pre><code>Main.storyboard と ViewController.swift を削除する</code></pre>
         </td>
     </tr>
     <tr>
         <td>「２」</td>
         <td>
-            <pre><code>同時在Info.plist中（最末尾）把Storyboard Name = Main這一行刪除</code></pre>
+            <pre><code>Info.plist の末尾で、Storyboard Name = Main の行を削除する</code></pre>
         </td>
     </tr>
     <tr>
         <td>「３」</td>
         <td>
-            <pre><code>在Build Settings中把Main Storyboard File Base Name刪掉</code></pre>
+            <pre><code>Build Settings で Main Storyboard File Base Name を削除する</code></pre>
         </td>
     </tr>
     <tr>
         <td>「４」</td>
         <td>
-            <pre><code>在Build Settings裡將User Script Sandboxing設置為No</code></pre>
+            <pre><code>Build Settings で User Script Sandboxing を No に設定する</code></pre>
         </td>
     </tr>
 </table>
 
-2. **右鍵單擊Info.plist，選擇Open as source code，並在最後一個Dict結束標籤之前添加如下代碼（以支持後台音頻播放）：**
+2. **Info.plist を右クリックして「ソースコードとして開く」を選択し、最後の Dict タグの終了タグの前に以下のコードを追加します（バックグラウンドオーディオ再生をサポートするため）：**
    ```xml
     <key>UIBackgroundModes</key>
     <array>
         <string>audio</string>
     </array>
    ```
-3. **在項目根目錄新建Podfile並添加如下內容（“Example-Cocoapods”替換為你的項目名稱）：**
+3. **プロジェクトのルートディレクトリに Podfile を新しく作成し、以下の内容を追加します（「Example-Cocoapods」をあなたのプロジェクト名に置き換えてください）：**
 ```ruby
 
 platform :ios, '12.0'
@@ -58,7 +58,7 @@ target 'Example-Cocoapods' do
 
 end
 ```
-4. **在根目錄運行pod install，完成後打開xcworkspace檔案，並將SceneDelegate.swift替換為如下代碼（把我的地址換成你自己的音樂倉庫地址，音樂倉庫必須是一個Github檔案夾且權限為public）：**
+4. **ルートディレクトリで pod install を実行し、完了後に xcworkspace ファイルを開きます。次に、SceneDelegate.swift を以下のコードで置き換えます（自分の音楽リポジトリの URL に置き換えてください。音楽リポジトリは GitHub 上のフォルダで、パブリックにする必要があります）：**
 ```swift
 import UIKit
 import EiteiPLR
@@ -73,7 +73,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(windowScene: windowScene)
 
-        // 把我的地址換成你自己的音樂倉庫地址
+        // 自分の音楽リポジトリの URL に置き換えてください
         window?.rootViewController = ViewController(baseURL: "https://api.github.com/repos/JunEitei/EiteiPLR/contents/Music")
 
         window?.makeKeyAndVisible()
@@ -82,14 +82,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 }
 ```
 
-5. **將AppDelegate.swift中的didFinishLaunchingWithOptions函數中增加一行（需提前import EiteiPLR）：**
+5. **AppDelegate.swift の didFinishLaunchingWithOptions 関数に以下の行を追加します（事前に EiteiPLR をインポートしておく必要があります）：**
 ```swift
 
         EiteiAudioSessionManager.shared.configureAudioSession()
 
 ```
 
-6. （Optional）**必要時執行下面的命令以清理Pod緩存：**：
+6. （オプション）必要に応じて以下のコマンドを実行して Pod キャッシュをクリアします：**：
 ```ruby
 pod cache clean --all
 pod deintegrate
@@ -97,12 +97,12 @@ pod clean
 rm -rf ~/Library/Developer/Xcode/DerivedData/*
 pod install --repo-update
 ```    
-7.  **運行項目即可**
+7.  **プロジェクトを実行します**
 
 
-## Install via SPM
+## SPM を使ってインストールする方法
 
-1. **新建一個Swift項目，類型選擇Storyboard。接著在根目錄新建Package.swift，內容如下：**
+1. **新しい Swift プロジェクトを作成し、Storyboard を選択します。次に、ルートディレクトリに Package.swift を新しく作成し、以下の内容を追加します：**
 ```swift
 // swift-tools-version: 5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
@@ -111,7 +111,7 @@ import PackageDescription
 
 let package = Package()
 ```
-2. **執行下列操作：**
+2. **次の操作を行います：**
 <table>
     <tr>
         <td>「１」</td>
@@ -139,7 +139,7 @@ let package = Package()
     </tr>
 </table>
 
-3. **右鍵單擊Info.plist，選擇Open as source code，並在最後一個Dict結束標籤之前添加如下代碼（以支持後台音頻播放）：**
+3. **Info.plist を右クリックして「ソースコードとして開く」を選択し、最後の Dict タグの終了タグの前に以下のコードを追加します（バックグラウンドオーディオ再生をサポートするため）：**
    ```xml
     <key>UIBackgroundModes</key>
     <array>
@@ -147,7 +147,7 @@ let package = Package()
     </array>
    ```
 
-4. **將SceneDelegate.swift替換為如下代碼（把我的地址換成你自己的音樂倉庫地址，音樂倉庫必須是一個Github檔案夾且權限為public）：**
+4. **SceneDelegate.swift を以下のコードで置き換えます（自分の音楽リポジトリの URL に置き換えてください。音楽リポジトリは GitHub 上のフォルダで、パブリックにする必要があります）：**
 ```swift
 import UIKit
 import EiteiPLR
@@ -162,7 +162,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(windowScene: windowScene)
 
-        // 把我的地址換成你自己的音樂倉庫地址
+        // 自分の音楽リポジトリの URL に置き換えてください
         window?.rootViewController = ViewController(baseURL: "https://api.github.com/repos/JunEitei/EiteiPLR/contents/Music")
 
         window?.makeKeyAndVisible()
@@ -171,33 +171,34 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 }
 ```
 
-5. **將AppDelegate.swift中的didFinishLaunchingWithOptions函數中增加一行（需提前import EiteiPLR）：**
+5. **AppDelegate.swift の didFinishLaunchingWithOptions 関数に以下の行を追加します（事前に EiteiPLR をインポートしておく必要があります）：**
 ```swift
 
         EiteiAudioSessionManager.shared.configureAudioSession()
 
 ```
 
-6. **順序執行以下操作：**
+6. **以下の手順を順番に実行します：**
 <table>
     <tr>
         <td>「１」</td>
         <td>
-            <pre><code>點擊項目的Build Target，在Build Phases找到“Link Binary With Libraryies”,點擊加號</code></pre>
+            <pre><code>プロジェクトの Build Target をクリックし、Build Phases で「Link Binary With Libraries」を見つけて、プラスアイコンをクリックする</code></pre>
         </td>
     </tr>
     <tr>
         <td>「２」</td>
         <td>
-            <pre><code>彈出的對話框中點擊Add Other，然後Add Package Dependency</code></pre>
+            <pre><code>表示されるダイアログで「Add Other」をクリックし、「Add Package Dependency」を選択する</code></pre>
         </td>
     </tr>
     <tr>
         <td>「３」</td>
         <td>
-            <pre><code>在彈出的對話框中，點擊Add Local（亦可搜索eiteiplr拉取遠程的）</code></pre>
+            <pre><code>表示されるダイアログで「Add Local」をクリックする（リモートの EiteiPLR を検索して取得することも可能）</code></pre>
         </td>
     </tr>
 </table>
 
-7. **運行項目即可**
+
+7. **プロジェクトを実行します**
