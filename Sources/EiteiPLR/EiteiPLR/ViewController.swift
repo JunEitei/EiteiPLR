@@ -704,13 +704,6 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                             // 从数据模型中删除音轨
                             musicPlayerViewModel.tracks.remove(at: indexPath.row)
                             
-                            // 更新表格视图
-                            DispatchQueue.main.async { [self] in
-                                listTableView.deleteRows(at: [indexPath], with: .fade)
-                            }
-                            
-                            // 刷新
-                            reload()
                             
                         case .failure(let error):
                             print("File delete failed: \(error.localizedDescription)")

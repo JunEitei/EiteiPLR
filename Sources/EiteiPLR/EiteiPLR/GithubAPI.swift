@@ -41,6 +41,12 @@ struct GitHubAlbum: Codable {
 }
 
 
+// 用於刪除
+struct FileInfo: Decodable {
+    let sha: String
+}
+
+
 public final class GithubAPI {
     // 網絡連接實例
     private var session: Session
@@ -232,26 +238,27 @@ public final class GithubAPI {
             return
         }
         
-        let url = baseURL + "/contents/\(encodedPath)"
-        
+        let url = removeRefQuery(from: baseURL) + "/\(encodedPath)"
+
         // 设置请求头
         let headers: HTTPHeaders = [
             "Authorization": "token \(token)",
-            "Accept": "application/vnd.github.v3+json"
+            "Accept": "application/json"
         ]
         
         // 发送 GET 请求以获取文件的 SHA 值
         AF.request(url, method: .get, headers: headers)
-            .validate()
-            .responseJSON { response in
+            .validate()  // Validate status code to be 200-299
+            .responseDecodable(of: FileInfo.self) { response in
                 switch response.result {
-                case .success(let json):
-                    if let jsonDict = json as? [String: Any], let sha = jsonDict["sha"] as? String {
-                        completion(.success(sha))
-                    } else {
-                        completion(.failure(NSError(domain: "Invalid response format", code: -1, userInfo: nil)))
-                    }
+                case .success(let fileInfo):
+                    completion(.success(fileInfo.sha))
                 case .failure(let error):
+                    // Provide more detailed error information
+                    if let data = response.data {
+                        let responseString = String(data: data, encoding: .utf8) ?? "No response data"
+                        print("Response data: \(responseString)")
+                    }
                     completion(.failure(error))
                 }
             }
@@ -307,8 +314,8 @@ public final class GithubAPI {
             return
         }
         
-        let url = baseURL + "/contents/\(encodedPath)"
-        
+        let url = removeRefQuery(from: baseURL) + "/\(encodedPath)"
+
         // 设置请求头
         let headers: HTTPHeaders = [
             "Authorization": "token \(token)",
