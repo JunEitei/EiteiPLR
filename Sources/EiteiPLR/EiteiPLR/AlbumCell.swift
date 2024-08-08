@@ -8,13 +8,14 @@
 #if canImport(UIKit)
 import UIKit
 #endif
+import SnapKit
 
 class AlbumCell: UICollectionViewCell {
     
     // 定義專輯名稱標籤
     let albumNameLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 23)  // 設置字體為粗體，字號為 18
+        label.font = UIFont.boldSystemFont(ofSize: 23)  // 設置字體為粗體，字號為 23
         label.textColor = .white  // 設置文字顏色為白色
         label.textAlignment = .center  // 設置文字對齊方式為居中
         return label
@@ -55,10 +56,36 @@ class AlbumCell: UICollectionViewCell {
             make.centerX.equalToSuperview()  // 將藝術家名稱標籤的 X 軸中心對齊到超級視圖
             make.top.equalTo(albumNameLabel.snp.bottom).offset(8)  // 將藝術家名稱標籤的頂部對齊到專輯名稱標籤的底部，並向下偏移 8 點
         }
+        
+        // 添加灰度斜線紋理
+        addGrayStripes()
     }
     
     // 當使用 Interface Builder 時，需要實現此初始化方法
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")  // 此初始化方法未實現
+    }
+    
+    // 專輯封面紋理
+    private func addGrayStripes() {
+        let stripeLayer = CAShapeLayer()
+        let path = UIBezierPath()
+        let numberOfStripes = 6  // 設置直線數量
+        let stripeWidth: CGFloat = 2.0
+        let stripeColor = UIColor.black
+        
+        for i in 0..<numberOfStripes {
+            let xOffset = CGFloat(i) * (stripeWidth * 2)
+            path.move(to: CGPoint(x: xOffset, y: 0))
+            path.addLine(to: CGPoint(x: xOffset + stripeWidth, y: bounds.height))
+        }
+        
+        stripeLayer.path = path.cgPath
+        stripeLayer.strokeColor = stripeColor.cgColor
+        stripeLayer.lineWidth = stripeWidth
+        stripeLayer.fillColor = UIColor.clear.cgColor
+        stripeLayer.frame = contentView.bounds
+        stripeLayer.opacity = 0.5  // 設置透明度以避免遮擋標題
+        contentView.layer.addSublayer(stripeLayer)
     }
 }
