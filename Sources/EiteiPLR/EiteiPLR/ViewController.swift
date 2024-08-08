@@ -12,6 +12,7 @@ import UIKit
 import SnapKit
 import Combine
 import MobileCoreServices
+import ProgressHUD
 
 public class ViewController: UIViewController, UISearchBarDelegate ,UIViewControllerTransitioningDelegate {
     
@@ -271,11 +272,10 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         }
     }
     
+    // 重新加載數據
     @objc func reload() {
-        
         // 检查提取的专辑名称是否为 "Custom Album"
         if GithubAPI.extractSubstring(from: baseURL) == "Custom Album" {
-            
             // 创建自定义的加号按钮
             let addButton = UIButton(type: .custom)
             addButton.setImage(UIImage(systemName: "plus"), for: .normal) // 使用系统加号图标
@@ -295,13 +295,15 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
             navigationItem.rightBarButtonItem = nil
         }
         
-        // 在後台線程中加載音軌數據
-        self.musicPlayerViewModel.fetchTracks()
-        
-        
-        
-        // 加載表格數據
-        self.listTableView.reloadData()
+        // 在后台线程中加载音轨数据
+        DispatchQueue.global(qos: .background).async {
+            self.musicPlayerViewModel.fetchTracks()
+            
+            // 在主线程上刷新表格数据
+            DispatchQueue.main.async {
+                self.listTableView.reloadData()
+            }
+        }
     }
     
     
@@ -725,13 +727,41 @@ extension ViewController: UIDocumentPickerDelegate {
     public func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         guard let selectedFileURL = urls.first else { return }
         
-        // 检查文件扩展名
+        // 檢查文件擴展名
         let fileExtension = selectedFileURL.pathExtension.lowercased()
         if fileExtension == "mp3" || fileExtension == "m4a" {
-            // 处理选择的文件
+            // 處理選擇的文件
             print("Selected file: \(selectedFileURL)")
+            
+            do {
+                // 讀取文件內容為二進制數據
+                let fileData = try Data(contentsOf: selectedFileURL)
+                
+                // 獲取文件路徑（在 GitHub 儲存庫中的路徑）
+                let filePath = "Custom Album/\(selectedFileURL.lastPathComponent)"
+                
+                // 創建 GithubAPI 實例
+                let githubAPI = GithubAPI(baseURL: baseURL)
+                
+                // 調用上傳文件方法
+                let token = "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"
+                githubAPI.uploadFile(filePath: filePath, fileContent: fileData, token: token) { [self] result in
+                    switch result {
+                    case .success(let response):
+                        print("File uploaded successfully: \(response)")
+                        
+                        // TODO：需要大概5-10秒的時間，才能刷新出來⋯⋯
+                        presentAlbumViewController()
+                        
+                    case .failure(let error):
+                        print("File upload failed: \(error)")
+                    }
+                }
+            } catch {
+                print("Failed to read file content: \(error)")
+            }
         } else {
-            // 弹出警告或错误提示
+            // 彈出警告或錯誤提示
             showAlert(for: selectedFileURL)
         }
     }

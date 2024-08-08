@@ -40,56 +40,6 @@ struct GitHubAlbum: Codable {
     let url: String // 專輯的 URL
 }
 
-// MARK: - GitHubResponse
-// GitHubResponse 結構體，用來表示從 GitHub 獲取的響應結果
-struct GitHubResponse: Codable {
-    let content: GitHubFile? // 文件內容，可選
-    let commit: GitHubCommit? // 提交資訊，可選
-}
-
-// MARK: - GitHubCommit
-// GitHubCommit 結構體，用來表示 Git 提交資訊
-struct GitHubCommit: Codable {
-    let sha: String // 提交的 SHA-1 哈希值
-    let node_id: String // 提交的 Node ID
-    let commit: CommitDetail // 提交詳細資訊
-}
-
-// MARK: - CommitDetail
-// CommitDetail 結構體，用來表示提交的詳細資訊
-struct CommitDetail: Codable {
-    let message: String // 提交訊息
-    let author: CommitAuthor // 提交作者資訊
-    let committer: CommitAuthor // 提交者資訊
-    let tree: CommitTree // 提交的樹狀結構
-    let url: String // 提交的 URL
-    let comment_count: Int // 提交的評論數
-    let verification: CommitVerification // 提交驗證資訊
-}
-
-// MARK: - CommitAuthor
-// CommitAuthor 結構體，用來表示提交者的資訊
-struct CommitAuthor: Codable {
-    let name: String // 提交者名稱
-    let email: String // 提交者電子郵件
-    let date: String // 提交日期
-}
-
-// MARK: - CommitTree
-// CommitTree 結構體，用來表示提交的樹狀結構
-struct CommitTree: Codable {
-    let sha: String // 樹的 SHA-1 哈希值
-    let url: String // 樹的 URL
-}
-
-// MARK: - CommitVerification
-// CommitVerification 結構體，用來表示提交的驗證資訊
-struct CommitVerification: Codable {
-    let verified: Bool // 是否驗證通過
-    let reason: String // 驗證理由
-    let signature: String? // 簽名，可選
-    let payload: String? // 載荷，可選
-}
 
 public final class GithubAPI {
     // 網絡連接實例
@@ -200,31 +150,23 @@ public final class GithubAPI {
         }
     }
     
-    // 創建文件夾
-    func createFolder(owner: String, repo: String, folderPath: String, token: String, completion: @escaping (Result<GitHubResponse, Error>) -> Void) {
-        let path = "\(folderPath)/.gitkeep"
-        let message = "Create folder \(folderPath)"
-        let content = Data() // 空文件的數據
-        
-        uploadFile(owner: owner, repo: repo, path: path, message: message, content: content, token: token, completion: completion)
-    }
     
-    // 上傳文件
-    func uploadFile(owner: String, repo: String, filePath: String, fileContent: String, token: String, completion: @escaping (Result<GitHubResponse, Error>) -> Void) {
-        // 將文件內容的字串轉換為 Data 類型，使用 UTF-8 編碼
-        let content = fileContent.data(using: .utf8)!
+    // 上傳文件方法
+    func uploadFile(filePath: String, fileContent: Data, token: String, completion: @escaping (Result<GitHubResponse, Error>) -> Void) {
+        // 將文件內容進行 Base64 編碼
+        let base64Content = fileContent.base64EncodedString()
         
         // 設定提交消息，包括文件路徑
         let message = "Add new file at \(filePath)"
         
-        // 調用實際上傳文件的函數，傳遞必要的參數，包括擁有者、儲存庫、文件路徑、提交消息、文件內容和 token
-        uploadFile(owner: owner, repo: repo, path: filePath, message: message, content: content, token: token, completion: completion)
+        // 調用實際上傳文件的方法，傳遞必要的參數，包括擁有者、儲存庫、文件路徑、提交消息、文件內容和 token
+        uploadFile(path: filePath, message: message, content: base64Content, token: token, completion: completion)
     }
     
-    
-    private func uploadFile(owner: String, repo: String, path: String, message: String, content: Data, token: String, completion: @escaping (Result<GitHubResponse, Error>) -> Void) {
-        // 構造 GitHub API 的 URL，包括擁有者、儲存庫名和文件路徑
-        let url = "https://api.github.com/repos/\(owner)/\(repo)/contents/\(path)"
+    private func uploadFile(path: String, message: String, content: String, token: String, completion: @escaping (Result<GitHubResponse, Error>) -> Void) {
+        // 構造 GitHub API 的 URL，包括擁有者、儲存庫名和文件路徑，並進行URL編碼
+        let encodedPath = path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? path
+        let url = "https://api.github.com/repos/JunEitei/Music/contents/\(encodedPath)"
         
         // 設定 HTTP 請求的標頭，包括授權 token 和接受的內容類型
         let headers: HTTPHeaders = [
@@ -235,16 +177,16 @@ public final class GithubAPI {
         // 設定要上傳的參數，包括提交消息、文件內容和提交者資訊
         let parameters: [String: Any] = [
             "message": message,  // 提交消息，用於描述此次更改
-            "content": content.base64EncodedString(),  // 文件內容，進行 Base64 編碼後上傳
+            "content": content,  // 文件內容，進行 Base64 編碼後上傳
             "committer": [  // 提交者的詳細資訊
-                "name": "Your Name",  // 提交者的名稱
-                "email": "your-email@example.com"  // 提交者的電子郵件
+                "name": "大毛",  // 提交者的名稱
+                "email": "dadada.maomaomao@gmail.com"  // 提交者的電子郵件
                          ]
         ]
         
         // 使用 Alamofire 發送 PUT 請求來上傳文件
-        session.request(url, method: .put, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
-            .validate()  // 驗證響應狀態碼是否為 2xx 範圍
+        AF.request(url, method: .put, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+            .validate(contentType: ["application/vnd.github.v3+json", "application/json"])  // 验证响应的内容类型
             .responseDecodable(of: GitHubResponse.self) { response in  // 解析響應為 GitHubResponse 類型
                 switch response.result {
                 case .success(let value):
@@ -256,6 +198,7 @@ public final class GithubAPI {
                 }
             }
     }
+    
     
     // 定義函數來獲取和解析專輯數據
     func fetchGitHubAlbums(completion: @escaping ([GitHubAlbum]?) -> Void) {

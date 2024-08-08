@@ -57,7 +57,7 @@ class AlbumCell: UICollectionViewCell {
             make.top.equalTo(albumNameLabel.snp.bottom).offset(8)  // 將藝術家名稱標籤的頂部對齊到專輯名稱標籤的底部，並向下偏移 8 點
         }
         
-        // 添加灰度斜線紋理
+        // 針對固定專輯添加灰度斜線紋理
         addGrayStripes()
     }
     
@@ -71,7 +71,7 @@ class AlbumCell: UICollectionViewCell {
         let stripeLayer = CAShapeLayer()
         let path = UIBezierPath()
         let numberOfStripes = 6  // 設置直線數量
-        let stripeWidth: CGFloat = 2.0
+        let stripeWidth: CGFloat = 1 // 寬
         let stripeColor = UIColor.black
         
         for i in 0..<numberOfStripes {

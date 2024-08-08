@@ -71,12 +71,31 @@ class AlbumViewController: UIViewController, UICollectionViewDataSource, UIColle
     // 提供每個 cell 的內容
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "AlbumCell", for: indexPath) as! AlbumCell
-        cell.layer.cornerRadius = 7.0  // 設置 cell 的圓角半徑
+        
+        cell.layer.cornerRadius = 9.0  // 設置 cell 的圓角半徑
+        cell.layer.masksToBounds = true  // 確保圓角效果應用於子視圖
+        
+        // 移除之前的漸變層（如果有）
+        if let sublayers = cell.layer.sublayers {
+            for sublayer in sublayers {
+                if sublayer is CAGradientLayer {
+                    sublayer.removeFromSuperlayer()
+                }
+            }
+        }
         
         // 使用從 API 獲得的數據填充 cell
         let album = albums[indexPath.row]
-        // 設置專輯背景顏色為深色的且带有微妙色调的灰色
-        cell.backgroundColor = UIColor.randomSteppedDarkGrayColor()
+        
+        if album.name.contains("Custom") {
+            
+            cell.backgroundColor = UIColor.black
+            
+        } else {
+            // 設置專輯背景顏色為深色的且带有微妙色调的灰色
+            cell.backgroundColor = UIColor.randomSteppedDarkGrayColor()
+        }
+        
         cell.albumNameLabel.text = album.name  // 設置專輯名稱
         cell.artistNameLabel.text = "大毛"  // 設置藝術家名稱或 URL
         cell.albumURL = album.url  // 設置 albumURL
