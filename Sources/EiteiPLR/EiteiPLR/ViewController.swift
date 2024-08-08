@@ -32,7 +32,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     }
     
     // 此處聲明Github音樂倉庫的路徑，此為默認值
-    var baseURL = "https://api.github.com/repos/JunEitei/Music/contents/わたしも"
+    var baseURL: String!
     
     // MARK: - Properties
     private var subscriptions = Set<AnyCancellable>() // 訂閱集合，用於管理Combine框架的訂閱
@@ -157,8 +157,6 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        // 配置按鈕
-        navigateButton.setTitle("Navigate", for: .normal)
         
         // 更改字体大小
         navigateButton.titleLabel?.font = UIFont.systemFont(ofSize: 28) // 这里设置字体大小为18
@@ -186,10 +184,19 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         if let savedAlbumURL = UserDefaults.standard.string(forKey: "SavedAlbumURL") {
             // 如果 UserDefaults 中有值，则使用该值更新 baseURL
             baseURL = savedAlbumURL
+            
+            // 自定義導航條的標題，截取專輯名稱並顯示
+            navigationItem.title = GithubAPI.extractSubstring(from: baseURL)
+        }else {
+            
+            // 否則默認播放わたしも
+            baseURL = baseURL + "/わたしも"
+            
+            // 標題設置為わたしも
+            navigationItem.title = "わたしも"
         }
         
-        // 自定義導航條的標題，截取專輯名稱並顯示
-        navigationItem.title = GithubAPI.extractSubstring(from: baseURL)
+        
         
         
         // 使用初始的 baseURL 初始化 GithubAPI 实例

@@ -98,7 +98,7 @@ public final class GithubAPI {
     // 網路狀態監聽器
     private let reachability = try! Reachability()
     
-    private var baseURL: String
+    public var baseURL: String!
     
     // 初始化方法，設定 baseURL 並設置網絡連接配置
     public init(baseURL: String) {
@@ -259,7 +259,7 @@ public final class GithubAPI {
     // 定義函數來獲取和解析專輯數據
     func fetchGitHubAlbums(completion: @escaping ([GitHubAlbum]?) -> Void) {
         // 設定 API URL
-        guard let url = URL(string: "https://api.github.com/repos/JunEitei/Music/contents") else {
+        guard let url = URL(string: baseURL) else {
             print("Invalid URL")
             completion(nil)
             return
