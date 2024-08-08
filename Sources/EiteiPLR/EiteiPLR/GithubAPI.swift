@@ -276,4 +276,26 @@ public final class GithubAPI {
             }
         }
     }
+    
+    // 從URL中截取專輯名稱
+    static func extractSubstring(from urlString: String) -> String? {
+        // 尋找 "contents" 的結尾位置
+        guard let contentsRange = urlString.range(of: "contents") else {
+            print("Unable to find 'contents' in the URL")
+            return nil
+        }
+        
+        // "contents" 的結尾位置
+        let contentsEndIndex = urlString.index(contentsRange.upperBound, offsetBy: 0)
+        
+        // 尋找問號的位置
+        guard let questionMarkRange = urlString.range(of: "?", range: contentsEndIndex..<urlString.endIndex) else {
+            print("Unable to find '?' after 'contents' in the URL")
+            return nil
+        }
+        
+        // 截取 "contents" 後到問號之間的字符
+        let substring = urlString[contentsEndIndex..<questionMarkRange.lowerBound]
+        return String(substring)
+    }
 }
