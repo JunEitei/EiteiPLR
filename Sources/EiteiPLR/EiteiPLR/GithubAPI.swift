@@ -264,50 +264,38 @@ public final class GithubAPI {
         return urlComponents.url?.absoluteString ?? urlString
     }
     
-    // 新增刪除文件方法
-    func deleteFile(filePath: String, token: String, completion: @escaping (Result<GitHubResponse, Error>) -> Void) {
-        // 設定提交消息，包括文件路徑
-        let message = "Delete file at \(filePath)"
-        
-        // 調用實際刪除文件的方法，傳遞必要的參數，包括文件路徑、提交消息和 token
-        deleteFile(path: filePath, message: message, token: token, completion: completion)
-    }
     
-    // 刪除文件的方法
-    private func deleteFile(path: String, message: String, token: String, completion: @escaping (Result<GitHubResponse, Error>) -> Void) {
-        // 構造 GitHub API 的 URL，包括擁有者、儲存庫名和文件路徑，並進行URL編碼
-        let encodedPath = path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? path
-        
-        // 對url進行清洗
+    // 删除文件的方法
+    func deleteFile(from filePath: String, token: String, completion: @escaping (Result<String, Error>) -> Void) {
+        // 编码文件路径
+        let encodedPath = filePath.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? filePath
         let url = removeRefQuery(from: baseURL) + "/\(encodedPath)"
         
-        // 設定 HTTP 請求的標頭，包括授權 token 和接受的內容類型
+        // 设置请求头
         let headers: HTTPHeaders = [
-            "Authorization": "token \(token)",  // 設定授權標頭，包含個人訪問 token
-            "Accept": "application/vnd.github.v3+json"  // 設定接受的內容類型為 GitHub API v3 的 JSON 格式
+            "Authorization": "token \(token)",
+            "Accept": "application/vnd.github.v3+json"
         ]
         
-        // 設定要上傳的參數，包括提交消息和提交者資訊
-        let parameters: [String: Any] = [
-            "message": message,  // 提交消息，用於描述此次更改
-            "committer": [  // 提交者的詳細資訊
-                "name": "大毛",  // 提交者的名稱
-                "email": "dadada.maomaomao@gmail.com"  // 提交者的電子郵件
-                         ]
-        ]
-        
-        // 使用 Alamofire 發送 DELETE 請求來刪除文件
-        AF.request(url, method: .delete, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
-            .validate(contentType: ["application/vnd.github.v3+json", "application/json"])  // 验证响应的内容类型
-            .responseDecodable(of: GitHubResponse.self) { response in  // 解析響應為 GitHubResponse 類型
+        // 发送 DELETE 请求
+        AF.request(url, method: .delete, headers: headers)
+            .validate(statusCode: 204...204) // 仅验证 204 状态码
+            .responseData { response in
                 switch response.result {
-                case .success(let value):
-                    // 請求成功，將結果傳遞給 completion 處理
-                    completion(.success(value))
+                case .success(let data):
+                    // 请求成功且状态码为 204，文件删除成功
+                    let responseString = String(data: data, encoding: .utf8) ?? "No response data"
+                    completion(.success(responseString))
                 case .failure(let error):
-                    // 請求失敗，將錯誤傳遞給 completion 處理
+                    // 请求失败，返回错误
+                    print("File delete failed: \(error.localizedDescription)")
+                    if let data = response.data {
+                        let responseString = String(data: data, encoding: .utf8) ?? "No response data"
+                        print("Response data: \(responseString)")
+                    }
                     completion(.failure(error))
                 }
             }
     }
+    
 }

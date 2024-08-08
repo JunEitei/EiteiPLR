@@ -694,8 +694,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             // 創建 GithubAPI 實例
             let githubAPI = GithubAPI(baseURL: baseURL)
             
-            // 調用上傳文件方法
-            githubAPI.deleteFile(filePath: filePath, token: githubAPI.token) { [self] result in
+            // 調用刪除文件方法
+            githubAPI.deleteFile(from: filePath, token: githubAPI.token) { [self] result in
                 switch result {
                 case .success(let response):
                     print("File deleted successfully: \(response)")
@@ -710,11 +710,11 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                     reload()
                     
                 case .failure(let error):
-                    print("File upload failed: \(error)")
+                    print("File delete failed: \(error)")
                 }
             }
         }
-
+        
     }
     
     
