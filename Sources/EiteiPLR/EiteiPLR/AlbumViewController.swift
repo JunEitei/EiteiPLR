@@ -13,7 +13,7 @@ import SnapKit
 class AlbumViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
     var collectionView: UICollectionView!  // 定義 UICollectionView 屬性
-    var albums: [AlbumFetcher.GitHubAlbum] = []  // 更新 albums 屬性來存儲從 API 獲得的數據
+    var albums: [GitHubAlbum] = []  // 更新 albums 屬性來存儲從 API 獲得的數據
     // 回调闭包
     var onAlbumSelected: ((String) -> Void)?
     
@@ -52,8 +52,9 @@ class AlbumViewController: UIViewController, UICollectionViewDataSource, UIColle
     
     // 獲取專輯數據並更新 collectionView
     private func fetchAlbumData() {
-        let fetcher = AlbumFetcher()
-        fetcher.fetchGitHubAlbums { [weak self] fetchedAlbums in
+        
+        let githubAPI = GithubAPI(baseURL: "https://api.github.com/repos/JunEitei/Music/contents")  // 创建 GithubAPI 实例
+        githubAPI.fetchGitHubAlbums { [weak self] fetchedAlbums in
             if let fetchedAlbums = fetchedAlbums {
                 // 在主線程中處理結果
                 DispatchQueue.main.async {

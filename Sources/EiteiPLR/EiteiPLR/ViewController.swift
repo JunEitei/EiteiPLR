@@ -198,7 +198,7 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         
         if gesture.state == .began {
             // 获取点击的单元格的数据
-            guard let cell = listTableView.cellForRow(at: indexPath) as? EiteiMusicCell else { return }
+            guard listTableView.cellForRow(at: indexPath) is EiteiMusicCell else { return }
             
             // 根据数据模型获取相应的音樂模型
             let track = musicPlayerViewModel.tracks[indexPath.row]
