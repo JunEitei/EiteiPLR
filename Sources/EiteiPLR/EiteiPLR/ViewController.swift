@@ -11,6 +11,7 @@ import UIKit
 
 import SnapKit
 import Combine
+import MobileCoreServices
 
 public class ViewController: UIViewController, UISearchBarDelegate ,UIViewControllerTransitioningDelegate {
     
@@ -234,8 +235,13 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     
     // 加号按钮点击事件处理
     @objc private func addButtonTapped() {
-        // 在这里处理加号按钮的点击事件
-        print("Add button tapped")
+        let documentPicker = UIDocumentPickerViewController(
+            documentTypes: [String(kUTTypeAudio)],
+            in: .import
+        )
+        documentPicker.delegate = self
+        documentPicker.allowsMultipleSelection = false
+        present(documentPicker, animated: true, completion: nil)
     }
     
     // 處理長按手勢
@@ -711,3 +717,27 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
 }
 
+
+// 文件選擇功能擴展
+extension ViewController: UIDocumentPickerDelegate {
+    
+    // 文件選擇完畢
+    public func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        guard let selectedFileURL = urls.first else { return }
+        
+        // 检查文件扩展名
+        let fileExtension = selectedFileURL.pathExtension.lowercased()
+        if fileExtension == "mp3" || fileExtension == "m4a" {
+            // 处理选择的文件
+            print("Selected file: \(selectedFileURL)")
+        } else {
+            // 弹出警告或错误提示
+            print("Selected file is not a valid audio file.")
+        }
+    }
+    
+    public func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+        // 处理取消事件
+        print("Document picker was cancelled.")
+    }
+}
