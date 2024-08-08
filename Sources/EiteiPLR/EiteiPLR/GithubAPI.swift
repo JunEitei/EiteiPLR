@@ -51,7 +51,7 @@ public final class GithubAPI {
     // 網絡連接實例
     private var session: Session
     
-    public let token = "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"
+    public let token = "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"
     
     
     // 網路狀態監聽器
