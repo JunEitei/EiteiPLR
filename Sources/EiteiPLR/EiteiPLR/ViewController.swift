@@ -732,12 +732,23 @@ extension ViewController: UIDocumentPickerDelegate {
             print("Selected file: \(selectedFileURL)")
         } else {
             // 弹出警告或错误提示
-            print("Selected file is not a valid audio file.")
+            showAlert(for: selectedFileURL)
         }
     }
     
     public func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
         // 处理取消事件
         print("Document picker was cancelled.")
+    }
+    
+    // MARK: - Helper Methods
+    private func showAlert(for fileURL: URL) {
+        let alert = UIAlertController(
+            title: "無效的檔案",
+            message: "選擇的檔案不是有效的音訊檔案。請選擇 .mp3 或 .m4a 檔案。",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "確定", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
 }
