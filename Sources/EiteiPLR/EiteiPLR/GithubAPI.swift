@@ -160,8 +160,8 @@ public final class GithubAPI {
     // 讀取全部音軌同時統計數量
     func fetchTracks() -> AnyPublisher<[GitHubFile], Error> {
         // 顯示 ProgressHUD
-        ProgressHUD.colorHUD = .eiteiPurple
-        ProgressHUD.colorAnimation = .eiteiPurple
+        ProgressHUD.colorHUD = .white // 背景色白色
+        ProgressHUD.colorAnimation = .eiteiPurple // 動畫為紫色
         ProgressHUD.fontStatus = .systemFont(ofSize: 21, weight: .ultraLight)
         ProgressHUD.animate("楽しんで", .triangleDotShift)
         
