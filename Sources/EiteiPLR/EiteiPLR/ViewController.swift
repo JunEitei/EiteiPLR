@@ -180,6 +180,8 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         }
         
         
+        
+        
         // 从 UserDefaults 获取保存的专辑 URL（如果有的话）
         if let savedAlbumURL = UserDefaults.standard.string(forKey: "SavedAlbumURL") {
             // 如果 UserDefaults 中有值，则使用该值更新 baseURL
@@ -195,7 +197,6 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
             // 標題設置為わたしも
             navigationItem.title = "わたしも"
         }
-        
         
         
         
@@ -231,6 +232,12 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         listTableView.addGestureRecognizer(longPressGesture)
     }
     
+    // 加号按钮点击事件处理
+    @objc private func addButtonTapped() {
+        // 在这里处理加号按钮的点击事件
+        print("Add button tapped")
+    }
+    
     // 處理長按手勢
     @objc private func handleLongPress(_ gesture: UILongPressGestureRecognizer) {
         let location = gesture.location(in: listTableView)
@@ -260,9 +267,34 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     
     @objc func reload() {
         
+        // 检查提取的专辑名称是否为 "Custom Album"
+        if GithubAPI.extractSubstring(from: baseURL) == "Custom Album" {
+            
+            // 创建自定义的加号按钮
+            let addButton = UIButton(type: .custom)
+            addButton.setImage(UIImage(systemName: "plus"), for: .normal) // 使用系统加号图标
+            addButton.tintColor = .white // 设置加号颜色为白色
+            addButton.addTarget(self, action: #selector(addButtonTapped), for: .touchUpInside)
+            
+            // 设置按钮的大小
+            addButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+            
+            // 创建 UIBarButtonItem 并将自定义按钮作为其视图
+            let addButtonItem = UIBarButtonItem(customView: addButton)
+            
+            // 设置导航条的右上角按钮
+            navigationItem.rightBarButtonItem = addButtonItem
+        } else {
+            // 取消导航条的右上角按钮
+            navigationItem.rightBarButtonItem = nil
+        }
+        
         // 在後台線程中加載音軌數據
         self.musicPlayerViewModel.fetchTracks()
         
+        
+        
+        // 加載表格數據
         self.listTableView.reloadData()
     }
     
@@ -633,11 +665,15 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             // 把當前播放器的url重置
             musicPlayerViewModel.githubAPI.setBaseURL(albumURL)
             
+            // 修改baseURL
+            self.baseURL = albumURL
+            
             // 重新加載
             reload()
             
             // 保存专辑 URL 到 UserDefaults
             UserDefaults.standard.set(albumURL, forKey: "SavedAlbumURL")
+            
             
             // 修改標題
             navigationItem.title = GithubAPI.extractSubstring(from: albumURL)
