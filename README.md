@@ -4,7 +4,7 @@
 
 ## Preview：
 
-<img width="559" alt="截圖 2024-08-06 15 59 39" src="https://github.com/user-attachments/assets/cf5570ff-37ce-4a65-a069-711eb5138d1a">
+<img width="559" alt="截圖 2024-08-08 12 01 37" src="https://github.com/user-attachments/assets/5a812554-bb95-4fd6-ac35-5c7e6f6ba231">
 <img width="559" alt="截圖 2024-08-08 11 53 11" src="https://github.com/user-attachments/assets/c68688fe-9e3d-48d5-9fc6-22d1b09f6d7b">
 <img width="559" alt="截圖 2024-08-05 11 34 43" src="https://github.com/user-attachments/assets/b1584908-86f4-41b4-a27e-821db4ab5eab">
 
