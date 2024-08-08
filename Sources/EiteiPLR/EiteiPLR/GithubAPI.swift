@@ -45,6 +45,9 @@ public final class GithubAPI {
     // 網絡連接實例
     private var session: Session
     
+    public let token = "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"
+    
+    
     // 網路狀態監聽器
     private let reachability = try! Reachability()
     
@@ -247,6 +250,20 @@ public final class GithubAPI {
         return decodedString
     }
     
+    // 清洗URL
+    func removeRefQuery(from urlString: String) -> String {
+        // 使用 URL 组件解析 URL 字符串
+        guard var urlComponents = URLComponents(string: urlString) else {
+            return urlString
+        }
+        
+        // 移除 query 部分
+        urlComponents.query = nil
+        
+        // 返回更新后的 URL 字符串
+        return urlComponents.url?.absoluteString ?? urlString
+    }
+    
     // 新增刪除文件方法
     func deleteFile(filePath: String, token: String, completion: @escaping (Result<GitHubResponse, Error>) -> Void) {
         // 設定提交消息，包括文件路徑
@@ -255,13 +272,15 @@ public final class GithubAPI {
         // 調用實際刪除文件的方法，傳遞必要的參數，包括文件路徑、提交消息和 token
         deleteFile(path: filePath, message: message, token: token, completion: completion)
     }
-
+    
     // 刪除文件的方法
     private func deleteFile(path: String, message: String, token: String, completion: @escaping (Result<GitHubResponse, Error>) -> Void) {
         // 構造 GitHub API 的 URL，包括擁有者、儲存庫名和文件路徑，並進行URL編碼
         let encodedPath = path.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? path
-        let url = baseURL + "/\(encodedPath)"
-
+        
+        // 對url進行清洗
+        let url = removeRefQuery(from: baseURL) + "/\(encodedPath)"
+        
         // 設定 HTTP 請求的標頭，包括授權 token 和接受的內容類型
         let headers: HTTPHeaders = [
             "Authorization": "token \(token)",  // 設定授權標頭，包含個人訪問 token
@@ -274,7 +293,7 @@ public final class GithubAPI {
             "committer": [  // 提交者的詳細資訊
                 "name": "大毛",  // 提交者的名稱
                 "email": "dadada.maomaomao@gmail.com"  // 提交者的電子郵件
-            ]
+                         ]
         ]
         
         // 使用 Alamofire 發送 DELETE 請求來刪除文件

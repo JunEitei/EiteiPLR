@@ -681,6 +681,40 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     private func deleteData(at indexPath: IndexPath) {
         
+        // 获取要删除的音轨模型
+        let trackToDelete = musicPlayerViewModel.tracks[indexPath.row]
+        
+        // 在后台线程中进行数据删除操作
+        DispatchQueue.global(qos: .background).async { [self] in
+            // 假设有一个方法用于从持久化存储中删除音轨
+            
+            // 獲取文件路徑（在 GitHub 儲存庫中的路徑）
+            let filePath = trackToDelete.name
+            
+            // 創建 GithubAPI 實例
+            let githubAPI = GithubAPI(baseURL: baseURL)
+            
+            // 調用上傳文件方法
+            githubAPI.deleteFile(filePath: filePath, token: githubAPI.token) { [self] result in
+                switch result {
+                case .success(let response):
+                    print("File deleted successfully: \(response)")
+                    
+                    // 从数据模型中删除音轨
+                    musicPlayerViewModel.tracks.remove(at: indexPath.row)
+                    
+                    // 更新表格视图
+                    listTableView.deleteRows(at: [indexPath], with: .fade)
+                    
+                    // 刷新
+                    reload()
+                    
+                case .failure(let error):
+                    print("File upload failed: \(error)")
+                }
+            }
+        }
+
     }
     
     
@@ -769,8 +803,7 @@ extension ViewController: UIDocumentPickerDelegate {
                 let githubAPI = GithubAPI(baseURL: baseURL)
                 
                 // 調用上傳文件方法
-                let token = "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"
-                githubAPI.uploadFile(filePath: filePath, fileContent: fileData, token: token) { [self] result in
+                githubAPI.uploadFile(filePath: filePath, fileContent: fileData, token: githubAPI.token) { [self] result in
                     switch result {
                     case .success(let response):
                         print("File uploaded successfully: \(response)")
