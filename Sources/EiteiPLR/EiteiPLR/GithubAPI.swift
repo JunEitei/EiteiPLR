@@ -162,7 +162,7 @@ public final class GithubAPI {
         // 顯示 ProgressHUD
         ProgressHUD.colorHUD = .white // 背景色白色
         ProgressHUD.colorAnimation = .eiteiPurple // 動畫為紫色
-        ProgressHUD.fontStatus = .systemFont(ofSize: 21, weight: .ultraLight)
+        ProgressHUD.fontStatus = .systemFont(ofSize: 18, weight: .ultraLight) // 專輯名稱字體
         ProgressHUD.animate(GithubAPI.extractSubstring(from: baseURL), .triangleDotShift) //　專輯名稱
         
         
