@@ -163,7 +163,8 @@ public final class GithubAPI {
         ProgressHUD.colorHUD = .white // 背景色白色
         ProgressHUD.colorAnimation = .eiteiPurple // 動畫為紫色
         ProgressHUD.fontStatus = .systemFont(ofSize: 21, weight: .ultraLight)
-        ProgressHUD.animate("楽しんで", .triangleDotShift)
+        ProgressHUD.animate(GithubAPI.extractSubstring(from: baseURL), .triangleDotShift) //　專輯名稱
+        
         
         return fetchFiles()
             .map { files in
