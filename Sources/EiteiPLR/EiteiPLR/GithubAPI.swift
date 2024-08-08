@@ -45,7 +45,7 @@ public final class GithubAPI {
     // 網絡連接實例
     private var session: Session
     
-    public let token = "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"
+    public let token = "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"
     
     
     // 網路狀態監聽器
@@ -224,6 +224,40 @@ public final class GithubAPI {
         }
     }
     
+    // 获取文件 SHA 值的方法
+    func getFileSHA(from filePath: String, token: String, completion: @escaping (Result<String, Error>) -> Void) {
+        // 编码文件路径
+        guard let encodedPath = filePath.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else {
+            completion(.failure(NSError(domain: "Invalid file path", code: -1, userInfo: nil)))
+            return
+        }
+        
+        let url = baseURL + "/contents/\(encodedPath)"
+        
+        // 设置请求头
+        let headers: HTTPHeaders = [
+            "Authorization": "token \(token)",
+            "Accept": "application/vnd.github.v3+json"
+        ]
+        
+        // 发送 GET 请求以获取文件的 SHA 值
+        AF.request(url, method: .get, headers: headers)
+            .validate()
+            .responseJSON { response in
+                switch response.result {
+                case .success(let json):
+                    if let jsonDict = json as? [String: Any], let sha = jsonDict["sha"] as? String {
+                        completion(.success(sha))
+                    } else {
+                        completion(.failure(NSError(domain: "Invalid response format", code: -1, userInfo: nil)))
+                    }
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+    }
+    
+    
     // 从 URL 中截取专辑名称
     static func extractSubstring(from urlString: String) -> String? {
         // 查找 "contents" 的结尾位置
@@ -266,10 +300,14 @@ public final class GithubAPI {
     
     
     // 删除文件的方法
-    func deleteFile(from filePath: String, token: String, completion: @escaping (Result<String, Error>) -> Void) {
+    func deleteFile(from filePath: String, sha: String, message: String, token: String, completion: @escaping (Result<String, Error>) -> Void) {
         // 编码文件路径
-        let encodedPath = filePath.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? filePath
-        let url = removeRefQuery(from: baseURL) + "/\(encodedPath)"
+        guard let encodedPath = filePath.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) else {
+            completion(.failure(NSError(domain: "Invalid file path", code: -1, userInfo: nil)))
+            return
+        }
+        
+        let url = baseURL + "/contents/\(encodedPath)"
         
         // 设置请求头
         let headers: HTTPHeaders = [
@@ -277,17 +315,21 @@ public final class GithubAPI {
             "Accept": "application/vnd.github.v3+json"
         ]
         
+        // 请求体
+        let parameters: [String: Any] = [
+            "message": message,
+            "sha": sha
+        ]
+        
         // 发送 DELETE 请求
-        AF.request(url, method: .delete, headers: headers)
-            .validate(statusCode: 204...204) // 仅验证 204 状态码
+        AF.request(url, method: .delete, parameters: parameters, encoding: JSONEncoding.default, headers: headers)
+            .validate(statusCode: 200...204) // 验证状态码
             .responseData { response in
                 switch response.result {
                 case .success(let data):
-                    // 请求成功且状态码为 204，文件删除成功
                     let responseString = String(data: data, encoding: .utf8) ?? "No response data"
                     completion(.success(responseString))
                 case .failure(let error):
-                    // 请求失败，返回错误
                     print("File delete failed: \(error.localizedDescription)")
                     if let data = response.data {
                         let responseString = String(data: data, encoding: .utf8) ?? "No response data"

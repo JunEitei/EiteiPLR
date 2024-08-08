@@ -679,45 +679,50 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     
+    // 删除数据的方法，首先获取 SHA 值然后删除文件
     private func deleteData(at indexPath: IndexPath) {
-        
         // 获取要删除的音轨模型
         let trackToDelete = musicPlayerViewModel.tracks[indexPath.row]
         
         // 在后台线程中进行数据删除操作
         DispatchQueue.global(qos: .background).async { [self] in
-            // 假设有一个方法用于从持久化存储中删除音轨
-            
-            // 獲取文件路徑（在 GitHub 儲存庫中的路徑）
             let filePath = trackToDelete.name
             
-            // 創建 GithubAPI 實例
+            // 创建 GithubAPI 实例
             let githubAPI = GithubAPI(baseURL: baseURL)
             
-            // 調用刪除文件方法
-            githubAPI.deleteFile(from: filePath, token: githubAPI.token) { [self] result in
+            // 首先获取文件的 SHA 值
+            githubAPI.getFileSHA(from: filePath, token: githubAPI.token) { result in
                 switch result {
-                case .success(let response):
-                    print("File deleted successfully: \(response)")
-                    
-                    // 从数据模型中删除音轨
-                    musicPlayerViewModel.tracks.remove(at: indexPath.row)
-                    
-                    // 更新表格视图
-                    listTableView.deleteRows(at: [indexPath], with: .fade)
-                    
-                    // 刷新
-                    reload()
-                    
+                case .success(let sha):
+                    // 使用获取到的 SHA 值删除文件
+                    githubAPI.deleteFile(from: filePath, sha: sha, message: "Deleting file at \(filePath)", token: githubAPI.token) { [self] result in
+                        switch result {
+                        case .success(let response):
+                            print("File deleted successfully: \(response)")
+                            
+                            // 从数据模型中删除音轨
+                            musicPlayerViewModel.tracks.remove(at: indexPath.row)
+                            
+                            // 更新表格视图
+                            DispatchQueue.main.async { [self] in
+                                listTableView.deleteRows(at: [indexPath], with: .fade)
+                            }
+                            
+                            // 刷新
+                            reload()
+                            
+                        case .failure(let error):
+                            print("File delete failed: \(error.localizedDescription)")
+                        }
+                    }
                 case .failure(let error):
-                    print("File delete failed: \(error)")
+                    print("Failed to get file SHA: \(error.localizedDescription)")
                 }
             }
         }
         
     }
-    
-    
     // 彈出專輯選擇器
     func presentAlbumViewController() {
         
