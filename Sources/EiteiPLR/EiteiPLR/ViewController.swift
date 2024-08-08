@@ -660,6 +660,29 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         return 0
     }
     
+    // 定義滑動刪除
+    public func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        // 检查提取的专辑名称是否为 "Custom Album"
+        if GithubAPI.extractSubstring(from: baseURL) == "Custom Album" {
+            let deleteAction = UIContextualAction(style: .destructive, title: "删除") { [weak self] (action, view, completionHandler) in
+                self?.deleteData(at: indexPath)
+                completionHandler(true)
+            }
+            deleteAction.backgroundColor = .red
+            
+            let configuration = UISwipeActionsConfiguration(actions: [deleteAction])
+            return configuration
+        }else
+        {
+            return nil
+        }
+    }
+    
+    private func deleteData(at indexPath: IndexPath) {
+        
+    }
+    
     
     // 彈出專輯選擇器
     func presentAlbumViewController() {
@@ -716,6 +739,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         
         return EiteiPresentationController(presentedViewController: presented, presenting: presenting)
     }
+    
+    
     
 }
 
