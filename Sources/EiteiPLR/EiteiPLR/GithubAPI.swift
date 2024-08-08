@@ -277,25 +277,35 @@ public final class GithubAPI {
         }
     }
     
-    // 從URL中截取專輯名稱
+    // 从 URL 中截取专辑名称
     static func extractSubstring(from urlString: String) -> String? {
-        // 尋找 "contents" 的結尾位置
+        // 寻找 "contents" 的结尾位置
         guard let contentsRange = urlString.range(of: "contents") else {
             print("Unable to find 'contents' in the URL")
             return nil
         }
         
-        // "contents" 的結尾位置
+        // "contents" 的结尾位置
         let contentsEndIndex = urlString.index(contentsRange.upperBound, offsetBy: 0)
         
-        // 尋找問號的位置
+        // 寻找问号的位置
         guard let questionMarkRange = urlString.range(of: "?", range: contentsEndIndex..<urlString.endIndex) else {
             print("Unable to find '?' after 'contents' in the URL")
             return nil
         }
         
-        // 截取 "contents" 後到問號之間的字符
+        // 截取 "contents" 后到问号之间的字符
         let substring = urlString[contentsEndIndex..<questionMarkRange.lowerBound]
-        return String(substring)
+        
+        // 将提取的 URL 编码字符串解码为可读字符
+        guard let decodedString = substring.removingPercentEncoding else {
+            print("Failed to decode URL-encoded string")
+            return nil
+        }
+        
+        // 去掉最前面的斜杠
+        let cleanedString = decodedString.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+        
+        return cleanedString
     }
 }

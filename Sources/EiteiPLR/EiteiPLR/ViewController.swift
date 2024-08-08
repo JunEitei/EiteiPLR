@@ -14,6 +14,10 @@ import Combine
 
 public class ViewController: UIViewController, UISearchBarDelegate ,UIViewControllerTransitioningDelegate {
     
+    private let navigateButton = UIButton(type: .system)
+    
+    
+    
     // 用于跟踪 EiteiPlayerController 实例，提前初始化以備後用
     private var playerViewController = EiteiPlayerController()
     
@@ -148,19 +152,48 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
         return musicPlayerContainer // 返回容器視圖
     }()
     
+    
     // MARK: - Lifecycle
     public override func viewDidLoad() {
         super.viewDidLoad()
         
+        // 配置按鈕
+        navigateButton.setTitle("Navigate", for: .normal)
         
-        // 获取保存的专辑 URL（如果有的话）
-        let savedAlbumURL = UserDefaults.standard.string(forKey: "SavedAlbumURL")
+        // 更改字体大小
+        navigateButton.titleLabel?.font = UIFont.systemFont(ofSize: 28) // 这里设置字体大小为18
         
-        // 根据保存的 URL 或默认的 baseURL 初始化 GithubAPI
-        let initialBaseURL = savedAlbumURL ?? baseURL
+        view.addSubview(navigateButton)
+        
+        // 設置按鈕的 SnapKit 約束
+        navigateButton.snp.makeConstraints { make in
+            make.center.equalTo(view)
+        }
+        
+        
+        navigationItem.largeTitleDisplayMode = .never
+        // 設置導航條標題顏色
+        if let navigationBar = navigationController?.navigationBar {
+            navigationBar.titleTextAttributes = [
+                .foregroundColor: UIColor.white, // 設置標題顏色為白色
+                .font: UIFont.systemFont(ofSize: 23, weight: .black) // 设置字体大小
+                
+            ]
+        }
+        
+        
+        // 从 UserDefaults 获取保存的专辑 URL（如果有的话）
+        if let savedAlbumURL = UserDefaults.standard.string(forKey: "SavedAlbumURL") {
+            // 如果 UserDefaults 中有值，则使用该值更新 baseURL
+            baseURL = savedAlbumURL
+        }
+        
+        // 自定義導航條的標題，截取專輯名稱並顯示
+        navigationItem.title = GithubAPI.extractSubstring(from: baseURL)
+        
         
         // 使用初始的 baseURL 初始化 GithubAPI 实例
-        musicPlayerViewModel = EiteiMusicModel(githubAPI: GithubAPI(baseURL: initialBaseURL))
+        musicPlayerViewModel = EiteiMusicModel(githubAPI: GithubAPI(baseURL: baseURL))
         
         
         
@@ -596,8 +629,12 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             // 重新加載
             reload()
             
-            //保存专辑 URL 到 UserDefaults
+            // 保存专辑 URL 到 UserDefaults
             UserDefaults.standard.set(albumURL, forKey: "SavedAlbumURL")
+            
+            // 修改標題
+            navigationItem.title = GithubAPI.extractSubstring(from: albumURL)
+            
         }
         
         albumViewController.modalPresentationStyle = .custom

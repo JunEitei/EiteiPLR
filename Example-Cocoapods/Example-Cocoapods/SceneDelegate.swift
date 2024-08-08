@@ -17,9 +17,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         window = UIWindow(windowScene: windowScene)
-        
+
         // 把我的地址換成你自己的音樂倉庫地址
-        window?.rootViewController = ViewController(baseURL: "https://api.github.com/repos/JunEitei/Music/contents/わたしも")
+        window?.rootViewController = UINavigationController(rootViewController: ViewController(baseURL: "https://api.github.com/repos/JunEitei/Music/contents/わたしも")!)
         
         window?.makeKeyAndVisible()
     }

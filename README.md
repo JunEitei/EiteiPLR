@@ -74,7 +74,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
 
         // 自分の音楽リポジトリの URL に置き換えてください
-        window?.rootViewController = ViewController(baseURL: "https://api.github.com/repos/JunEitei/EiteiPLR/contents/Music")
+        window?.rootViewController = UINavigationController(rootViewController: ViewController(baseURL: "https://api.github.com/repos/JunEitei/Music/contents/わたしも")!)
 
         window?.makeKeyAndVisible()
     }
@@ -163,7 +163,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
 
         // 自分の音楽リポジトリの URL に置き換えてください
-        window?.rootViewController = ViewController(baseURL: "https://api.github.com/repos/JunEitei/EiteiPLR/contents/Music")
+        window?.rootViewController = UINavigationController(rootViewController: ViewController(baseURL: "https://api.github.com/repos/JunEitei/Music/contents/わたしも")!)
 
         window?.makeKeyAndVisible()
     }
