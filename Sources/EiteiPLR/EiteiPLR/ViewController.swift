@@ -274,8 +274,8 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     
     // 重新加載數據
     @objc func reload() {
-        // 检查提取的专辑名称是否为 "Custom Album"
-        if GithubAPI.extractSubstring(from: baseURL) == "Custom Album" {
+        // 检查提取的专辑名称是否包含 "Custom"
+        if ((GithubAPI.extractSubstring(from: baseURL)?.contains("Custom")) != nil) {
             // 创建自定义的加号按钮
             let addButton = UIButton(type: .custom)
             addButton.setImage(UIImage(systemName: "plus"), for: .normal) // 使用系统加号图标
@@ -663,8 +663,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     // 定義滑動刪除
     public func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
-        // 检查提取的专辑名称是否为 "Custom Album"
-        if GithubAPI.extractSubstring(from: baseURL) == "Custom Album" {
+        // 检查提取的专辑名称是否包含 "Custom"
+        if ((GithubAPI.extractSubstring(from: baseURL)?.contains("Custom")) != nil) {
             let deleteAction = UIContextualAction(style: .destructive, title: "删除") { [weak self] (action, view, completionHandler) in
                 self?.deleteData(at: indexPath)
                 completionHandler(true)
@@ -795,7 +795,7 @@ extension ViewController: UIDocumentPickerDelegate {
                 let fileData = try Data(contentsOf: selectedFileURL)
                 
                 // 獲取文件路徑（在 GitHub 儲存庫中的路徑）
-                let filePath = "Custom Album/\(selectedFileURL.lastPathComponent)"
+                let filePath = "Custom/\(selectedFileURL.lastPathComponent)"
                 
                 // 創建 GithubAPI 實例
                 let githubAPI = GithubAPI(baseURL: baseURL)
