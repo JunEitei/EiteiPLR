@@ -86,9 +86,10 @@ public final class GithubAPI {
         }
     }
     
-    // 檢索文件
+    // 檢索音樂文件，支持自動重試
     func fetchFiles() -> AnyPublisher<[GitHubFile], Error> {
         let url = URL(string: baseURL)!
+        
         return Future<[GitHubFile], Error> { promise in
             self.session.request(url)
                 .validate()
@@ -100,6 +101,25 @@ public final class GithubAPI {
                         promise(.failure(error))
                     }
                 }
+        }
+        .retry(3) // 最多重試3次（立即重試）
+        .catch { error -> AnyPublisher<[GitHubFile], Error> in
+            return Future<[GitHubFile], Error> { promise in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                    // 在5秒後重試一次
+                    self.fetchFiles().sink(receiveCompletion: { completion in
+                        switch completion {
+                        case .finished:
+                            break
+                        case .failure(let retryError):
+                            promise(.failure(retryError))
+                        }
+                    }, receiveValue: { files in
+                        promise(.success(files))
+                    }).cancel()
+                }
+            }
+            .eraseToAnyPublisher()
         }
         .eraseToAnyPublisher()
     }
@@ -116,7 +136,7 @@ public final class GithubAPI {
         print("Updated baseURL to \(newBaseURL)")
     }
     
-    // 讀取全部音軌同時統計數量
+    // 讀取全部音軌
     func fetchTracks() -> AnyPublisher<[GitHubFile], Error> {
         // 顯示 ProgressHUD
         ProgressHUD.colorHUD = .white // 背景色白色
@@ -209,8 +229,8 @@ public final class GithubAPI {
     }
     
     
-    // 定義函數來獲取和解析專輯數據
-    func fetchGitHubAlbums(completion: @escaping ([GitHubAlbum]?) -> Void) {
+    // 定義函數來獲取和解析專輯數據，並在請求失敗時每隔5秒自動重試
+    func fetchGitHubAlbums(retryCount: Int = 3, delaySeconds: TimeInterval = 5, completion: @escaping ([GitHubAlbum]?) -> Void) {
         // 設定 API URL
         guard let url = URL(string: baseURL) else {
             print("Invalid URL")
@@ -225,7 +245,16 @@ public final class GithubAPI {
                 completion(albums)
             case .failure(let error):
                 print("Error: \(error.localizedDescription)")
-                completion(nil)
+                
+                if retryCount > 0 {
+                    print("Retrying in \(delaySeconds) seconds... (\(retryCount) retries left)")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + delaySeconds) { [self] in
+                        fetchGitHubAlbums(retryCount: retryCount - 1, delaySeconds: delaySeconds, completion: completion)
+                    }
+                } else {
+                    print("Failed after \(retryCount) attempts.")
+                    completion(nil)
+                }
             }
         }
     }
@@ -239,7 +268,7 @@ public final class GithubAPI {
         }
         
         let url = removeRefQuery(from: baseURL) + "/\(encodedPath)"
-
+        
         // 设置请求头
         let headers: HTTPHeaders = [
             "Authorization": "token \(token)",
@@ -315,7 +344,7 @@ public final class GithubAPI {
         }
         
         let url = removeRefQuery(from: baseURL) + "/\(encodedPath)"
-
+        
         // 设置请求头
         let headers: HTTPHeaders = [
             "Authorization": "token \(token)",
