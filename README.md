@@ -2,6 +2,12 @@
 
 ## 企業公式サイトとは　https://yongcheng.jp/
 
+## Preview：
+
+<img width="559" alt="截圖 2024-08-08 16 34 15" src="https://github.com/user-attachments/assets/21728150-021f-45b9-942e-a8286944da3a">
+<img width="559" alt="截圖 2024-08-08 11 53 11" src="https://github.com/user-attachments/assets/c68688fe-9e3d-48d5-9fc6-22d1b09f6d7b">
+<img width="559" alt="截圖 2024-08-05 11 34 43" src="https://github.com/user-attachments/assets/b1584908-86f4-41b4-a27e-821db4ab5eab">
+
 ## 機能紹介
 
 | **機能**               | **説明**                                   |
@@ -11,12 +17,6 @@
 | アルバム切り替え       | 再生するアルバムを切り替えることができます    |
 | 音楽のアップロード     | 自定義アルバムに音楽をアップロードできます  |
 | 自定義アルバム管理     | 自定義アルバムの音楽を削除することができます  |
-
-## Preview：
-
-<img width="559" alt="截圖 2024-08-08 16 34 15" src="https://github.com/user-attachments/assets/21728150-021f-45b9-942e-a8286944da3a">
-<img width="559" alt="截圖 2024-08-08 11 53 11" src="https://github.com/user-attachments/assets/c68688fe-9e3d-48d5-9fc6-22d1b09f6d7b">
-<img width="559" alt="截圖 2024-08-05 11 34 43" src="https://github.com/user-attachments/assets/b1584908-86f4-41b4-a27e-821db4ab5eab">
 
 ## Cocoapods を使ってインストールする方法
 
