@@ -8,6 +8,12 @@
 <img width="559" alt="截圖 2024-08-08 11 53 11" src="https://github.com/user-attachments/assets/c68688fe-9e3d-48d5-9fc6-22d1b09f6d7b">
 <img width="559" alt="截圖 2024-08-05 11 34 43" src="https://github.com/user-attachments/assets/b1584908-86f4-41b4-a27e-821db4ab5eab">
 
+## 機能紹介
+
+• Github倉庫の曲を再生する
+• 単曲ループとリストループ
+• アルバムを切り替える
+
 ## Cocoapods を使ってインストールする方法
 
 1. **新しい Swift プロジェクトを作成し、Storyboard を選択して、次の操作を行います：**
