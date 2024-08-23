@@ -228,9 +228,8 @@ public final class GithubAPI {
             }
     }
     
-    
-    // 定義函數來獲取和解析專輯數據，並在請求失敗時每隔5秒自動重試
-    func fetchGitHubAlbums(retryCount: Int = 3, delaySeconds: TimeInterval = 5, completion: @escaping ([GitHubAlbum]?) -> Void) {
+    // 定義函數來獲取和解析專輯數據
+    func fetchGitHubAlbums(completion: @escaping ([GitHubAlbum]?) -> Void) {
         // 設定 API URL
         guard let url = URL(string: baseURL) else {
             print("Invalid URL")
@@ -245,16 +244,7 @@ public final class GithubAPI {
                 completion(albums)
             case .failure(let error):
                 print("Error: \(error.localizedDescription)")
-                
-                if retryCount > 0 {
-                    print("Retrying in \(delaySeconds) seconds... (\(retryCount) retries left)")
-                    DispatchQueue.main.asyncAfter(deadline: .now() + delaySeconds) { [self] in
-                        fetchGitHubAlbums(retryCount: retryCount - 1, delaySeconds: delaySeconds, completion: completion)
-                    }
-                } else {
-                    print("Failed after \(retryCount) attempts.")
-                    completion(nil)
-                }
+                completion(nil)
             }
         }
     }

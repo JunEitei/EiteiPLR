@@ -45,6 +45,9 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     // 延迟加载的属性，播放器模型
     var musicPlayerViewModel: EiteiMusicModel!
     
+    // 創建專輯選擇器的實例，並傳入 URL
+    let albumViewController = AlbumViewController()
+    
     // 歌曲列表
     let listTableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .insetGrouped)        // 設置表格視圖
@@ -268,7 +271,9 @@ public class ViewController: UIViewController, UISearchBarDelegate ,UIViewContro
     @objc func handleEdgeSwipe(_ gesture: UIScreenEdgePanGestureRecognizer) {
         if gesture.state == .recognized {
             // 当手势识别到时，调用專輯選擇
-            presentAlbumViewController()
+            DispatchQueue.main.async {
+                self.presentAlbumViewController()
+            }
         }
     }
     
@@ -718,9 +723,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     // 彈出專輯選擇器
     func presentAlbumViewController() {
-        
-        // 創建專輯選擇器的實例，並傳入 URL
-        let albumViewController = AlbumViewController()
+
         
         // 配置回调闭包
         albumViewController.onAlbumSelected = { [self] albumURL in
