@@ -228,7 +228,7 @@ public final class GithubAPI {
             }
     }
     
-    // 定義函數來獲取和解析專輯數據
+    // 定義函數來獲取和解析專輯數據2
     func fetchGitHubAlbums(completion: @escaping ([GitHubAlbum]?) -> Void) {
         // 設定 API URL
         guard let url = URL(string: baseURL) else {
